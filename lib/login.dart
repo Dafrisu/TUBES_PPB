@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/lupaPassword.dart';
+import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/register.dart';
 import 'package:tubes_ppb/verifikasi.dart';
 import 'homepage.dart'; // Import home_page.dart
+import 'package:google_fonts/google_fonts.dart'; //google font
 
 class login extends StatelessWidget {
   const login({super.key});
@@ -12,7 +14,29 @@ class login extends StatelessWidget {
     final _formKey = GlobalKey<FormState>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Login Page')),
+      appBar: AppBar(
+        backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new), 
+          onPressed: () {
+            Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const landingPage(),
+                      ),
+                    ); 
+          },
+          color: Colors.white,
+        ),
+        centerTitle: true,
+        title: Text('Masuk',
+          style: GoogleFonts.montserrat(
+            fontSize: 20,
+            fontWeight: FontWeight.w500, 
+           color: Colors.white
+            ),
+          ),
+        ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
