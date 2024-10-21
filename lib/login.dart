@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/lupaPassword.dart';
 import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/register.dart';
-// import 'register_page.dart'; // Import register_page.dart
+import 'package:tubes_ppb/verifikasi.dart';
 import 'homepage.dart'; // Import home_page.dart
 import 'package:google_fonts/google_fonts.dart'; //google font
 
@@ -67,13 +68,26 @@ class login extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 10),
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const lupaPassword()),
+                    );
+                  },
+                  child: const Text('Lupa Password?'),
+                ),
+              ),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState?.validate() == true) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const homePage(),
+                        builder: (context) => const verifikasi(),
                       ),
                     );
                   }
