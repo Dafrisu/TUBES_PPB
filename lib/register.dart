@@ -65,6 +65,10 @@ class register extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => Dashboard()),
                     );
                   }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => verifikasi()),
+                  );
                 },
                 child: const Text('Register'),
               ),
