@@ -3,8 +3,9 @@ import 'package:tubes_ppb/lupaPassword.dart';
 import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/register.dart';
 import 'package:tubes_ppb/verifikasi.dart';
-import 'homepage.dart'; // Import home_page.dart
-import 'package:google_fonts/google_fonts.dart'; //google font
+import 'dashboard.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class login extends StatelessWidget {
   const login({super.key});
@@ -87,7 +88,7 @@ class login extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const verifikasi(),
+                        builder: (context) => Dashboard(),
                       ),
                     );
                   }
