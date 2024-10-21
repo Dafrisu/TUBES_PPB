@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tubes_ppb/homepage.dart';
+import 'dashboard.dart';
 
 class verifikasi extends StatelessWidget {
   const verifikasi({super.key});
@@ -46,7 +46,7 @@ class verifikasi extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const homePage(),
+                        builder: (context) => Dashboard(),
                       ),
                     );
                   }

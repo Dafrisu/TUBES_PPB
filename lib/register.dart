@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/verifikasi.dart';
 
 class register extends StatelessWidget {
   const register({super.key});
@@ -59,6 +60,11 @@ class register extends StatelessWidget {
                       const SnackBar(content: Text('Registration Successful')),
                     );
                   }
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => verifikasi()),
+                    );
                 },
                 child: const Text('Register'),
               ),
