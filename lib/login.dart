@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tubes_ppb/register.dart';
 // import 'register_page.dart'; // Import register_page.dart
 import 'homepage.dart'; // Import home_page.dart
+import 'dashboard.dart';
 
 class login extends StatelessWidget {
   const login({super.key});
@@ -11,7 +12,6 @@ class login extends StatelessWidget {
     final _formKey = GlobalKey<FormState>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Login Page')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -49,7 +49,7 @@ class login extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const homePage(),
+                        builder: (context) => Dashboard(),
                       ),
                     );
                   }
