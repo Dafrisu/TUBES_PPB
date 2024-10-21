@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/lupaPassword.dart';
+import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/register.dart';
-// import 'register_page.dart'; // Import register_page.dart
-import 'homepage.dart'; // Import home_page.dart
+import 'package:tubes_ppb/verifikasi.dart';
 import 'dashboard.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class login extends StatelessWidget {
   const login({super.key});
@@ -12,6 +15,29 @@ class login extends StatelessWidget {
     final _formKey = GlobalKey<FormState>();
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new), 
+          onPressed: () {
+            Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const landingPage(),
+                      ),
+                    ); 
+          },
+          color: Colors.white,
+        ),
+        centerTitle: true,
+        title: Text('Masuk',
+          style: GoogleFonts.montserrat(
+            fontSize: 20,
+            fontWeight: FontWeight.w500, 
+           color: Colors.white
+            ),
+          ),
+        ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -43,6 +69,19 @@ class login extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 10),
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const lupaPassword()),
+                    );
+                  },
+                  child: const Text('Lupa Password?'),
+                ),
+              ),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState?.validate() == true) {
