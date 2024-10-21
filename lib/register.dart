@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/dashboard.dart';
+import 'verifikasi.dart';
 
 class register extends StatelessWidget {
   const register({super.key});
@@ -57,6 +59,10 @@ class register extends StatelessWidget {
                   if (_formKey.currentState?.validate() == true) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Registration Successful')),
+                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Dashboard()),
                     );
                   }
                 },
