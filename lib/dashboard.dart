@@ -1,5 +1,4 @@
-// main.dart
-import 'package:flutter/material.dart';// Import the DashboardPage
+import 'package:flutter/material.dart';
 import 'dashboard_full_product.dart';
 
 void main() {
@@ -59,13 +58,16 @@ class Dashboard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Product Catalog', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                Text('Product Catalog',
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 TextButton(
                   onPressed: () {
                     // Navigate to full catalog
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => FullCatalogPage()),
+                      MaterialPageRoute(
+                          builder: (context) => FullCatalogPage()),
                     );
                   },
                   child: Text('See All', style: TextStyle(color: Colors.blue)),
@@ -101,7 +103,8 @@ class ProductCard extends StatelessWidget {
     return Card(
       child: Column(
         children: <Widget>[
-          Image.asset(imageUrl, fit: BoxFit.cover, height: 100), // Adjust height as needed
+          Image.asset(imageUrl,
+              fit: BoxFit.cover, height: 100), // Adjust height as needed
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(title, style: TextStyle(fontSize: 16)),

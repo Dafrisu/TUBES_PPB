@@ -185,8 +185,7 @@ class OrderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-      },
+      onTap: () {},
       child: Container(
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
@@ -198,7 +197,7 @@ class OrderCard extends StatelessWidget {
             Container(
               width: 80,
               height: 80,
-              color: const Color(0xFF658864), 
+              color: const Color(0xFF658864),
               child: const Center(
                 child: Text(
                   'Gambar',
@@ -225,11 +224,11 @@ class OrderCard extends StatelessWidget {
             ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF7B5400), 
+                backgroundColor: const Color(0xFF7B5400),
               ),
               child: const Text(
                 'Dikemas',
-                style: TextStyle(color: Color(0xFFE6AF2E)), 
+                style: TextStyle(color: Color(0xFFE6AF2E)),
               ),
             ),
           ],
@@ -238,7 +237,6 @@ class OrderCard extends StatelessWidget {
     );
   }
 }
-
 
 class InboxPage extends StatefulWidget {
   @override
@@ -286,7 +284,8 @@ class _InboxPageState extends State<InboxPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ChatPage(sender: selectedMessage.sender),
+                        builder: (context) =>
+                            ChatPage(sender: selectedMessage.sender),
                       ),
                     );
                   },
@@ -310,11 +309,12 @@ class _InboxPageState extends State<InboxPage> {
             trailing: Text(item.time),
             onTap: () {
               setState(() {
-                item.isRead = true; 
+                item.isRead = true;
               });
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChatPage(sender: item.sender)),
+                MaterialPageRoute(
+                    builder: (context) => ChatPage(sender: item.sender)),
               );
             },
           );
@@ -328,7 +328,8 @@ class MessageSearchDelegate extends SearchDelegate<InboxItemData> {
   final List<InboxItemData> inboxMessages;
   final ValueChanged<InboxItemData> onSelected;
 
-  MessageSearchDelegate({required this.inboxMessages, required this.onSelected});
+  MessageSearchDelegate(
+      {required this.inboxMessages, required this.onSelected});
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -354,8 +355,10 @@ class MessageSearchDelegate extends SearchDelegate<InboxItemData> {
 
   @override
   Widget buildResults(BuildContext context) {
-    final results = inboxMessages.where((message) =>
-        message.sender.toLowerCase().contains(query.toLowerCase())).toList();
+    final results = inboxMessages
+        .where((message) =>
+            message.sender.toLowerCase().contains(query.toLowerCase()))
+        .toList();
 
     return ListView.builder(
       itemCount: results.length,
@@ -375,8 +378,10 @@ class MessageSearchDelegate extends SearchDelegate<InboxItemData> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final suggestions = inboxMessages.where((message) =>
-        message.sender.toLowerCase().startsWith(query.toLowerCase())).toList();
+    final suggestions = inboxMessages
+        .where((message) =>
+            message.sender.toLowerCase().startsWith(query.toLowerCase()))
+        .toList();
 
     return ListView.builder(
       itemCount: suggestions.length,
@@ -407,7 +412,6 @@ class InboxItemData {
     this.isRead = false,
   });
 }
-
 
 class ChatPage extends StatefulWidget {
   final String sender;
@@ -465,7 +469,7 @@ class _ChatPageState extends State<ChatPage> {
                     if (!message['isSentByUser'])
                       const CircleAvatar(
                         radius: 15,
-                        backgroundImage: AssetImage(''), 
+                        backgroundImage: AssetImage(''),
                       ),
                     if (!message['isSentByUser']) const SizedBox(width: 8),
                     ChatBubble(
@@ -476,7 +480,7 @@ class _ChatPageState extends State<ChatPage> {
                     if (message['isSentByUser'])
                       const CircleAvatar(
                         radius: 15,
-                        backgroundImage: AssetImage(''), 
+                        backgroundImage: AssetImage(''),
                       ),
                   ],
                 );
@@ -499,7 +503,7 @@ class _ChatPageState extends State<ChatPage> {
                       hintText: 'Type a message',
                       border: InputBorder.none,
                     ),
-                    onSubmitted: (value) => _sendMessage(), 
+                    onSubmitted: (value) => _sendMessage(),
                   ),
                 ),
                 IconButton(
@@ -514,7 +518,6 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 }
-
 
 class ChatBubble extends StatelessWidget {
   final String text;
@@ -672,4 +675,3 @@ class NotificationItem extends StatelessWidget {
     );
   }
 }
-
