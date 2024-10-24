@@ -47,14 +47,17 @@ class login extends StatelessWidget {
               const Text('Login',
                   style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
               const SizedBox(height: 20),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Email'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
-                  }
-                  return null;
-                },
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  decoration: const InputDecoration(labelText: 'Email'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    return null;
+                  },
+                ),
               ),
               const SizedBox(height: 10),
               TextFormField(
