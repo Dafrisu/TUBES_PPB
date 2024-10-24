@@ -87,6 +87,7 @@ class login extends StatelessWidget {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                 ),
                 onPressed: () {
                   if (formKey.currentState?.validate() == true) {
