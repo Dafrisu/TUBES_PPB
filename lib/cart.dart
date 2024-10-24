@@ -44,7 +44,10 @@ class _cartpagestate extends State<Cartpage> {
             Navigator.of(context).pop();
           },
         ),
-        title: Text(widget.title),
+        title: Text(
+          widget.title,
+          textAlign: TextAlign.center,
+        ),
         backgroundColor: colorpalete[0]["green"],
       ),
     );
