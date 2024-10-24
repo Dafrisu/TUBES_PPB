@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tubes_ppb/BarangPenjual.dart';
 import 'Data.dart' as data;
 
-
-void main() {
-  runApp(const MyApp());
-}
-
 final List<Map<String, dynamic>> colorpalete = [
   {"green": const Color.fromARGB(255, 101, 136, 100)}
 ];
