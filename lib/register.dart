@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_ppb/dashboard.dart';
+import 'package:tubes_ppb/dashboard/dashboard.dart';
 import 'verifikasi.dart';
 
 class register extends StatelessWidget {
