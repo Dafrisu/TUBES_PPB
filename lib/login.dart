@@ -3,6 +3,7 @@ import 'package:tubes_ppb/lupaPassword.dart';
 import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/register.dart';
 import 'dashboard/dashboard.dart';
+import 'package:tubes_ppb/verifikasi.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class login extends StatelessWidget {
@@ -41,8 +42,11 @@ class login extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              const Text('Login',
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+              
+              Center(
+                child: const Text('Selamat Datang Kembali',
+                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+              ),
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -82,17 +86,22 @@ class login extends StatelessWidget {
                 ),
               ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                ),
                 onPressed: () {
                   if (formKey.currentState?.validate() == true) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const Dashboard(),
+                        builder: (context) => const verifikasi(),
                       ),
                     );
                   }
                 },
-                child: const Text('Login'),
+                child: const Text('Masuk', style: TextStyle(
+                  color: Colors.white
+                )),
               ),
               const SizedBox(height: 10),
               Row(
