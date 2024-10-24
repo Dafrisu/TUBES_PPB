@@ -5,42 +5,39 @@ import 'package:tubes_ppb/register.dart';
 import 'dashboard.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class login extends StatelessWidget {
   const login({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new), 
+          icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () {
             Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const landingPage(),
-                      ),
-                    ); 
+              context,
+              MaterialPageRoute(
+                builder: (context) => const landingPage(),
+              ),
+            );
           },
           color: Colors.white,
         ),
         centerTitle: true,
-        title: Text('Masuk',
+        title: Text(
+          'Masuk',
           style: GoogleFonts.montserrat(
-            fontSize: 20,
-            fontWeight: FontWeight.w500, 
-           color: Colors.white
-            ),
-          ),
+              fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
         ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey,
+          key: formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
@@ -86,11 +83,11 @@ class login extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  if (_formKey.currentState?.validate() == true) {
+                  if (formKey.currentState?.validate() == true) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Dashboard(),
+                        builder: (context) => const Dashboard(),
                       ),
                     );
                   }

@@ -5,6 +5,8 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -80,7 +82,7 @@ class DeliveryPage extends StatelessWidget {
   final bool hasUnreadInboxMessages;
   final VoidCallback markAllNotificationsAsRead;
 
-  DeliveryPage({
+  const DeliveryPage({super.key, 
     required this.notifications,
     required this.inboxMessages,
     required this.hasUnreadNotifications,
@@ -182,11 +184,12 @@ class DeliveryPage extends StatelessWidget {
 }
 
 class OrderCard extends StatelessWidget {
+  const OrderCard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-      },
+      onTap: () {},
       child: Container(
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
@@ -198,7 +201,7 @@ class OrderCard extends StatelessWidget {
             Container(
               width: 80,
               height: 80,
-              color: const Color(0xFF658864), 
+              color: const Color(0xFF658864),
               child: const Center(
                 child: Text(
                   'Gambar',
@@ -225,11 +228,11 @@ class OrderCard extends StatelessWidget {
             ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF7B5400), 
+                backgroundColor: const Color(0xFF7B5400),
               ),
               child: const Text(
                 'Dikemas',
-                style: TextStyle(color: Color(0xFFE6AF2E)), 
+                style: TextStyle(color: Color(0xFFE6AF2E)),
               ),
             ),
           ],
@@ -239,8 +242,9 @@ class OrderCard extends StatelessWidget {
   }
 }
 
-
 class InboxPage extends StatefulWidget {
+  const InboxPage({super.key});
+
   @override
   _InboxPageState createState() => _InboxPageState();
 }
@@ -286,7 +290,8 @@ class _InboxPageState extends State<InboxPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ChatPage(sender: selectedMessage.sender),
+                        builder: (context) =>
+                            ChatPage(sender: selectedMessage.sender),
                       ),
                     );
                   },
@@ -310,11 +315,12 @@ class _InboxPageState extends State<InboxPage> {
             trailing: Text(item.time),
             onTap: () {
               setState(() {
-                item.isRead = true; 
+                item.isRead = true;
               });
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChatPage(sender: item.sender)),
+                MaterialPageRoute(
+                    builder: (context) => ChatPage(sender: item.sender)),
               );
             },
           );
@@ -328,7 +334,8 @@ class MessageSearchDelegate extends SearchDelegate<InboxItemData> {
   final List<InboxItemData> inboxMessages;
   final ValueChanged<InboxItemData> onSelected;
 
-  MessageSearchDelegate({required this.inboxMessages, required this.onSelected});
+  MessageSearchDelegate(
+      {required this.inboxMessages, required this.onSelected});
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -354,8 +361,10 @@ class MessageSearchDelegate extends SearchDelegate<InboxItemData> {
 
   @override
   Widget buildResults(BuildContext context) {
-    final results = inboxMessages.where((message) =>
-        message.sender.toLowerCase().contains(query.toLowerCase())).toList();
+    final results = inboxMessages
+        .where((message) =>
+            message.sender.toLowerCase().contains(query.toLowerCase()))
+        .toList();
 
     return ListView.builder(
       itemCount: results.length,
@@ -375,8 +384,10 @@ class MessageSearchDelegate extends SearchDelegate<InboxItemData> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final suggestions = inboxMessages.where((message) =>
-        message.sender.toLowerCase().startsWith(query.toLowerCase())).toList();
+    final suggestions = inboxMessages
+        .where((message) =>
+            message.sender.toLowerCase().startsWith(query.toLowerCase()))
+        .toList();
 
     return ListView.builder(
       itemCount: suggestions.length,
@@ -408,11 +419,10 @@ class InboxItemData {
   });
 }
 
-
 class ChatPage extends StatefulWidget {
   final String sender;
 
-  ChatPage({required this.sender});
+  const ChatPage({super.key, required this.sender});
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -424,7 +434,7 @@ class _ChatPageState extends State<ChatPage> {
     {'text': 'Siapp otw', 'isSentByUser': true},
     {'text': 'ok', 'isSentByUser': false},
   ];
-  TextEditingController _messageController = TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
 
   void _sendMessage() {
     String messageText = _messageController.text.trim();
@@ -465,7 +475,7 @@ class _ChatPageState extends State<ChatPage> {
                     if (!message['isSentByUser'])
                       const CircleAvatar(
                         radius: 15,
-                        backgroundImage: AssetImage(''), 
+                        backgroundImage: AssetImage(''),
                       ),
                     if (!message['isSentByUser']) const SizedBox(width: 8),
                     ChatBubble(
@@ -476,7 +486,7 @@ class _ChatPageState extends State<ChatPage> {
                     if (message['isSentByUser'])
                       const CircleAvatar(
                         radius: 15,
-                        backgroundImage: AssetImage(''), 
+                        backgroundImage: AssetImage(''),
                       ),
                   ],
                 );
@@ -499,7 +509,7 @@ class _ChatPageState extends State<ChatPage> {
                       hintText: 'Type a message',
                       border: InputBorder.none,
                     ),
-                    onSubmitted: (value) => _sendMessage(), 
+                    onSubmitted: (value) => _sendMessage(),
                   ),
                 ),
                 IconButton(
@@ -515,12 +525,11 @@ class _ChatPageState extends State<ChatPage> {
   }
 }
 
-
 class ChatBubble extends StatelessWidget {
   final String text;
   final bool isSentByUser;
 
-  ChatBubble({required this.text, required this.isSentByUser});
+  const ChatBubble({super.key, required this.text, required this.isSentByUser});
 
   @override
   Widget build(BuildContext context) {
@@ -540,7 +549,7 @@ class NotificationPage extends StatefulWidget {
   final List<NotificationItemData> notifications;
   final VoidCallback markAllAsRead;
 
-  NotificationPage({required this.notifications, required this.markAllAsRead});
+  const NotificationPage({super.key, required this.notifications, required this.markAllAsRead});
 
   @override
   _NotificationPageState createState() => _NotificationPageState();
@@ -622,7 +631,7 @@ class NotificationItem extends StatelessWidget {
   final String time;
   final bool isRead;
 
-  NotificationItem({
+  const NotificationItem({super.key, 
     required this.title,
     required this.message,
     required this.time,
@@ -672,4 +681,3 @@ class NotificationItem extends StatelessWidget {
     );
   }
 }
-
