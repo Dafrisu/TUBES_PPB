@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-// masih copas dari library flutter, ga jalan wak
-class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({super.key});
+import 'package:tubes_ppb/landing.dart';
+
+class animation extends StatelessWidget {
+  const animation({super.key});
 
   @override
   Widget build(BuildContext context) {

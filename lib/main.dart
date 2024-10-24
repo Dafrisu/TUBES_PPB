@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/landing.dart';
-import 'login.dart'; // Import login_page.dart
+import 'package:tubes_ppb/animation.dart'; 
 
 void main() {
   runApp(const MainApp());
@@ -12,8 +12,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      //landing page ato login page?
-      home: const landingPage(), // Halaman awal adalah LoginPage
+      home: const landingPage(), 
     );
   }
 }
