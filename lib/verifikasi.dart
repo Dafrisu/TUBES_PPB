@@ -7,56 +7,79 @@ class verifikasi extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final TextEditingController codeController = TextEditingController();
-
-    return Scaffold(
-      appBar: AppBar(title: const Text('Kode Verifikasi')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              const Text(
-                'Masukkan Kode Verifikasi',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: codeController,
-                decoration: const InputDecoration(
-                  labelText: 'Kode Verifikasi',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Masukkan kode verifikasi';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (formKey.currentState?.validate() == true) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Kode Verifikasi Benar')));
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Dashboard(),
-                      ),
-                    );
-                  }
-                },
-                child: const Text('Verifikasi'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    return Form(
+        child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SizedBox(
+            height: 68,
+            width: 64,
+            child: TextField(
+              onChanged: (value) {
+                if (value.length == 1) {
+                  FocusScope.of(context).nextFocus();
+                }
+              },
+              style: Theme.of(context).textTheme.headlineMedium,
+              keyboardType: TextInputType.number,
+              textAlign: TextAlign.center,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(1),
+                FilteringTextInputFormatter.digitsOnly,
+              ],
+            )),
+        SizedBox(
+            height: 68,
+            width: 64,
+            child: TextField(
+              onChanged: (value) {
+                if (value.length == 1) {
+                  FocusScope.of(context).nextFocus();
+                }
+              },
+              style: Theme.of(context).textTheme.headlineMedium,
+              keyboardType: TextInputType.number,
+              textAlign: TextAlign.center,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(1),
+                FilteringTextInputFormatter.digitsOnly,
+              ],
+            )),
+        SizedBox(
+            height: 68,
+            width: 64,
+            child: TextField(
+              onChanged: (value) {
+                if (value.length == 1) {
+                  FocusScope.of(context).nextFocus();
+                }
+              },
+              style: Theme.of(context).textTheme.headlineMedium,
+              keyboardType: TextInputType.number,
+              textAlign: TextAlign.center,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(1),
+                FilteringTextInputFormatter.digitsOnly,
+              ],
+            )),
+        SizedBox(
+            height: 68,
+            width: 64,
+            child: TextField(
+              onChanged: (value) {
+                if (value.length == 1) {
+                  FocusScope.of(context).nextFocus();
+                }
+              },
+              style: Theme.of(context).textTheme.headlineMedium,
+              keyboardType: TextInputType.number,
+              textAlign: TextAlign.center,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(1),
+                FilteringTextInputFormatter.digitsOnly,
+              ],
+            ))
+      ],
+    ));
   }
 }

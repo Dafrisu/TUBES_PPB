@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -82,7 +82,8 @@ class DeliveryPage extends StatelessWidget {
   final bool hasUnreadInboxMessages;
   final VoidCallback markAllNotificationsAsRead;
 
-  const DeliveryPage({super.key, 
+  const DeliveryPage({
+    super.key,
     required this.notifications,
     required this.inboxMessages,
     required this.hasUnreadNotifications,
@@ -143,7 +144,7 @@ class DeliveryPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => InboxPage(),
+                      builder: (context) => const InboxPage(),
                     ),
                   );
                 },
@@ -165,16 +166,16 @@ class DeliveryPage extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: const Padding(
+        padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Pesanan yang harus diantar',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             OrderCard(),
           ],
         ),
@@ -549,7 +550,8 @@ class NotificationPage extends StatefulWidget {
   final List<NotificationItemData> notifications;
   final VoidCallback markAllAsRead;
 
-  const NotificationPage({super.key, required this.notifications, required this.markAllAsRead});
+  const NotificationPage(
+      {super.key, required this.notifications, required this.markAllAsRead});
 
   @override
   _NotificationPageState createState() => _NotificationPageState();
@@ -631,7 +633,8 @@ class NotificationItem extends StatelessWidget {
   final String time;
   final bool isRead;
 
-  const NotificationItem({super.key, 
+  const NotificationItem({
+    super.key,
     required this.title,
     required this.message,
     required this.time,
