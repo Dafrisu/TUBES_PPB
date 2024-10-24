@@ -7,15 +7,22 @@ final List<Map<String, dynamic>> listdata = [
   {"asd": "asd"}
 ];
 
+// class cart extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return const MaterialApp(
+//       title: 'cart',
+//       home: Cartpage(title: 'ini cart page'),
+//     );
+//   }
+// }
+
 class cart extends StatelessWidget {
   const cart({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'cart',
-      home: Cartpage(title: 'ini cart page'),
-    );
+    return const Cartpage(title: 'ini cart page');
   }
 }
 
