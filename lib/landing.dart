@@ -4,7 +4,7 @@ import 'package:tubes_ppb/login.dart';
 import 'package:tubes_ppb/register.dart';
 
 class landingPage extends StatefulWidget {
-  const landingPage({Key? key}) : super(key: key);
+  const landingPage({super.key});
   @override 
   landingPageState createState() => landingPageState();
 }

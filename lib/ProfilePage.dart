@@ -20,7 +20,6 @@ class ProfilePage extends StatelessWidget {
         child: Column(
           children: [
             Container(
-
               child: const Padding(
                 padding: EdgeInsets.all(16.0),
                 child: Column(
@@ -85,7 +84,8 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildOptionButton(BuildContext context, IconData icon, String label, Color color) {
+  Widget _buildOptionButton(
+      BuildContext context, IconData icon, String label, Color color) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
