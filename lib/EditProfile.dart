@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class EditProfile extends StatelessWidget {
+  const EditProfile({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +25,7 @@ class EditProfile extends StatelessWidget {
               Stack(
                 alignment: Alignment.center,
                 children: [
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 60,
                     backgroundImage: NetworkImage(
                       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWW0xcyFQPL6DIne-s-4nHzmBuIMCN12FioA&s',
@@ -33,12 +35,12 @@ class EditProfile extends StatelessWidget {
                     bottom: 0,
                     right: 80,
                     child: Container(
-                      padding: EdgeInsets.all(4),
+                      padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
                         color: Colors.green[400],
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.edit,
                         color: Colors.white,
                         size: 20,
@@ -47,20 +49,20 @@ class EditProfile extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 16),
-              Text(
+              const SizedBox(height: 16),
+              const Text(
                 'Asep Montir',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 8),
-              Text(
+              const SizedBox(height: 8),
+              const Text(
                 'asepmontir@gmail.com',
                 style: TextStyle(fontSize: 16),
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               _buildTextField('ID Pembeli', '109238'),
               _buildTextField('Nama Lengkap', 'Asep Lengkap'),
               _buildTextField('Nomor Telefon', '129384751782'),
@@ -68,16 +70,16 @@ class EditProfile extends StatelessWidget {
               _buildTextField('Username', 'AsepL'),
               _buildTextField('Email', 'AsepL@email.co.id'),
               _buildTextField('Kata Sandi', 'AsepLlonzz'),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: () {
                   // Implement save button logic here
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green[400],
-                  minimumSize: Size(double.infinity, 50),
+                  minimumSize: const Size(double.infinity, 50),
                 ),
-                child: Text(
+                child: const Text(
                   'Simpan',
                   style: TextStyle(fontSize: 18),
                 ),
@@ -95,7 +97,7 @@ class EditProfile extends StatelessWidget {
       child: TextFormField(
         decoration: InputDecoration(
           labelText: label,
-          border: OutlineInputBorder(),
+          border: const OutlineInputBorder(),
         ),
         initialValue: initialValue,
       ),

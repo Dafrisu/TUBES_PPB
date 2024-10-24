@@ -7,14 +7,14 @@ class register extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     return Scaffold(
       appBar: AppBar(title: const Text('Register Page')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey,
+          key: formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
@@ -56,18 +56,18 @@ class register extends StatelessWidget {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  if (_formKey.currentState?.validate() == true) {
+                  if (formKey.currentState?.validate() == true) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Registration Successful')),
                     );
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Dashboard()),
+                      MaterialPageRoute(builder: (context) => const Dashboard()),
                     );
                   }
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => verifikasi()),
+                    MaterialPageRoute(builder: (context) => const verifikasi()),
                   );
                 },
                 child: const Text('Register'),

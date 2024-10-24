@@ -5,6 +5,8 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -80,7 +82,7 @@ class DeliveryPage extends StatelessWidget {
   final bool hasUnreadInboxMessages;
   final VoidCallback markAllNotificationsAsRead;
 
-  DeliveryPage({
+  const DeliveryPage({super.key, 
     required this.notifications,
     required this.inboxMessages,
     required this.hasUnreadNotifications,
@@ -182,6 +184,8 @@ class DeliveryPage extends StatelessWidget {
 }
 
 class OrderCard extends StatelessWidget {
+  const OrderCard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -239,6 +243,8 @@ class OrderCard extends StatelessWidget {
 }
 
 class InboxPage extends StatefulWidget {
+  const InboxPage({super.key});
+
   @override
   _InboxPageState createState() => _InboxPageState();
 }
@@ -416,7 +422,7 @@ class InboxItemData {
 class ChatPage extends StatefulWidget {
   final String sender;
 
-  ChatPage({required this.sender});
+  const ChatPage({super.key, required this.sender});
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -428,7 +434,7 @@ class _ChatPageState extends State<ChatPage> {
     {'text': 'Siapp otw', 'isSentByUser': true},
     {'text': 'ok', 'isSentByUser': false},
   ];
-  TextEditingController _messageController = TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
 
   void _sendMessage() {
     String messageText = _messageController.text.trim();
@@ -523,7 +529,7 @@ class ChatBubble extends StatelessWidget {
   final String text;
   final bool isSentByUser;
 
-  ChatBubble({required this.text, required this.isSentByUser});
+  const ChatBubble({super.key, required this.text, required this.isSentByUser});
 
   @override
   Widget build(BuildContext context) {
@@ -543,7 +549,7 @@ class NotificationPage extends StatefulWidget {
   final List<NotificationItemData> notifications;
   final VoidCallback markAllAsRead;
 
-  NotificationPage({required this.notifications, required this.markAllAsRead});
+  const NotificationPage({super.key, required this.notifications, required this.markAllAsRead});
 
   @override
   _NotificationPageState createState() => _NotificationPageState();
@@ -625,7 +631,7 @@ class NotificationItem extends StatelessWidget {
   final String time;
   final bool isRead;
 
-  NotificationItem({
+  const NotificationItem({super.key, 
     required this.title,
     required this.message,
     required this.time,

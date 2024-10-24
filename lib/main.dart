@@ -10,8 +10,8 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const login(), // Halaman awal adalah LoginPage
+    return const MaterialApp(
+      home: login(), // Halaman awal adalah LoginPage
     );
   }
 }

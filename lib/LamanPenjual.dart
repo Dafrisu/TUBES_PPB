@@ -52,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text(widget.title),
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.shopping_cart),
+              icon: const Icon(Icons.shopping_cart),
               onPressed: () {
                 Navigator.push(
                     context, MaterialPageRoute(builder: (context) => cart()));
@@ -92,31 +92,31 @@ class _MyHomePageState extends State<MyHomePage> {
                         Text(
                           listdata[index]["nama"],
                           style:
-                              TextStyle(fontSize: 30, fontFamily: "comic-sans"),
+                              const TextStyle(fontSize: 30, fontFamily: "comic-sans"),
                         ),
                         Text(
                           listdata[index]["harga"],
                           style:
-                              TextStyle(fontSize: 20, fontFamily: "comicsans"),
+                              const TextStyle(fontSize: 20, fontFamily: "comicsans"),
                         )
                       ],
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.only(top: 10),
                     decoration: const BoxDecoration(
                       color: Colors.white,
                     ),
                     child: Column(
                       children: [
-                        Text(
+                        const Text(
                           'Deskripsi Produk',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18),
                         ),
                         Text(
                           listdata[index]["deskripsi"],
-                          style: TextStyle(fontSize: 15),
+                          style: const TextStyle(fontSize: 15),
                         ),
                       ],
                     ),

@@ -17,27 +17,27 @@ class Dashboard extends StatelessWidget {
         automaticallyImplyLeading:
             false, // Disable tombol back ketika di navigate ke page ini
         actions: <Widget>[
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             onPressed: () {
               // Handle search button press
             },
           ),
           IconButton(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             onPressed: () {
               // Handle profile button press
             },
           ),
           IconButton(
-            icon: Icon(Icons.mail),
+            icon: const Icon(Icons.mail),
             onPressed: () {
               // Handle inbox button press
             },
           ),
           IconButton(
-            icon: Icon(Icons.notifications),
+            icon: const Icon(Icons.notifications),
             onPressed: () {
               // Handle notifications button press
             },
@@ -52,7 +52,7 @@ class Dashboard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Produk',
+                const Text('Produk',
                     style:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 TextButton(
@@ -61,13 +61,13 @@ class Dashboard extends StatelessWidget {
                     // Ke Page yang menunjukan semua Produk yang dijual UMKM
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => FullProdukPage()),
+                      MaterialPageRoute(builder: (context) => const FullProdukPage()),
                     );
                   },
                   // Tombol yang dipencet ketika ingin melihat
                   // Semua Produk yang dijual UMKM
                   child:
-                      Text('Lihat Semua', style: TextStyle(color: Colors.blue)),
+                      const Text('Lihat Semua', style: TextStyle(color: Colors.blue)),
                 ),
               ],
             ),
@@ -76,7 +76,7 @@ class Dashboard extends StatelessWidget {
           Expanded(
             child: GridView.count(
               crossAxisCount: 2, // Jumlah kolom yang ditampilkan
-              children: <Widget>[
+              children: const <Widget>[
                 ProductCard(title: 'Produk 1', imageUrl: 'assets/drink1.jpg'),
                 ProductCard(title: 'Produk 2', imageUrl: 'assets/food1.jpg'),
                 // Add more previews as needed
@@ -90,7 +90,7 @@ class Dashboard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Makanan',
+                const Text('Makanan',
                     style:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 TextButton(
@@ -100,13 +100,13 @@ class Dashboard extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => FullMakananPage()),
+                          builder: (context) => const FullMakananPage()),
                     );
                   },
                   // Tombol yang dipencet ketika ingin melihat
                   // Semua Makanan yang dijual UMKM
                   child:
-                      Text('Lihat Semua', style: TextStyle(color: Colors.blue)),
+                      const Text('Lihat Semua', style: TextStyle(color: Colors.blue)),
                 ),
               ],
             ),
@@ -115,7 +115,7 @@ class Dashboard extends StatelessWidget {
           Expanded(
             child: GridView.count(
               crossAxisCount: 2, // Jumlah kolom yang ditampilkan
-              children: <Widget>[
+              children: const <Widget>[
                 ProductCard(
                     title: 'Makanan 1', imageUrl: 'assets/Makanan1.jpg'),
                 ProductCard(
@@ -131,7 +131,7 @@ class Dashboard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Minuman',
+                const Text('Minuman',
                     style:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 TextButton(
@@ -141,13 +141,13 @@ class Dashboard extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => FullMinumanPage()),
+                          builder: (context) => const FullMinumanPage()),
                     );
                   },
                   // Tombol yang dipencet ketika ingin melihat
                   // Semua Minuman yang dijual UMKM
                   child:
-                      Text('Lihat Semua', style: TextStyle(color: Colors.blue)),
+                      const Text('Lihat Semua', style: TextStyle(color: Colors.blue)),
                 ),
               ],
             ),
@@ -156,7 +156,7 @@ class Dashboard extends StatelessWidget {
           Expanded(
             child: GridView.count(
               crossAxisCount: 2, // Jumlah kolom yang ditampilkan
-              children: <Widget>[
+              children: const <Widget>[
                 ProductCard(
                     title: 'Minuman 1', imageUrl: 'assets/Minuman1.jpg'),
                 ProductCard(
@@ -172,7 +172,7 @@ class Dashboard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Misc',
+                const Text('Misc',
                     style:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 TextButton(
@@ -181,13 +181,13 @@ class Dashboard extends StatelessWidget {
                     // Ke Page yang menunjukan semua Misc yang dijual UMKM
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => FullMiscPage()),
+                      MaterialPageRoute(builder: (context) => const FullMiscPage()),
                     );
                   },
                   // Tombol yang dipencet ketika ingin melihat
                   // Semua Misc yang dijual UMKM
                   child:
-                      Text('Lihat Semua', style: TextStyle(color: Colors.blue)),
+                      const Text('Lihat Semua', style: TextStyle(color: Colors.blue)),
                 ),
               ],
             ),
@@ -196,7 +196,7 @@ class Dashboard extends StatelessWidget {
           Expanded(
             child: GridView.count(
               crossAxisCount: 2, // Jumlah kolom yang ditampilkan
-              children: <Widget>[
+              children: const <Widget>[
                 ProductCard(title: 'Misc 1', imageUrl: 'assets/Misc1.jpg'),
                 ProductCard(title: 'Misc 2', imageUrl: 'assets/Misc2.jpg'),
                 // Add more previews as needed
@@ -213,7 +213,7 @@ class ProductCard extends StatelessWidget {
   final String title;
   final String imageUrl;
 
-  const ProductCard({required this.title, required this.imageUrl});
+  const ProductCard({super.key, required this.title, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -224,7 +224,7 @@ class ProductCard extends StatelessWidget {
               fit: BoxFit.cover, height: 100), // Adjust height as needed
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(title, style: TextStyle(fontSize: 16)),
+            child: Text(title, style: const TextStyle(fontSize: 16)),
           ),
         ],
       ),

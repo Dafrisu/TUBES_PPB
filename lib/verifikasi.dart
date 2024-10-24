@@ -7,7 +7,7 @@ class verifikasi extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
     final TextEditingController codeController = TextEditingController();
 
     return Scaffold(
@@ -15,7 +15,7 @@ class verifikasi extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey,
+          key: formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
@@ -40,13 +40,13 @@ class verifikasi extends StatelessWidget {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  if (_formKey.currentState?.validate() == true) {
+                  if (formKey.currentState?.validate() == true) {
                     ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Kode Verifikasi Benar')));
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Dashboard(),
+                        builder: (context) => const Dashboard(),
                       ),
                     );
                   }

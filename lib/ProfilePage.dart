@@ -21,17 +21,17 @@ class ProfilePage extends StatelessWidget {
           children: [
             Container(
 
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
+              child: const Padding(
+                padding: EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 60,
                       backgroundImage: NetworkImage(
                           'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWW0xcyFQPL6DIne-s-4nHzmBuIMCN12FioA&s'),
                     ),
-                    const SizedBox(height: 16),
-                    const Text(
+                    SizedBox(height: 16),
+                    Text(
                       'Asep Montir',
                       style: TextStyle(
                         fontSize: 24,
@@ -39,8 +39,8 @@ class ProfilePage extends StatelessWidget {
                         color: Colors.black,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
+                    SizedBox(height: 8),
+                    Text(
                       'asepmontir@gmail.com',
                       style: TextStyle(
                         fontSize: 16,
@@ -101,7 +101,7 @@ class ProfilePage extends StatelessWidget {
       ),
       child: ListTile(
         leading: Icon(icon, color: color),
-        title: Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
         onTap: () {
           if (label == 'Pengaturan akun') {

@@ -9,27 +9,27 @@ class FullMiscPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Misc', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         actions: <Widget>[
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             onPressed: () {
               // Handle search button press
             },
           ),
           IconButton(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             onPressed: () {
               // Handle profile button press
             },
           ),
           IconButton(
-            icon: Icon(Icons.mail),
+            icon: const Icon(Icons.mail),
             onPressed: () {
               // Handle inbox button press
             },
           ),
           IconButton(
-            icon: Icon(Icons.notifications),
+            icon: const Icon(Icons.notifications),
             onPressed: () {
               // Handle notifications button press
             },

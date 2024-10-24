@@ -7,7 +7,7 @@ class lupaPassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
     final TextEditingController emailController = TextEditingController();
 
     return Scaffold(
@@ -15,7 +15,7 @@ class lupaPassword extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey,
+          key: formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
@@ -43,7 +43,7 @@ class lupaPassword extends StatelessWidget {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  if (_formKey.currentState?.validate() == true) {
+                  if (formKey.currentState?.validate() == true) {
                     // Aksi ketika email valid untuk reset password
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
