@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'cart.dart';
+import 'package:tubes_ppb/BarangPenjual.dart';
+import 'Data.dart' as data;
+
 
 void main() {
   runApp(const MyApp());
@@ -46,85 +48,83 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: colorpalete[0]["green"],
-          leading: const Icon(Icons.arrow_back_ios_new),
-          title: Text(widget.title),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.shopping_cart),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const cart()));
-              },
-            )
-          ],
+      appBar: AppBar(
+        backgroundColor: data.colorpalete[0]["green"],
+        leading: IconButton(
+            onPressed: () {}, icon: const Icon(Icons.arrow_back_ios_new)),
+        title: Text(widget.title),
+      ),
+      body: SafeArea(
+          child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, // 2 kotak dalam satu baris
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          childAspectRatio: 3 / 4, // Rasio lebar-tinggi dari tiap item
         ),
-        body: SafeArea(
-          child: ListView.builder(
-            itemCount: listdata.length,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  Container(
-                    height: 400,
-                    width: 550,
-                    decoration: const BoxDecoration(
-                        color: Colors.white,
-                        border: Border(
-                            bottom: BorderSide(
-                          color: Colors.black,
-                        ))),
-                    child: Image.network(
-                        'https://images.tokopedia.net/img/cache/900/VqbcmM/2024/3/28/79bd45c3-03ef-4e06-85cf-d8c2987010f6.jpg'),
+        itemCount: data.listdata.length,
+        itemBuilder: (context, index) {
+          final item = data.listdata[index];
+          return InkWell(
+              onTap: () {
+                // Mengarahkan ke halaman detail produk
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyApp(product: item),
                   ),
-                  Container(
-                    decoration: const BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(color: Colors.grey, offset: Offset(0, 1.5))
-                      ],
-                      color: Colors.white,
+                );
+              },
+              child: Card(
+                elevation: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Gambar produk
+                    Expanded(
+                      child: item['img'] != ''
+                          ? Image.network(
+                              item['img'],
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: 100,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(Icons.image_not_supported),
+                            )
+                          : Icon(Icons.image,
+                              size: 100), // Placeholder jika img kosong
                     ),
-                    alignment: Alignment.topLeft,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          listdata[index]["nama"],
-                          style: const TextStyle(
-                              fontSize: 30, fontFamily: "comic-sans"),
+                    SizedBox(height: 8),
+                    // Nama produk
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        item['nama'],
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
                         ),
-                        Text(
-                          listdata[index]["harga"],
-                          style: const TextStyle(
-                              fontSize: 20, fontFamily: "comicsans"),
-                        )
-                      ],
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(top: 10),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                    ),
-                    child: Column(
-                      children: [
-                        const Text(
-                          'Deskripsi Produk',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18),
+                    SizedBox(height: 4),
+                    // Harga produk
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        item['harga'],
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.green,
                         ),
-                        Text(
-                          listdata[index]["deskripsi"],
-                          style: const TextStyle(fontSize: 15),
-                        ),
-                      ],
+                      ),
                     ),
-                  )
-                ],
-              );
-            },
-          ),
-        ));
+                  ],
+                ),
+              ));
+        },
+      )),
+    );
   }
 }

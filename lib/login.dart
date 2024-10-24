@@ -42,8 +42,11 @@ class login extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              const Text('Login',
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+              
+              Center(
+                child: const Text('Selamat Datang Kembali',
+                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+              ),
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -83,6 +86,9 @@ class login extends StatelessWidget {
                 ),
               ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                ),
                 onPressed: () {
                   if (formKey.currentState?.validate() == true) {
                     Navigator.push(
@@ -93,7 +99,9 @@ class login extends StatelessWidget {
                     );
                   }
                 },
-                child: const Text('Login'),
+                child: const Text('Masuk', style: TextStyle(
+                  color: Colors.white
+                )),
               ),
               const SizedBox(height: 10),
               Row(
