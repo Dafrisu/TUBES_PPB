@@ -13,7 +13,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       //landing page ato login page?
-      home: const landingPage(), // Halaman awal adalah LoginPage
+      home: const login(), // Halaman awal adalah LoginPage
     );
   }
 }
