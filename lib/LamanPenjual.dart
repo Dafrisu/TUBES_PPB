@@ -16,7 +16,7 @@ final List<Map<String, dynamic>> listdata = [
 ];
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required Map<String, dynamic> product});
 
   // This widget is the root of your application.
   @override
