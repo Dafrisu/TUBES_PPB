@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tubes_ppb/lupaPassword.dart';
 import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/register.dart';
+import 'package:tubes_ppb/verifikasi.dart';
 import 'dashboard.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -87,7 +88,7 @@ class login extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const Dashboard(),
+                        builder: (context) => const verifikasi(),
                       ),
                     );
                   }
