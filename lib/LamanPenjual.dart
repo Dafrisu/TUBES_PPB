@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tubes_ppb/BarangPenjual.dart';
 import 'Data.dart' as data;
 
-
-void main() {
-  runApp(const MyApp());
-}
-
 final List<Map<String, dynamic>> colorpalete = [
   {"green": const Color.fromARGB(255, 101, 136, 100)}
 ];
@@ -21,7 +16,7 @@ final List<Map<String, dynamic>> listdata = [
 ];
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required Map<String, dynamic> product});
 
   // This widget is the root of your application.
   @override
