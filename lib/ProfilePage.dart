@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tubes_testing/EditProfile.dart';
+import 'package:tubes_ppb/EditProfile.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
