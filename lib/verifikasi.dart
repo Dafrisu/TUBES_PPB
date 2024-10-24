@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dashboard.dart';
+import 'dashboard/dashboard.dart';
 
 class verifikasi extends StatelessWidget {
   const verifikasi({super.key});

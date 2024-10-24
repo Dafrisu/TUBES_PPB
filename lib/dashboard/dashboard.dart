@@ -53,14 +53,14 @@ class Dashboard extends StatelessWidget {
             FlutterCarousel(
               // Settingan untuk carouselnya (ukuran, otomatis ganti, produk awal, dkk)
               options: FlutterCarouselOptions(
-                height: 400.0,
+                height: 250.0,
                 showIndicator: true,
                 initialPage:
                     0, // Set untuk show item paling pertama ketika page dibuka
                 autoPlay: true, // Set carousel otomatis berganti-ganti
                 autoPlayInterval: const Duration(
                     seconds:
-                        2), // Set interval berapa detik sebelum otomatis berganti item selanjutnya
+                        3), // Set interval berapa detik sebelum otomatis berganti item selanjutnya
                 slideIndicator: CircularSlideIndicator(),
               ),
               // Isi carousel

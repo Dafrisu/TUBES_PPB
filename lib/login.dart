@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tubes_ppb/lupaPassword.dart';
 import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/register.dart';
-import 'dashboard.dart';
+import 'dashboard/dashboard.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class login extends StatelessWidget {
