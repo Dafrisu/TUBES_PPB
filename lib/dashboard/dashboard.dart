@@ -1,10 +1,11 @@
-// main.dart
-import 'package:flutter/material.dart'; // Import the DashboardPage
-import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+import 'package:flutter/material.dart';
 import 'dashboard_full_produk.dart';
 import 'dashboard_full_makanan.dart';
 import 'dashboard_full_minuman.dart';
 import 'dashboard_full_misc.dart';
+
+// Import package carousel dari pub.dev
+import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key});
