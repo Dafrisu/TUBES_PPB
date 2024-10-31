@@ -2,6 +2,7 @@ import 'package:expandable_text/expandable_text.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/Data.dart' as dataprovider;
+import 'package:tubes_ppb/LamanPenjual.dart';
 import 'cart.dart';
 
 class PageBarang extends StatefulWidget {
@@ -109,7 +110,8 @@ class _PageBarangState extends State<PageBarang> {
                         textAlign: TextAlign.left,
                         style: TextStyle(fontWeight: FontWeight.normal),
                       ),
-                    )
+                    ),
+                    SizedBox(height: 20)
                   ],
                 ),
               ),
@@ -131,6 +133,14 @@ class _PageBarangState extends State<PageBarang> {
                       style: TextStyle(fontSize: 12),
                     ),
                   ),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PagePenjual(
+                                  title: '',
+                                )));
+                  },
                 ),
               ),
               const Card(

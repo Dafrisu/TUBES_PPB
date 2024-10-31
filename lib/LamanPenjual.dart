@@ -37,7 +37,10 @@ class _PagePenjualState extends State<PagePenjual> {
       appBar: AppBar(
         backgroundColor: data.colorpalete[0]["green"],
         leading: IconButton(
-            onPressed: () {}, icon: const Icon(Icons.arrow_back_ios_new)),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back_ios_new)),
         actions: <Widget>[
           IconButton(
             onPressed: () {
