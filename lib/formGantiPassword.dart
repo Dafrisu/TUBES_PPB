@@ -1,8 +1,9 @@
+import 'package:tubes_ppb/login.dart';
 import 'package:tubes_ppb/verifikasi.dart';
 import 'package:flutter/material.dart';
 
-class lupaPassword extends StatelessWidget {
-  const lupaPassword({super.key});
+class Formgantipassword extends StatelessWidget {
+  const Formgantipassword({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +11,7 @@ class lupaPassword extends StatelessWidget {
     final TextEditingController emailController = TextEditingController();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Lupa Password')),
+      appBar: AppBar(title: const Text('Ubah Password')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -19,22 +20,19 @@ class lupaPassword extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               const Text(
-                'Masukkan Email Anda',
+                'Password Baru',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
               TextFormField(
                 controller: emailController,
                 decoration: const InputDecoration(
-                  labelText: 'Email',
+                  labelText: 'Password Baru',
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Masukkan email Anda';
-                  }
-                  if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                    return 'Masukkan email yang valid';
+                    return 'Masukkan Password Baru';
                   }
                   return null;
                 },
@@ -46,18 +44,17 @@ class lupaPassword extends StatelessWidget {
                     // Aksi ketika email valid untuk reset password
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          content:
-                              Text('Instruksi reset password telah dikirim')),
+                          content: Text('Password sudah di set ulang')),
                     );
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const verifikasi(),
+                        builder: (context) => const login(),
                       ),
                     );
                   }
                 },
-                child: const Text('Kirim'),
+                child: const Text('Ubah Password'),
               ),
             ],
           ),

@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_ppb/verifikasi.dart';
+import 'package:tubes_ppb/dashboard/dashboard.dart';
+import 'verifikasi.dart';
 
 class register extends StatelessWidget {
   const register({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     return Scaffold(
       appBar: AppBar(title: const Text('Register Page')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey,
+          key: formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
@@ -55,16 +56,16 @@ class register extends StatelessWidget {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  if (_formKey.currentState?.validate() == true) {
+                  if (formKey.currentState?.validate() == true) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Registration Successful')),
                     );
-                  }
-                  Navigator.push(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => verifikasi()),
+                          builder: (context) => const verifikasi()),
                     );
+                  }
                 },
                 child: const Text('Register'),
               ),

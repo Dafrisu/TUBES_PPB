@@ -2,50 +2,49 @@ import 'package:flutter/material.dart';
 import 'package:tubes_ppb/lupaPassword.dart';
 import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/register.dart';
-import 'dashboard.dart';
+import 'package:tubes_ppb/verifikasi.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 
 class login extends StatelessWidget {
   const login({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new), 
+          icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () {
             Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const landingPage(),
-                      ),
-                    ); 
+              context,
+              MaterialPageRoute(
+                builder: (context) => const landingPage(),
+              ),
+            );
           },
           color: Colors.white,
         ),
         centerTitle: true,
-        title: Text('Masuk',
+        title: Text(
+          'Masuk',
           style: GoogleFonts.montserrat(
-            fontSize: 20,
-            fontWeight: FontWeight.w500, 
-           color: Colors.white
-            ),
-          ),
+              fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
         ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey,
+          key: formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              const Text('Login',
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+              Center(
+                child: Text('Selamat Datang Kembali',
+                    style: GoogleFonts.montserrat(fontSize: 24, fontWeight: FontWeight.bold)),
+              ),
               const SizedBox(height: 20),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Email'),
@@ -69,30 +68,40 @@ class login extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 10),
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const lupaPassword()),
-                    );
-                  },
-                  child: const Text('Lupa Password?'),
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const lupaPassword()),
+                        );
+                      },
+                      child: const Text('Lupa Password?'),
+                    ),
+                  ],
                 ),
               ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                ),
                 onPressed: () {
-                  if (_formKey.currentState?.validate() == true) {
+                  if (formKey.currentState?.validate() == true) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Dashboard(),
+                        builder: (context) => verifikasi(),
                       ),
                     );
                   }
                 },
-                child: const Text('Login'),
+                child:
+                    const Text('Masuk', style: TextStyle(color: Colors.white)),
               ),
               const SizedBox(height: 10),
               Row(
