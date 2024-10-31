@@ -41,7 +41,7 @@ class landingPageState extends State<landingPage> {
               ),
             ),
             const SizedBox(height: 20), 
-            Image.asset('assets/landing_image.jpg',
+            Image.asset("lib/assets_images/landing_image.jpg",
               height: 150, 
               width: 150, 
               fit: BoxFit.cover,
