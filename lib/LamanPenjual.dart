@@ -58,7 +58,7 @@ class _PagePenjualState extends State<PagePenjual> {
           crossAxisCount: 2, // 2 kotak dalam satu baris
           crossAxisSpacing: 10,
           mainAxisSpacing: 10,
-          childAspectRatio: 3 / 4, // Rasio lebar-tinggi dari tiap item
+          childAspectRatio: 3 / 4, // Rasio lebar/tinggi dari tiap item
         ),
         itemCount: data.listdata.length,
         itemBuilder: (context, index) {
