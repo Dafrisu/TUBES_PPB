@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_ppb/masukkanEmail.dart';
+import 'package:tubes_ppb/dashboard/dashboard.dart';
 import 'package:tubes_ppb/landing.dart';
+import 'package:tubes_ppb/masukkanEmail.dart';
 import 'package:tubes_ppb/register.dart';
-import 'package:tubes_ppb/verifikasi.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class login extends StatelessWidget {
@@ -78,7 +78,7 @@ class login extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const lupaPassword()),
+                              builder: (context) => const Masukkanemail()),
                         );
                       },
                       child: const Text('Lupa Password?'),
@@ -97,7 +97,7 @@ class login extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => verifikasi(),
+                        builder: (context) => Dashboard(),
                       ),
                     );
                   }

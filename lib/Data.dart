@@ -23,7 +23,7 @@ final List<Map<String, dynamic>> listdata = [
     "harga": "RP.500.000",
     "img":
         'https://images.tokopedia.net/img/cache/900/VqbcmM/2024/4/27/3ad8ad82-927c-46c4-ad21-1b90c8f50240.jpg',
-    "seller": "Toko Mouse Mantap",
+    "seller": "Asep Montir Gamink",
     "deskripsi":
         "Logitech G502 HERO adalah gaming mouse berperforma tinggi dengan sensor HERO 25K yang canggih untuk keakuratan piksel sempurna."
             "\n\nMouse ini juga dilengkapi dengan sistem pemberat yang dapat disesuaikan, 11 tombol yang dapat diprogram, dan RGB lighting yang dapat dikustomisasi."
@@ -33,7 +33,7 @@ final List<Map<String, dynamic>> listdata = [
     "harga": "RP.700.000",
     "img":
         'https://images.tokopedia.net/img/cache/900/VqbcmM/2022/4/21/ac398ea7-9886-4e1e-8920-f456a8ce8376.jpg',
-    "seller": "Razer Store Indonesia",
+    "seller": "Asep Montir Gamink",
     "deskripsi":
         "Razer BlackShark V2 X merupakan headset gaming yang dirancang dengan fokus pada kualitas audio, kenyamanan, dan kinerja.\n\n"
             "Dengan teknologi suara THX Spatial Audio, memberikan pengalaman surround sound yang imersif. Headset ini juga sangat ringan, hanya 240g, dengan busa memory foam untuk kenyamanan jangka panjang."
@@ -43,7 +43,7 @@ final List<Map<String, dynamic>> listdata = [
     "harga": "RP.15.000.000",
     "img":
         'https://images.tokopedia.net/img/cache/900/VqbcmM/2024/8/28/7d5c4636-2bb9-42b6-812c-40b0fb044409.jpg',
-    "seller": "Toko Laptop Mantap",
+    "seller": "Asep Montir Gamink",
     "deskripsi":
         "ASUS TUF Gaming F15 adalah laptop gaming yang tahan banting dengan kinerja luar biasa berkat prosesor Intel Core i7 generasi ke-10 dan grafis NVIDIA GeForce GTX.\n\n"
             "Dilengkapi dengan layar 144Hz, memastikan pengalaman gaming yang mulus dan responsif. Laptop ini juga memiliki sertifikasi MIL-STD-810H, sehingga sangat tangguh untuk digunakan dalam kondisi ekstrim."
