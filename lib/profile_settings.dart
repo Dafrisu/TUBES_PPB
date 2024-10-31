@@ -37,115 +37,92 @@ class profileSettings extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 20),
-            UserProfileSection(),
+            CircleAvatar(
+              radius: 60,
+              backgroundImage: NetworkImage(userData["profileImageUrl"]),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              userData["displayName"],
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(height: 5),
+            Text(
+              userData["email"],
+              style: const TextStyle(fontSize: 16, color: Colors.black),
+            ),
             const SizedBox(height: 20),
-            Center(
-              child: SettingsOptions(context),
+            SizedBox(
+              width: 375,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  // Navigate to EditProfile screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => editProfile()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                icon: const Icon(Icons.person),
+                label: const Text('Pengaturan akun'),
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: 375,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  // Handle logout functionality
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                icon: const Icon(Icons.exit_to_app),
+                label: const Text('Sign Out'),
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: 375,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  // Handle account deletion
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AccountDeletion()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                icon: const Icon(Icons.delete),
+                label: const Text('Hapus Akun'),
+              ),
             ),
           ],
         ),
       ),
-    );
-  }
-
-  // ignore: non_constant_identifier_names
-  Widget UserProfileSection() {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 60,
-          backgroundImage: NetworkImage(userData["profileImageUrl"]),
-        ),
-        const SizedBox(height: 10),
-        Text(
-          userData["displayName"],
-          style: const TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-        const SizedBox(height: 5),
-        Text(
-          userData["email"],
-          style: const TextStyle(fontSize: 16, color: Colors.black),
-        ),
-      ],
-    );
-  }
-
-  // ignore: non_constant_identifier_names
-  Widget SettingsOptions(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          width: 375, // 75 pixels width
-          child: ElevatedButton.icon(
-            onPressed: () {
-              // Navigate to EditProfile screen
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => editProfile()),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              minimumSize: const Size.fromHeight(50), // 50 pixels height
-            ),
-            icon: const Icon(Icons.person),
-            label: const Text('Pengaturan akun'),
-          ),
-        ),
-        const SizedBox(height: 16),
-        SizedBox(
-          width: 375, // 75 pixels width
-          child: ElevatedButton.icon(
-            onPressed: () {
-              // Handle logout functionality
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              minimumSize: const Size.fromHeight(50), // 50 pixels height
-            ),
-            icon: const Icon(Icons.exit_to_app),
-            label: const Text('Sign Out'),
-          ),
-        ),
-        const SizedBox(height: 16),
-        SizedBox(
-          width: 375, // 75 pixels width
-          child: ElevatedButton.icon(
-            onPressed: () {
-              // Handle account deletion
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AccountDeletion()),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              minimumSize: const Size.fromHeight(50), // 50 pixels height
-            ),
-            icon: const Icon(Icons.delete),
-            label: const Text('Hapus Akun'),
-          ),
-        ),
-      ],
     );
   }
 }

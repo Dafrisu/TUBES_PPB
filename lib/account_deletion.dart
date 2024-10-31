@@ -66,61 +66,77 @@ class _AccountDeletionState extends State<AccountDeletion> {
               ),
             ),
             const SizedBox(height: 16.0),
-            _buildTextFormField(userData["email"], 'Email'),
+            SizedBox(
+              width: double.infinity,
+              child: TextFormField(
+                initialValue: userData["email"],
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  labelStyle: const TextStyle(color: Colors.white),
+                  border: const OutlineInputBorder(),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: 16.0),
-            _buildTextFormField(userData["password"], 'Password'),
+            SizedBox(
+              width: double.infinity,
+              child: TextFormField(
+                initialValue: userData["password"],
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  labelStyle: const TextStyle(color: Colors.white),
+                  border: const OutlineInputBorder(),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: 16.0),
-            Column(
-              children: [
-                _buildButton('Hapus Akun', () {
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
                   // Handle account deletion logic here
                   Navigator.pop(context);
-                }),
-                const SizedBox(height: 8.0),
-                _buildButton('Batal', () {
-                  Navigator.pop(context);
-                }),
-              ],
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text('Hapus Akun'),
+              ),
             ),
+            const SizedBox(height: 16.0),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text('Batal'),
+              ),
+            )
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildTextFormField(String initialValue, String labelText) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: TextFormField(
-        initialValue: initialValue,
-        style: const TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-          labelText: labelText,
-          labelStyle: const TextStyle(color: Colors.white),
-          border: const OutlineInputBorder(),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
-          ),
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildButton(String text, VoidCallback onPressed) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFFFF5151),
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-      child: Text(text),
     );
   }
 }

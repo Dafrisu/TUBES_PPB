@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 
-
 // ignore: camel_case_types
 class editProfile extends StatefulWidget {
   const editProfile({super.key});
 
   @override
-
   // ignore: library_private_types_in_public_api
   _editProfileState createState() => _editProfileState();
 }
 
-
 // ignore: camel_case_types
 class _editProfileState extends State<editProfile> {
-   Map<String, dynamic> userData = {
+  Map<String, dynamic> userData = {
     "id": "109238",
     "fullName": "Asep Lengkap",
     "email": "AsepL@email.co.id",
@@ -37,16 +34,40 @@ class _editProfileState extends State<editProfile> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 20),
-            Center(
-              child: CircleAvatar(
-                radius: 60,
-                backgroundImage: NetworkImage(userData["profileImageUrl"]),
-              ),
+            Stack(
+              children: [
+                CircleAvatar(
+                  radius: 60,
+                  backgroundImage: NetworkImage(userData["profileImageUrl"]),
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: () {
+                      // Handle profile image change logic here
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: const Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                        size: 16.0,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 20),
             Expanded(
               child: ListView(
                 children: [
+                  // Rest of the TextFormField widgets
                   TextFormField(
                     controller:
                         TextEditingController(text: userData["fullName"]),
