@@ -114,8 +114,8 @@ class Dashboard extends StatelessWidget {
                   true, // Allow GridView to take only the space it needs
               physics: NeverScrollableScrollPhysics(),
               children: const <Widget>[
-                ProductCard(title: 'Produk 1', imageUrl: 'assets/Makanan1.jpg'),
-                ProductCard(title: 'Produk 2', imageUrl: 'assets/Minuman1.jpg'),
+                ProductCard(title: 'Produk 1', imageUrl: 'assets/drink1.jpg'),
+                ProductCard(title: 'Produk 2', imageUrl: 'assets/food1.jpg'),
                 // Add more previews as needed
               ],
             ),
