@@ -41,7 +41,6 @@ class login extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              
               Center(
                 child: Text('Selamat Datang Kembali',
                     style: GoogleFonts.montserrat(fontSize: 24, fontWeight: FontWeight.bold)),
@@ -101,9 +100,8 @@ class login extends StatelessWidget {
                     );
                   }
                 },
-                child: const Text('Masuk', style: TextStyle(
-                  color: Colors.white
-                )),
+                child:
+                    const Text('Masuk', style: TextStyle(color: Colors.white)),
               ),
               const SizedBox(height: 10),
               Row(
