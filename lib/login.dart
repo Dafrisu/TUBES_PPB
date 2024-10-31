@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tubes_ppb/lupaPassword.dart';
 import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/register.dart';
-import 'dashboard/dashboard.dart';
+import 'dashboard.dart';
 import 'package:tubes_ppb/verifikasi.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -88,6 +88,7 @@ class login extends StatelessWidget {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                 ),
                 onPressed: () {
                   if (formKey.currentState?.validate() == true) {

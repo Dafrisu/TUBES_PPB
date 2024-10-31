@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:tubes_ppb/landing.dart';
 
 class animation extends StatelessWidget {
@@ -28,6 +29,36 @@ class animation extends StatelessWidget {
       ],
     );
     return titleSection;
+  }
+}
+
+
+class SplashScreen  extends StatefulWidget{
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Timer(const Duration(seconds: 2), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const landingPage()),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.green,
+      body: Center(
+        child: Text("UMKMku", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 50)),
+      ),
+    );
   }
 }
 
