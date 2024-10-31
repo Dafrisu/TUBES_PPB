@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/BarangPenjual.dart';
 import 'dashboard_full_produk.dart';
 import 'dashboard_full_makanan.dart';
 import 'dashboard_full_minuman.dart';
 import 'dashboard_full_misc.dart';
+import 'package:tubes_ppb/Data.dart' as data;
 
 // Import package carousel dari pub.dev
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
@@ -113,8 +115,21 @@ class Dashboard extends StatelessWidget {
               shrinkWrap:
                   true, // Allow GridView to take only the space it needs
               physics: NeverScrollableScrollPhysics(),
-              children: const <Widget>[
-                ProductCard(title: 'Produk 1', imageUrl: 'assets/Makanan1.jpg'),
+              children: <Widget>[
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                PageBarang(product: data.listdata[0])));
+                  },
+                  child: ProductCard(
+                    title: 'Produk 1',
+                    imageUrl: 'assets/Makanan1.jpg',
+                  ),
+                ),
+
                 ProductCard(title: 'Produk 2', imageUrl: 'assets/Minuman1.jpg'),
                 // Add more previews as needed
               ],
