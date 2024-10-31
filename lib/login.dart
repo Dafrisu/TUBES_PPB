@@ -3,6 +3,7 @@ import 'package:tubes_ppb/lupaPassword.dart';
 import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/register.dart';
 import 'dashboard.dart';
+import 'package:tubes_ppb/verifikasi.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class login extends StatelessWidget {
