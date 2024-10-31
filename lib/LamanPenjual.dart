@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/BarangPenjual.dart';
 import 'Data.dart' as data;
+import 'cart.dart';
 
 void main() {
   runApp(const Penjual());
@@ -33,6 +34,15 @@ class _PagePenjualState extends State<PagePenjual> {
         backgroundColor: data.colorpalete[0]["green"],
         leading: IconButton(
             onPressed: () {}, icon: const Icon(Icons.arrow_back_ios_new)),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => cart()));
+            },
+            icon: Icon(Icons.shopping_cart),
+          )
+        ],
         title: Text(widget.title),
       ),
       body: SafeArea(
@@ -52,7 +62,7 @@ class _PagePenjualState extends State<PagePenjual> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MyApp(product: item),
+                    builder: (context) => PageBarang(product: item),
                   ),
                 );
               },
@@ -72,7 +82,7 @@ class _PagePenjualState extends State<PagePenjual> {
                               errorBuilder: (context, error, stackTrace) =>
                                   Icon(Icons.image_not_supported),
                             )
-                          : Icon(Icons.image,
+                          : const Icon(Icons.image,
                               size: 100), // Placeholder jika img kosong
                     ),
                     SizedBox(height: 8),
@@ -81,7 +91,7 @@ class _PagePenjualState extends State<PagePenjual> {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
                         item['nama'],
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
                         ),
@@ -95,7 +105,7 @@ class _PagePenjualState extends State<PagePenjual> {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
                         item['harga'],
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
                           color: Colors.green,
                         ),
