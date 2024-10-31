@@ -16,14 +16,14 @@ class landingPageState extends State<landingPage> {
     return Scaffold(
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, // Center the content vertically
+          mainAxisAlignment: MainAxisAlignment.center, 
           children: [
             const Icon(
               Icons.business,
               color: Colors.green,
-              size: 50, // Adjust the icon size as needed
+              size: 50, 
             ),
-            const SizedBox(height: 10), // Space between icon and text
+            const SizedBox(height: 10), 
             Text(
               'Selamat Datang',
               style: GoogleFonts.montserrat(

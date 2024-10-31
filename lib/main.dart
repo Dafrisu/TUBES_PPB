@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/animation.dart'; 
 
 void main() {
@@ -12,7 +11,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const landingPage(), 
+      home: const SplashScreen(), 
     );
   }
 }
