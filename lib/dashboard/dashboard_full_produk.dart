@@ -40,10 +40,10 @@ class FullProdukPage extends StatelessWidget {
       body: GridView.count(
         crossAxisCount: 2, // Number of columns
         children: const <Widget>[
-          ProductCard(title: 'Produk 1', imageUrl: 'assets/Produk1.jpg'),
-          ProductCard(title: 'Produk 2', imageUrl: 'assets/Produk2.jpg'),
-          ProductCard(title: 'Produk 3', imageUrl: 'assets/Produk3.jpg'),
-          ProductCard(title: 'Produk 4', imageUrl: 'assets/Produk4.jpg'),
+          ProductCard(title: 'Produk 1', imageUrl: 'lib/assets_images/Produk1.png'),
+          ProductCard(title: 'Produk 2', imageUrl: 'lib/assets_images/Produk2.png'),
+          ProductCard(title: 'Produk 3', imageUrl: 'lib/assets_images/Produk3.png'),
+          ProductCard(title: 'Produk 4', imageUrl: 'lib/assets_images/Produk4.png'),
           // Add more products as needed
         ],
       ),
@@ -63,7 +63,7 @@ class ProductCard extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Image.asset(imageUrl,
-              fit: BoxFit.cover, height: 100), // Adjust height as needed
+              fit: BoxFit.cover, height: 100, width: 100), // nanti sesuaikan height sama width
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(title, style: const TextStyle(fontSize: 16)),
