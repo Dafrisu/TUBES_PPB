@@ -155,8 +155,8 @@ class _PageBarangState extends State<PageBarang> {
                     style: TextStyle(fontSize: 10),
                   ),
                   leading: SizedBox(
-                    width: 90, // Sesuaikan ukuran dengan keinginan
-                    height: 90, // Sesuaikan ukuran dengan keinginan
+                    width: 90,
+                    height: 90,
                     child: CircleAvatar(
                       backgroundColor: Colors.green,
                       radius: 45,
@@ -164,7 +164,7 @@ class _PageBarangState extends State<PageBarang> {
                         "avatarrr",
                         style: TextStyle(
                             fontSize: 18), // Ukuran teks di dalam avatar
-                      ), // Sesuaikan radius
+                      ),
                     ),
                   ),
                 ),
