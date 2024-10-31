@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tubes_ppb/formGantiPassword.dart';
+import 'package:tubes_ppb/login.dart';
 import 'dashboard/dashboard.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class verifikasi extends StatelessWidget {
-  const verifikasi({super.key});
+  final String previousPage;
+  const verifikasi({super.key, required this.previousPage});
 
   @override
   Widget build(BuildContext context) {
@@ -169,14 +171,17 @@ class verifikasi extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(1))),
                 onPressed: () {
-                  if (formKey.currentState?.validate() == true) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Kode Verifikasi Benar')));
-                    Navigator.push(
+                  // Logika navigasi berdasarkan nilai previousPage
+                  if (previousPage == 'masukkanEmail') {
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Dashboard(),
-                      ),
+                          builder: (context) => Formgantipassword()),
+                    );
+                  } else if (previousPage == 'register') {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => login()),
                     );
                   }
                 },

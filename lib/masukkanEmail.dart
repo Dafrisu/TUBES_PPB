@@ -1,8 +1,8 @@
 import 'package:tubes_ppb/verifikasi.dart';
 import 'package:flutter/material.dart';
 
-class lupaPassword extends StatelessWidget {
-  const lupaPassword({super.key});
+class Masukkanemail extends StatelessWidget {
+  const Masukkanemail({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,9 @@ class lupaPassword extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const verifikasi(),
+                        builder: (context) => const verifikasi(
+                          previousPage: 'masukkanEmail',
+                        ),
                       ),
                     );
                   }

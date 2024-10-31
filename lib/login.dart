@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_ppb/lupaPassword.dart';
+import 'package:tubes_ppb/masukkanEmail.dart';
 import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/register.dart';
 import 'package:tubes_ppb/verifikasi.dart';
@@ -43,7 +43,8 @@ class login extends StatelessWidget {
             children: <Widget>[
               Center(
                 child: Text('Selamat Datang Kembali',
-                    style: GoogleFonts.montserrat(fontSize: 24, fontWeight: FontWeight.bold)),
+                    style: GoogleFonts.montserrat(
+                        fontSize: 24, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 20),
               TextFormField(
@@ -88,7 +89,8 @@ class login extends StatelessWidget {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                  shape:
+                      RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                 ),
                 onPressed: () {
                   if (formKey.currentState?.validate() == true) {
