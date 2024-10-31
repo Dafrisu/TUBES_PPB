@@ -1,23 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/BarangPenjual.dart';
 import 'Data.dart' as data;
+import 'cart.dart';
 
-final List<Map<String, dynamic>> colorpalete = [
-  {"green": const Color.fromARGB(255, 101, 136, 100)}
-];
-final List<Map<String, dynamic>> listdata = [
-  {
-    "nama":
-        "Fantech ATOM PRO SERIES Wireless Keyboard Mechanical Gaming Hotswap",
-    "harga": "RP.300.000",
-    "deskripsi":
-        "3 Form Factor to Choose Stellar Edition merupakan seri keyboard gaming mechanical ATOM PRO yang terdiri dari tiga produk dengan layout yang berbeda-beda. ATOM PRO63 MK912 dengan layout 60% ATOM PRO83 MK913 dengan layout 75% ATOM PRO96 MK914 dengan layout 95%. (Coming Soon)"
-  }
-];
+void main() {
+  runApp(Penjual());
+}
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key, required Map<String, dynamic> product});
-
+class Penjual extends StatelessWidget {
+  const Penjual({super.key});
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -27,26 +18,38 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'INI LAMAN PENJUAL'),
+      home: const PagePenjual(title: 'INI LAMAN PENJUAL'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class PagePenjual extends StatefulWidget {
+  const PagePenjual({super.key, required this.title});
   final String title;
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<PagePenjual> createState() => _PagePenjualState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _PagePenjualState extends State<PagePenjual> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: data.colorpalete[0]["green"],
         leading: IconButton(
-            onPressed: () {}, icon: const Icon(Icons.arrow_back_ios_new)),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back_ios_new)),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => cart()));
+            },
+            icon: Icon(Icons.shopping_cart),
+          )
+        ],
         title: Text(widget.title),
       ),
       body: SafeArea(
@@ -66,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MyApp(product: item),
+                    builder: (context) => PageBarang(product: item),
                   ),
                 );
               },
@@ -86,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               errorBuilder: (context, error, stackTrace) =>
                                   Icon(Icons.image_not_supported),
                             )
-                          : Icon(Icons.image,
+                          : const Icon(Icons.image,
                               size: 100), // Placeholder jika img kosong
                     ),
                     SizedBox(height: 8),
@@ -95,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
                         item['nama'],
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
                         ),
@@ -109,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
                         item['harga'],
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
                           color: Colors.green,
                         ),
