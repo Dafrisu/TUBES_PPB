@@ -42,10 +42,10 @@ class login extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              
               Center(
                 child: const Text('Selamat Datang Kembali',
-                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+                    style:
+                        TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 20),
               Padding(
@@ -99,9 +99,8 @@ class login extends StatelessWidget {
                     );
                   }
                 },
-                child: const Text('Masuk', style: TextStyle(
-                  color: Colors.white
-                )),
+                child:
+                    const Text('Masuk', style: TextStyle(color: Colors.white)),
               ),
               const SizedBox(height: 10),
               Row(

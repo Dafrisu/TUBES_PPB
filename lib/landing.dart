@@ -5,8 +5,8 @@ import 'package:tubes_ppb/register.dart';
 
 class landingPage extends StatefulWidget {
   const landingPage({super.key});
-  
-  @override 
+
+  @override
   landingPageState createState() => landingPageState();
 }
 
@@ -16,7 +16,8 @@ class landingPageState extends State<landingPage> {
     return Scaffold(
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center, // Center the content vertically
+          mainAxisAlignment:
+              MainAxisAlignment.center, // Center the content vertically
           children: [
             const Icon(
               Icons.business,
@@ -61,9 +62,9 @@ class landingPageState extends State<landingPage> {
                   ),
                 );
               },
-              child: Text('Login', style: GoogleFonts.montserrat(
-                fontSize: 20, color: Colors.white
-              )),
+              child: Text('Login',
+                  style: GoogleFonts.montserrat(
+                      fontSize: 20, color: Colors.white)),
             ),
             const SizedBox(height: 10), // Space between buttons
             ElevatedButton(
@@ -79,9 +80,11 @@ class landingPageState extends State<landingPage> {
                   ),
                 );
               },
-              child: Text('Register', style: GoogleFonts.montserrat(
-                fontSize: 20, color: Colors.green,
-              )),
+              child: Text('Register',
+                  style: GoogleFonts.montserrat(
+                    fontSize: 20,
+                    color: Colors.green,
+                  )),
             ),
             const SizedBox(height: 20), // Space at the bottom
           ],
