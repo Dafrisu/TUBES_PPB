@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 void main() {
   runApp(const MyApp());
@@ -430,12 +432,40 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  List<Map<String, dynamic>> messages = [
-    {'text': 'Pesanan saya mana?', 'isSentByUser': false},
-    {'text': 'Siapp otw', 'isSentByUser': true},
-    {'text': 'ok', 'isSentByUser': false},
-  ];
+  List<Map<String, dynamic>> messages = [];
   final TextEditingController _messageController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMessages();
+  }
+
+  Future<void> _loadMessages() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedMessages = prefs.getString(widget.sender);
+
+    if (savedMessages != null) {
+      List<dynamic> decodedMessages = json.decode(savedMessages);
+      setState(() {
+        messages = List<Map<String, dynamic>>.from(decodedMessages);
+      });
+    } else {
+      // Initialize with example messages if no saved messages are found
+      setState(() {
+        messages = [
+          {'text': 'Pesanan saya mana?', 'isSentByUser': false},
+          {'text': 'Siap Otw', 'isSentByUser': true},
+          {'text': 'Okay', 'isSentByUser': false},
+        ];
+      });
+    }
+  }
+
+  Future<void> _saveMessages() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(widget.sender, json.encode(messages));
+  }
 
   void _sendMessage() {
     String messageText = _messageController.text.trim();
@@ -444,6 +474,7 @@ class _ChatPageState extends State<ChatPage> {
         messages.add({'text': messageText, 'isSentByUser': true});
       });
       _messageController.clear();
+      _saveMessages(); // Save messages after sending
     }
   }
 
@@ -476,7 +507,7 @@ class _ChatPageState extends State<ChatPage> {
                     if (!message['isSentByUser'])
                       const CircleAvatar(
                         radius: 15,
-                        backgroundImage: AssetImage(''),
+                        backgroundImage: AssetImage(''), 
                       ),
                     if (!message['isSentByUser']) const SizedBox(width: 8),
                     ChatBubble(
@@ -487,7 +518,7 @@ class _ChatPageState extends State<ChatPage> {
                     if (message['isSentByUser'])
                       const CircleAvatar(
                         radius: 15,
-                        backgroundImage: AssetImage(''),
+                        backgroundImage: AssetImage(''), 
                       ),
                   ],
                 );
