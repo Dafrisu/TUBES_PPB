@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tubes_ppb/formGantiPassword.dart';
 import 'dashboard/dashboard.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 
 class verifikasi extends StatelessWidget {
   const verifikasi({super.key});
@@ -175,7 +175,7 @@ class verifikasi extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const Dashboard(),
+                        builder: (context) => Dashboard(),
                       ),
                     );
                   }

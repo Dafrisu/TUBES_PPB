@@ -7,7 +7,8 @@ class FullProdukPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Produk', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        title: const Text('Produk',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         actions: <Widget>[
           const SizedBox(width: 10),
           IconButton(
@@ -61,7 +62,8 @@ class ProductCard extends StatelessWidget {
     return Card(
       child: Column(
         children: <Widget>[
-          Image.asset(imageUrl, fit: BoxFit.cover, height: 100), // Adjust height as needed
+          Image.asset(imageUrl,
+              fit: BoxFit.cover, height: 100), // Adjust height as needed
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(title, style: const TextStyle(fontSize: 16)),
