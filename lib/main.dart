@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/animation.dart'; 
 
+
 void main() {
   runApp(const MainApp());
 }
@@ -12,6 +13,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: const SplashScreen(), 
+
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_ppb/dashboard.dart';
+import 'package:tubes_ppb/dashboard/dashboard.dart';
 import 'verifikasi.dart';
 
 class register extends StatelessWidget {
@@ -62,13 +62,10 @@ class register extends StatelessWidget {
                     );
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const Dashboard()),
+                      MaterialPageRoute(
+                          builder: (context) => const verifikasi()),
                     );
                   }
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const verifikasi()),
-                  );
                 },
                 child: const Text('Register'),
               ),
