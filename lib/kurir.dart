@@ -44,17 +44,14 @@ class _MyAppState extends State<MyApp> {
     ),
   ];
 
-  // Check if there are unread notifications
   bool get hasUnreadNotifications {
     return notifications.any((notification) => !notification.isRead);
   }
 
-  // Check if there are unread messages in the Inbox
   bool get hasUnreadInboxMessages {
     return inboxMessages.any((message) => !message.isRead);
   }
 
-  // Mark all notifications as read
   void markAllNotificationsAsRead() {
     setState(() {
       for (var notification in notifications) {
