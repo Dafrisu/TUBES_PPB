@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/BarangPenjual.dart';
 import 'dashboard_full_produk.dart';
 import 'dashboard_full_makanan.dart';
 import 'dashboard_full_minuman.dart';
 import 'dashboard_full_misc.dart';
+import 'package:tubes_ppb/Data.dart' as data;
 
 // Import package carousel dari pub.dev
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
@@ -113,9 +115,22 @@ class Dashboard extends StatelessWidget {
               shrinkWrap:
                   true, // Allow GridView to take only the space it needs
               physics: NeverScrollableScrollPhysics(),
-              children: const <Widget>[
-                ProductCard(title: 'Produk 1', imageUrl: 'assets/drink1.jpg'),
-                ProductCard(title: 'Produk 2', imageUrl: 'assets/food1.jpg'),
+              children: <Widget>[
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                PageBarang(product: data.listdata[0])));
+                  },
+                  child: ProductCard(
+                    title: 'Produk 1',
+                    imageUrl: 'lib/assets_images/Makanan1.jpg',
+                  ),
+                ),
+
+                ProductCard(title: 'Produk 2', imageUrl: 'lib/assets_images/Minuman1.png'),
                 // Add more previews as needed
               ],
             ),
@@ -155,9 +170,9 @@ class Dashboard extends StatelessWidget {
               physics: NeverScrollableScrollPhysics(),
               children: const <Widget>[
                 ProductCard(
-                    title: 'Makanan 1', imageUrl: 'assets/Makanan1.jpg'),
+                    title: 'Makanan 1', imageUrl: 'lib/assets_images//Makanan1.jpg'),
                 ProductCard(
-                    title: 'Makanan 2', imageUrl: 'assets/Makanan2.jpg'),
+                    title: 'Makanan 2', imageUrl: 'lib/assets_images/Makanan2.jpg'),
                 // Add more previews as needed
               ],
             ),
@@ -197,9 +212,9 @@ class Dashboard extends StatelessWidget {
               physics: NeverScrollableScrollPhysics(),
               children: const <Widget>[
                 ProductCard(
-                    title: 'Minuman 1', imageUrl: 'assets/Minuman1.jpg'),
+                    title: 'Minuman 1', imageUrl: 'lib/assets_images/Minuman1.png'),
                 ProductCard(
-                    title: 'Minuman 2', imageUrl: 'assets/Minuman2.jpg'),
+                    title: 'Minuman 2', imageUrl: 'lib/assets_images/Minuman2.jpg'),
                 // Add more previews as needed
               ],
             ),
@@ -238,8 +253,8 @@ class Dashboard extends StatelessWidget {
                   true, // Allow GridView to take only the space it needs
               physics: NeverScrollableScrollPhysics(), // Disable Scroll
               children: const <Widget>[
-                ProductCard(title: 'Misc 1', imageUrl: 'assets/Misc1.jpg'),
-                ProductCard(title: 'Misc 2', imageUrl: 'assets/Misc2.jpg'),
+                ProductCard(title: 'Misc 1', imageUrl: 'lib/assets_images/Misc1.png'),
+                ProductCard(title: 'Misc 2', imageUrl: 'lib/assets_images/Misc2.png'),
                 // Add more previews as needed
               ],
             ),
@@ -262,7 +277,7 @@ class ProductCard extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Image.asset(imageUrl,
-              fit: BoxFit.cover, height: 100), // Adjust height as needed
+              fit: BoxFit.cover, height: 100, width: 100), // nanti sesuaikan height sama width
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(title, style: const TextStyle(fontSize: 16)),
