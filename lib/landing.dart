@@ -60,6 +60,8 @@ class landingPageState extends State<landingPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
                 minimumSize: const Size(300, 50),
+                shape:
+                      RoundedRectangleBorder(borderRadius: BorderRadius.zero),
               ),
               onPressed: () {
                 Navigator.push(
@@ -78,7 +80,8 @@ class landingPageState extends State<landingPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                 minimumSize: const Size(300, 50),
-                
+                shape:
+                      RoundedRectangleBorder(borderRadius: BorderRadius.zero),
               ),
               onPressed: () {
                 Navigator.push(
