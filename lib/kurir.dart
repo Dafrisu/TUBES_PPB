@@ -69,9 +69,31 @@ class _MyAppState extends State<MyApp> {
         hasUnreadNotifications: hasUnreadNotifications,
         hasUnreadInboxMessages: hasUnreadInboxMessages,
         markAllNotificationsAsRead: markAllNotificationsAsRead,
+        orders: orders
       ),
     );
   }
+
+    List<OrderItemData> orders = [
+    OrderItemData(
+      itemName: 'Salad',
+      quantity: 1,
+      address: 'Jl. Boulevard no 32',
+      gambar: 'lib/assets_images/Makanan1.jpg'
+    ),
+    OrderItemData(
+      itemName: 'French Fries',
+      quantity: 2,
+      address: 'Jl. Mangga no 21',
+      gambar: 'lib/assets_images/Makanan4.jpg'
+    ),
+    OrderItemData(
+      itemName: 'Iced Lemon',
+      quantity: 1,
+      address: 'Jl. Merdeka no 10',
+      gambar: 'lib/assets_images/Minuman4.jpg'
+    ),
+  ];
 }
 
 class DeliveryPage extends StatelessWidget {
@@ -80,6 +102,7 @@ class DeliveryPage extends StatelessWidget {
   final bool hasUnreadNotifications;
   final bool hasUnreadInboxMessages;
   final VoidCallback markAllNotificationsAsRead;
+  final List<OrderItemData> orders;
 
   const DeliveryPage({
     super.key,
@@ -88,6 +111,7 @@ class DeliveryPage extends StatelessWidget {
     required this.hasUnreadNotifications,
     required this.hasUnreadInboxMessages,
     required this.markAllNotificationsAsRead,
+    required this.orders,
   });
 
   @override
@@ -98,16 +122,16 @@ class DeliveryPage extends StatelessWidget {
           'Halo, Kurir.',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 101, 136, 100),
         elevation: 0,
         actions: [
           Stack(
             children: [
               IconButton(
-                icon: const Icon(Icons.notifications),
+                icon: const Icon(Icons.notifications, color: Colors.white,),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -138,7 +162,7 @@ class DeliveryPage extends StatelessWidget {
           Stack(
             children: [
               IconButton(
-                icon: const Icon(Icons.mail_outline),
+                icon: const Icon(Icons.mail_outline, color: Colors.white,),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -165,17 +189,25 @@ class DeliveryPage extends StatelessWidget {
           ),
         ],
       ),
-      body: const Padding(
-        padding: EdgeInsets.all(16.0),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Pesanan yang harus diantar',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
-            OrderCard(),
+            const SizedBox(height: 20),
+            Expanded(
+              child: ListView.builder(
+                itemCount: orders.length,
+                itemBuilder: (context, index) {
+                  final order = orders[index];
+                  return OrderCard(order: order);
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -183,60 +215,74 @@ class DeliveryPage extends StatelessWidget {
   }
 }
 
+class OrderItemData {
+  final String itemName;
+  final int quantity;
+  final String address;
+  final String gambar;
+
+  OrderItemData({
+    required this.itemName,
+    required this.quantity,
+    required this.address,
+    required this.gambar
+  });
+}
+
+
 class OrderCard extends StatelessWidget {
-  const OrderCard({super.key});
+  final OrderItemData order;
+  const OrderCard({super.key, required this.order});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              color: const Color(0xFF658864),
-              child: const Center(
-                child: Text(
-                  'Gambar',
-                  style: TextStyle(color: Colors.black),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(order.gambar),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  order.itemName,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-              ),
+                const SizedBox(height: 4),
+                Text('Jumlah: ${order.quantity}'),
+                Text(order.address),
+              ],
             ),
-            const SizedBox(width: 16),
-            const Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'T-shirt Babymetal',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 4),
-                  Text('Jumlah: 1'),
-                  Text('Jl. Boulevard no 32'),
-                ],
-              ),
+          ),
+          const SizedBox(width: 16),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF7B5400),
             ),
-            const SizedBox(width: 16),
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF7B5400),
-              ),
-              child: const Text(
-                'Dikemas',
-                style: TextStyle(color: Color(0xFFE6AF2E)),
-              ),
+            child: const Text(
+              'Dikemas',
+              style: TextStyle(color: Color(0xFFE6AF2E)),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -280,7 +326,7 @@ class _InboxPageState extends State<InboxPage> {
         backgroundColor: const Color(0xFF658864),
         actions: [
           IconButton(
-            icon: const Icon(Icons.search),
+            icon: const Icon(Icons.search, color: Colors.white,),
             onPressed: () {
               showSearch(
                 context: context,
@@ -448,7 +494,6 @@ class _ChatPageState extends State<ChatPage> {
         messages = List<Map<String, dynamic>>.from(decodedMessages);
       });
     } else {
-      // Initialize with example messages if no saved messages are found
       setState(() {
         messages = [
           {'text': 'Pesanan saya mana?', 'isSentByUser': false},
@@ -471,7 +516,7 @@ class _ChatPageState extends State<ChatPage> {
         messages.add({'text': messageText, 'isSentByUser': true});
       });
       _messageController.clear();
-      _saveMessages(); // Save messages after sending
+      _saveMessages(); 
     }
   }
 
@@ -480,7 +525,7 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.sender, // Show the sender's name
+          widget.sender,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,
