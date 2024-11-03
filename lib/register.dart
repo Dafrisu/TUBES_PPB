@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'verifikasi.dart';
 
+import 'package:google_fonts/google_fonts.dart';
+
 class register extends StatelessWidget {
   const register({super.key});
 
@@ -74,9 +76,25 @@ class register extends StatelessWidget {
                   }
                   return null;
                 },
+              ),const SizedBox(height: 10),
+              TextFormField(
+                decoration: const InputDecoration(labelText: 'Telephone Number'),
+                obscureText: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your telephone number';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 20),
               ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  shape:
+                      RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                      
+                ),
                 onPressed: () {
                   if (formKey.currentState?.validate() == true) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -91,7 +109,10 @@ class register extends StatelessWidget {
                     );
                   }
                 },
-                child: const Text('Register'),
+                child: Text('Register!',
+                  style: GoogleFonts.montserrat(
+                      fontSize: 20, color: Colors.white)
+                      ),
               ),
               const SizedBox(height: 10),
               Row(
