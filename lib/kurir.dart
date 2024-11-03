@@ -37,10 +37,28 @@ class _MyAppState extends State<MyApp> {
       isRead: false,
     ),
     InboxItemData(
-      sender: 'Dina Sari',
-      message: 'Besok aja ya',
-      time: '15:45',
+      sender: 'Joko Penjual',
+      message: 'Barang sudah sampai?',
+      time: '14:50',
       isRead: true,
+    ),
+    InboxItemData(
+      sender: 'Rina Katering',
+      message: 'Pesanan sudah disiapkan!',
+      time: '15:15',
+      isRead: false,
+    ),
+    InboxItemData(
+      sender: 'Budi Sumber',
+      message: 'Kapan bisa ambil barang?',
+      time: '13:45',
+      isRead: true,
+    ),
+    InboxItemData(
+      sender: 'Dewi Jaya',
+      message: 'Terima kasih atas pengiriman!',
+      time: '12:30',
+      isRead: false,
     ),
   ];
 
@@ -230,9 +248,22 @@ class OrderItemData {
 }
 
 
-class OrderCard extends StatelessWidget {
+class OrderCard extends StatefulWidget {
   final OrderItemData order;
   const OrderCard({super.key, required this.order});
+
+  
+  _OrderCardState createState() => _OrderCardState();
+}
+
+class _OrderCardState extends State<OrderCard> {
+  bool isPressed = false; 
+
+  void _onButtonPressed() {
+    setState(() {
+      isPressed = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -250,7 +281,7 @@ class OrderCard extends StatelessWidget {
             height: 80,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(order.gambar),
+                image: AssetImage(widget.order.gambar),
                 fit: BoxFit.cover,
               ),
             ),
@@ -261,25 +292,25 @@ class OrderCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  order.itemName,
+                  widget.order.itemName,
                   style: const TextStyle(
                       fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
-                Text('Jumlah: ${order.quantity}'),
-                Text(order.address),
+                Text('Jumlah: ${widget.order.quantity}'),
+                Text(widget.order.address),
               ],
             ),
           ),
           const SizedBox(width: 16),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: _onButtonPressed,
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF7B5400),
+              backgroundColor: isPressed ? Colors.green : const Color(0xFF7B5400), 
             ),
-            child: const Text(
-              'Dikemas',
-              style: TextStyle(color: Color(0xFFE6AF2E)),
+            child: Text(
+              isPressed ? 'Diantar' : 'Dikemas', 
+              style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
             ),
           ),
         ],
@@ -308,6 +339,24 @@ class _InboxPageState extends State<InboxPage> {
       message: 'Barang sudah sampai?',
       time: '14:50',
       isRead: true,
+    ),
+    InboxItemData(
+      sender: 'Rina Katering',
+      message: 'Pesanan sudah disiapkan!',
+      time: '15:15',
+      isRead: false,
+    ),
+    InboxItemData(
+      sender: 'Budi Sumber',
+      message: 'Kapan bisa ambil barang?',
+      time: '13:45',
+      isRead: true,
+    ),
+    InboxItemData(
+      sender: 'Dewi Jaya',
+      message: 'Terima kasih atas pengiriman!',
+      time: '12:30',
+      isRead: false,
     ),
   ];
 
@@ -376,7 +425,7 @@ class _InboxPageState extends State<InboxPage> {
   }
 }
 
-class MessageSearchDelegate extends SearchDelegate<InboxItemData> {
+class MessageSearchDelegate extends SearchDelegate<InboxItemData?> {
   final List<InboxItemData> inboxMessages;
   final ValueChanged<InboxItemData> onSelected;
 
@@ -387,7 +436,7 @@ class MessageSearchDelegate extends SearchDelegate<InboxItemData> {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: const Icon(Icons.clear),
+        icon: const Icon(Icons.clear, color: Colors.black),
         onPressed: () {
           query = '';
         },
@@ -398,9 +447,9 @@ class MessageSearchDelegate extends SearchDelegate<InboxItemData> {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back, color: Colors.black,),
       onPressed: () {
-        close;
+        close(context, null);
       },
     );
   }
