@@ -106,11 +106,11 @@ class _cartpagestate extends State<Cartpage> {
                               Row(
                                 children: [
                                   TextButton(
-                                      onPressed: () {}, child: Icon(Icons.add)),
-                                  Text('QTY: ${1}'),
-                                  TextButton(
                                       onPressed: () {},
                                       child: Icon(Icons.remove)),
+                                  Text('QTY: ${1}'),
+                                  TextButton(
+                                      onPressed: () {}, child: Icon(Icons.add)),
                                 ],
                               )
                             ],

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_ppb/dashboard/dashboard.dart';
+import 'package:tubes_ppb/landing.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import 'verifikasi.dart';
+
+import 'package:google_fonts/google_fonts.dart';
 
 class register extends StatelessWidget {
   const register({super.key});
@@ -10,7 +14,27 @@ class register extends StatelessWidget {
     final formKey = GlobalKey<FormState>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Register Page')),
+      appBar: AppBar(
+        backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => landingPage(),
+              ),
+            );
+          },
+          color: Colors.white,
+        ),
+        centerTitle: true,
+        title: Text(
+          'Masuk',
+          style: GoogleFonts.montserrat(
+              fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -52,9 +76,25 @@ class register extends StatelessWidget {
                   }
                   return null;
                 },
+              ),const SizedBox(height: 10),
+              TextFormField(
+                decoration: const InputDecoration(labelText: 'Telephone Number'),
+                obscureText: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your telephone number';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 20),
               ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  shape:
+                      RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                      
+                ),
                 onPressed: () {
                   if (formKey.currentState?.validate() == true) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -69,7 +109,10 @@ class register extends StatelessWidget {
                     );
                   }
                 },
-                child: const Text('Register'),
+                child: Text('Register!',
+                  style: GoogleFonts.montserrat(
+                      fontSize: 20, color: Colors.white)
+                      ),
               ),
               const SizedBox(height: 10),
               Row(
