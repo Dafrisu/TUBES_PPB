@@ -202,7 +202,20 @@ class _PageBarangState extends State<PageBarang> {
                 const SizedBox(width: 20),
                 ElevatedButton(
                   onPressed: () {
-                    dataprovider.listcart.add(widget.product);
+                    bool itemFound = false;
+
+                    dataprovider.listcart.forEach((item) {
+                      if (item["nama"] == widget.product["nama"]) {
+                        item["qty"] += 1;
+                        itemFound = true;
+                      }
+                    });
+
+                    if (!itemFound) {
+                      var newItem = Map<String, dynamic>.from(widget.product);
+                      newItem["qty"] = 1;
+                      dataprovider.listcart.add(newItem);
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: colorpalete[0]["green"],
