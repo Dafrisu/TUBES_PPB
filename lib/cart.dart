@@ -106,11 +106,22 @@ class _cartpagestate extends State<Cartpage> {
                               Row(
                                 children: [
                                   TextButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        if (data.listcart[index]["qty"] > 1) {
+                                          setState(() {
+                                            data.listcart[index]["qty"] -= 1;
+                                          });
+                                        }
+                                      },
                                       child: Icon(Icons.remove)),
-                                  Text('QTY: ${1}'),
+                                  Text('QTY: ${data.listcart[index]["qty"]}'),
                                   TextButton(
-                                      onPressed: () {}, child: Icon(Icons.add)),
+                                      onPressed: () {
+                                        setState(() {
+                                          data.listcart[index]["qty"] += 1;
+                                        });
+                                      },
+                                      child: Icon(Icons.add)),
                                 ],
                               )
                             ],
