@@ -4,7 +4,9 @@ final List<Map<String, dynamic>> colorpalete = [
   {"green": const Color.fromARGB(255, 101, 136, 100)}
 ];
 
-final List<Map<String, dynamic>> listdata = [
+List<Map<String, dynamic>> listcart = [];
+
+List<Map<String, dynamic>> listdata = [
   {
     "nama":
         "Fantech ATOM PRO SERIES Wireless Keyboard Mechanical Gaming Hotswap",
