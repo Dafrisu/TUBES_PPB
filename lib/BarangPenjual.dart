@@ -14,7 +14,7 @@ class PageBarang extends StatefulWidget {
 }
 
 class _PageBarangState extends State<PageBarang> {
-  // This widget is the root of your application.
+  // This widget is the root of your application./
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,29 +118,33 @@ class _PageBarangState extends State<PageBarang> {
               // Seller Information
               Card(
                 color: Colors.white,
-                child: ListTile(
-                  title: Text('${widget.product["seller"]}'),
-                  leading: const CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWW0xcyFQPL6DIne-s-4nHzmBuIMCN12FioA&s"),
-                    radius: 30,
-                  ),
-                  trailing: OutlinedButton(
-                    onPressed: () {},
-                    style: OutlinedButton.styleFrom(minimumSize: Size(30, 40)),
-                    child: const Text(
-                      "Hubungi Penjual",
-                      style: TextStyle(fontSize: 12),
+                child: Center(
+                  child: ListTile(
+                    contentPadding: EdgeInsets.symmetric(vertical: 16),
+                    title: Text('${widget.product["seller"]}'),
+                    leading: const CircleAvatar(
+                      backgroundImage: NetworkImage(
+                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWW0xcyFQPL6DIne-s-4nHzmBuIMCN12FioA&s"),
+                      radius: 30,
                     ),
+                    trailing: OutlinedButton(
+                      onPressed: () {},
+                      style:
+                          OutlinedButton.styleFrom(minimumSize: Size(30, 40)),
+                      child: const Text(
+                        "Hubungi Penjual",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PagePenjual(
+                                    title: '',
+                                  )));
+                    },
                   ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PagePenjual(
-                                  title: '',
-                                )));
-                  },
                 ),
               ),
               const Card(
@@ -155,8 +159,8 @@ class _PageBarangState extends State<PageBarang> {
                     style: TextStyle(fontSize: 10),
                   ),
                   leading: SizedBox(
-                    width: 90, // Sesuaikan ukuran dengan keinginan
-                    height: 90, // Sesuaikan ukuran dengan keinginan
+                    width: 90,
+                    height: 90,
                     child: CircleAvatar(
                       backgroundColor: Colors.green,
                       radius: 45,
@@ -164,7 +168,7 @@ class _PageBarangState extends State<PageBarang> {
                         "avatarrr",
                         style: TextStyle(
                             fontSize: 18), // Ukuran teks di dalam avatar
-                      ), // Sesuaikan radius
+                      ),
                     ),
                   ),
                 ),
@@ -197,7 +201,22 @@ class _PageBarangState extends State<PageBarang> {
                 ),
                 const SizedBox(width: 20),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    bool itemFound = false;
+
+                    dataprovider.listcart.forEach((item) {
+                      if (item["nama"] == widget.product["nama"]) {
+                        item["qty"] += 1;
+                        itemFound = true;
+                      }
+                    });
+
+                    if (!itemFound) {
+                      var newItem = Map<String, dynamic>.from(widget.product);
+                      newItem["qty"] = 1;
+                      dataprovider.listcart.add(newItem);
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: colorpalete[0]["green"],
                       minimumSize: Size(170, 120),
