@@ -40,17 +40,26 @@ class _PagePenjualState extends State<PagePenjual> {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: const Icon(Icons.arrow_back_ios_new)),
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              color: Colors.white,
+            )),
         actions: <Widget>[
           IconButton(
             onPressed: () {
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => cart()));
             },
-            icon: Icon(Icons.shopping_cart),
+            icon: Icon(
+              Icons.shopping_cart,
+              color: Colors.white,
+            ),
           )
         ],
-        title: Text(widget.title),
+        title: Text(
+          widget.title,
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: SafeArea(
           child: GridView.builder(

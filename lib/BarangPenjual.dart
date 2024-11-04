@@ -24,10 +24,16 @@ class _PageBarangState extends State<PageBarang> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                icon: const Icon(Icons.arrow_back_ios_new)),
+                icon: const Icon(
+                  Icons.arrow_back_ios_new,
+                  color: Colors.white,
+                )),
             actions: <Widget>[
               IconButton(
-                icon: Icon(Icons.shopping_cart),
+                icon: Icon(
+                  Icons.shopping_cart,
+                  color: Colors.white,
+                ),
                 onPressed: () {
                   Navigator.push(
                       context, MaterialPageRoute(builder: (context) => cart()));
