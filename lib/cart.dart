@@ -105,7 +105,7 @@ class _cartpagestate extends State<Cartpage> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 SizedBox(height: 5),
-                                Text('${data.listcart[index]["harga"]}'),
+                                Text('RP.${data.listcart[index]["harga"]}'),
                                 Row(
                                   children: [
                                     TextButton(

@@ -18,6 +18,7 @@ class _PageBarangState extends State<PageBarang> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
 
         // for appbar purpose
         appBar: AppBar(
@@ -85,7 +86,7 @@ class _PageBarangState extends State<PageBarang> {
                           textStyle: const TextStyle(fontSize: 30)),
                     ),
                     Text(
-                      widget.product["harga"],
+                      'RP.${widget.product["harga"]}',
                       style: GoogleFonts.montserrat(
                           textStyle: const TextStyle(fontSize: 20)),
                     )
@@ -116,7 +117,7 @@ class _PageBarangState extends State<PageBarang> {
                           textStyle: const TextStyle(fontSize: 14)),
                       textAlign: TextAlign.justify,
                       expandText: 'lebih banyak',
-                      linkColor: Colors.black,
+                      linkColor: dataprovider.colorpalete[0]["green"],
                       linkStyle: const TextStyle(fontWeight: FontWeight.bold),
                       collapseOnTextTap: true,
                     ),
@@ -170,14 +171,15 @@ class _PageBarangState extends State<PageBarang> {
               ),
 
               // card untuk ulasan (might change the listtile cuz why not?)
-              Padding(
-                padding: EdgeInsets.only(left: 10),
+              Align(
+                alignment: Alignment.centerLeft,
                 child: Text(
                   'Ulasan',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                 ),
               ),
-              const Card(
+              Card(
+                color: Colors.white,
                 child: ListTile(
                   minTileHeight: 100,
                   title: Text(
