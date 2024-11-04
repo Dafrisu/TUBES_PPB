@@ -18,22 +18,36 @@ class _PageBarangState extends State<PageBarang> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+        // for appbar purpose
         appBar: AppBar(
             backgroundColor: dataprovider.colorpalete[0]["green"],
+
+            // back button
             leading: IconButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                icon: const Icon(Icons.arrow_back_ios_new)),
+                icon: const Icon(
+                  Icons.arrow_back_ios_new,
+                  color: Colors.white,
+                )),
+
+            // cart button
             actions: <Widget>[
               IconButton(
-                icon: Icon(Icons.shopping_cart),
+                icon: Icon(
+                  Icons.shopping_cart,
+                  color: Colors.white,
+                ),
                 onPressed: () {
                   Navigator.push(
                       context, MaterialPageRoute(builder: (context) => cart()));
                 },
               )
             ]),
+
+        // Body (List view sortalike)
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -51,6 +65,7 @@ class _PageBarangState extends State<PageBarang> {
                     ? Image.network(widget.product["img"])
                     : Icon(Icons.image, size: 100),
               ),
+
               // Name and Price
               Container(
                 width: MediaQuery.of(context).size.width - 20,
@@ -77,6 +92,7 @@ class _PageBarangState extends State<PageBarang> {
                   ],
                 ),
               ),
+
               // Description and Variants
               Container(
                 width: MediaQuery.of(context).size.width - 20,
@@ -88,8 +104,12 @@ class _PageBarangState extends State<PageBarang> {
                   ),
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Deskripsi Barang'),
+                    const Text(
+                      'Deskripsi Barang',
+                      textAlign: TextAlign.start,
+                    ),
                     ExpandableText(
                       widget.product["deskripsi"],
                       style: GoogleFonts.montserrat(
@@ -115,6 +135,7 @@ class _PageBarangState extends State<PageBarang> {
                   ],
                 ),
               ),
+
               // Seller Information
               Card(
                 color: Colors.white,
@@ -147,6 +168,15 @@ class _PageBarangState extends State<PageBarang> {
                   ),
                 ),
               ),
+
+              // card untuk ulasan (might change the listtile cuz why not?)
+              Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: Text(
+                  'Ulasan',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                ),
+              ),
               const Card(
                 child: ListTile(
                   minTileHeight: 100,
@@ -176,6 +206,8 @@ class _PageBarangState extends State<PageBarang> {
             ],
           ),
         ),
+
+        //Navbar bottom (navbar di bawah untuk keranjang / beli sekarang)
         bottomNavigationBar: Container(
           height: 70,
           decoration: const BoxDecoration(
@@ -185,7 +217,7 @@ class _PageBarangState extends State<PageBarang> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                //const Padding(padding: EdgeInsets.only(left: 30)),
+                // button untuk beli sekarang
                 OutlinedButton(
                   iconAlignment: IconAlignment.start,
                   style: OutlinedButton.styleFrom(
@@ -200,10 +232,14 @@ class _PageBarangState extends State<PageBarang> {
                   ),
                 ),
                 const SizedBox(width: 20),
+
+                // button untuk +keranjang
                 ElevatedButton(
                   onPressed: () {
+                    // logic for add to keranjang
                     bool itemFound = false;
 
+                    // jika barang sudah ada di keranjang
                     dataprovider.listcart.forEach((item) {
                       if (item["nama"] == widget.product["nama"]) {
                         item["qty"] += 1;
@@ -211,6 +247,7 @@ class _PageBarangState extends State<PageBarang> {
                       }
                     });
 
+                    // jika barang belum ada di keranjang
                     if (!itemFound) {
                       var newItem = Map<String, dynamic>.from(widget.product);
                       newItem["qty"] = 1;
