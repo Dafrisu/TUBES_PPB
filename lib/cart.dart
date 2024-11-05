@@ -18,6 +18,14 @@ final List<Map<String, dynamic>> listdata = [
 //   }
 // }
 
+void sortcart() {
+  // Salin `listcart` ke `sortedcart`
+  data.sortedcart = List<Map<String, dynamic>>.from(data.listcart);
+
+  // Urutkan `sortedcart` berdasarkan `id_penjual`
+  data.sortedcart.sort((a, b) => a["id_penjual"].compareTo(b["id_penjual"]));
+}
+
 class cart extends StatelessWidget {
   const cart({super.key});
 
