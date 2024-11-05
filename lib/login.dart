@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/dashboard/dashboard.dart';
+import 'package:tubes_ppb/formGantiPassword.dart';
 import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/masukkanEmail.dart';
 import 'package:tubes_ppb/register.dart';
@@ -80,7 +81,7 @@ class login extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Masukkanemail()),
+                              builder: (context) => const Formgantipassword()),
                         );
                       },
                       child: const Text('Lupa Password?'),
