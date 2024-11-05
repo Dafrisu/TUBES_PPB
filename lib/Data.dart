@@ -6,6 +6,8 @@ final List<Map<String, dynamic>> colorpalete = [
 
 List<Map<String, dynamic>> listcart = [];
 
+List<Map<String, dynamic>> sortedcart = [];
+
 List<Map<String, dynamic>> listdata = [
   {
     "id_penjual": "pjl01",
