@@ -14,26 +14,41 @@ class PageBarang extends StatefulWidget {
 }
 
 class _PageBarangState extends State<PageBarang> {
-  // This widget is the root of your application.
+  // This widget is the root of your application./
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
+
+        // for appbar purpose
         appBar: AppBar(
             backgroundColor: dataprovider.colorpalete[0]["green"],
+
+            // back button
             leading: IconButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                icon: const Icon(Icons.arrow_back_ios_new)),
+                icon: const Icon(
+                  Icons.arrow_back_ios_new,
+                  color: Colors.white,
+                )),
+
+            // cart button
             actions: <Widget>[
               IconButton(
-                icon: Icon(Icons.shopping_cart),
+                icon: Icon(
+                  Icons.shopping_cart,
+                  color: Colors.white,
+                ),
                 onPressed: () {
                   Navigator.push(
                       context, MaterialPageRoute(builder: (context) => cart()));
                 },
               )
             ]),
+
+        // Body (List view sortalike)
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -51,6 +66,7 @@ class _PageBarangState extends State<PageBarang> {
                     ? Image.network(widget.product["img"])
                     : Icon(Icons.image, size: 100),
               ),
+
               // Name and Price
               Container(
                 width: MediaQuery.of(context).size.width - 20,
@@ -70,13 +86,14 @@ class _PageBarangState extends State<PageBarang> {
                           textStyle: const TextStyle(fontSize: 30)),
                     ),
                     Text(
-                      widget.product["harga"],
+                      'RP.${widget.product["harga"]}',
                       style: GoogleFonts.montserrat(
                           textStyle: const TextStyle(fontSize: 20)),
                     )
                   ],
                 ),
               ),
+
               // Description and Variants
               Container(
                 width: MediaQuery.of(context).size.width - 20,
@@ -88,15 +105,19 @@ class _PageBarangState extends State<PageBarang> {
                   ),
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Deskripsi Barang'),
+                    const Text(
+                      'Deskripsi Barang',
+                      textAlign: TextAlign.start,
+                    ),
                     ExpandableText(
                       widget.product["deskripsi"],
                       style: GoogleFonts.montserrat(
                           textStyle: const TextStyle(fontSize: 14)),
                       textAlign: TextAlign.justify,
                       expandText: 'lebih banyak',
-                      linkColor: Colors.black,
+                      linkColor: dataprovider.colorpalete[0]["green"],
                       linkStyle: const TextStyle(fontWeight: FontWeight.bold),
                       collapseOnTextTap: true,
                     ),
@@ -115,35 +136,50 @@ class _PageBarangState extends State<PageBarang> {
                   ],
                 ),
               ),
+
               // Seller Information
               Card(
                 color: Colors.white,
-                child: ListTile(
-                  title: Text('${widget.product["seller"]}'),
-                  leading: const CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWW0xcyFQPL6DIne-s-4nHzmBuIMCN12FioA&s"),
-                    radius: 30,
-                  ),
-                  trailing: OutlinedButton(
-                    onPressed: () {},
-                    style: OutlinedButton.styleFrom(minimumSize: Size(30, 40)),
-                    child: const Text(
-                      "Hubungi Penjual",
-                      style: TextStyle(fontSize: 12),
+                child: Center(
+                  child: ListTile(
+                    contentPadding: EdgeInsets.symmetric(vertical: 16),
+                    title: Text('${widget.product["seller"]}'),
+                    leading: const CircleAvatar(
+                      backgroundImage: NetworkImage(
+                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWW0xcyFQPL6DIne-s-4nHzmBuIMCN12FioA&s"),
+                      radius: 30,
                     ),
+                    trailing: OutlinedButton(
+                      onPressed: () {},
+                      style:
+                          OutlinedButton.styleFrom(minimumSize: Size(30, 40)),
+                      child: const Text(
+                        "Hubungi Penjual",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PagePenjual(
+                                    title: '',
+                                  )));
+                    },
                   ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PagePenjual(
-                                  title: '',
-                                )));
-                  },
                 ),
               ),
-              const Card(
+
+              // card untuk ulasan (might change the listtile cuz why not?)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Ulasan',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                ),
+              ),
+              Card(
+                color: Colors.white,
                 child: ListTile(
                   minTileHeight: 100,
                   title: Text(
@@ -155,8 +191,8 @@ class _PageBarangState extends State<PageBarang> {
                     style: TextStyle(fontSize: 10),
                   ),
                   leading: SizedBox(
-                    width: 90, // Sesuaikan ukuran dengan keinginan
-                    height: 90, // Sesuaikan ukuran dengan keinginan
+                    width: 90,
+                    height: 90,
                     child: CircleAvatar(
                       backgroundColor: Colors.green,
                       radius: 45,
@@ -164,7 +200,7 @@ class _PageBarangState extends State<PageBarang> {
                         "avatarrr",
                         style: TextStyle(
                             fontSize: 18), // Ukuran teks di dalam avatar
-                      ), // Sesuaikan radius
+                      ),
                     ),
                   ),
                 ),
@@ -172,6 +208,8 @@ class _PageBarangState extends State<PageBarang> {
             ],
           ),
         ),
+
+        //Navbar bottom (navbar di bawah untuk keranjang / beli sekarang)
         bottomNavigationBar: Container(
           height: 70,
           decoration: const BoxDecoration(
@@ -181,7 +219,7 @@ class _PageBarangState extends State<PageBarang> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                //const Padding(padding: EdgeInsets.only(left: 30)),
+                // button untuk beli sekarang
                 OutlinedButton(
                   iconAlignment: IconAlignment.start,
                   style: OutlinedButton.styleFrom(
@@ -196,8 +234,28 @@ class _PageBarangState extends State<PageBarang> {
                   ),
                 ),
                 const SizedBox(width: 20),
+
+                // button untuk +keranjang
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // logic for add to keranjang
+                    bool itemFound = false;
+
+                    // jika barang sudah ada di keranjang
+                    dataprovider.listcart.forEach((item) {
+                      if (item["nama"] == widget.product["nama"]) {
+                        item["qty"] += 1;
+                        itemFound = true;
+                      }
+                    });
+
+                    // jika barang belum ada di keranjang
+                    if (!itemFound) {
+                      var newItem = Map<String, dynamic>.from(widget.product);
+                      newItem["qty"] = 1;
+                      dataprovider.listcart.add(newItem);
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: colorpalete[0]["green"],
                       minimumSize: Size(170, 120),
