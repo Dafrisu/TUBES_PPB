@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/BarangPenjual.dart';
+import 'package:tubes_ppb/Data.dart' as data;
 import 'package:tubes_ppb/pages/informasi_pemesanan.dart';
 import 'package:tubes_ppb/pages/profil_umkm.dart';
 import 'dashboard_full_produk.dart';
@@ -119,8 +121,15 @@ class Dashboard extends StatelessWidget {
               shrinkWrap:
                   true, // Allow GridView to take only the space it needs
               physics: NeverScrollableScrollPhysics(),
-              children: <Widget>[
-                ProductCard(
+              InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                PageBarang(product: data.listdata[0])));
+                  },
+                  child: ProductCard(
                     title: 'Produk 1',
                     imageUrl: 'lib/assets_images/Makanan1.jpg'),
                 ProductCard(
