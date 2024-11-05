@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/BarangPenjual.dart';
+import 'package:tubes_ppb/Data.dart' as data;
+import 'package:tubes_ppb/pages/informasi_pemesanan.dart';
+import 'package:tubes_ppb/pages/profil_umkm.dart';
 import 'dashboard_full_produk.dart';
 import 'dashboard_full_makanan.dart';
 import 'dashboard_full_minuman.dart';
 import 'dashboard_full_misc.dart';
-import 'package:tubes_ppb/Data.dart' as data;
 
 // Import package carousel dari pub.dev
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
@@ -24,15 +26,19 @@ class Dashboard extends StatelessWidget {
         actions: <Widget>[
           const SizedBox(width: 10),
           IconButton(
-            icon: const Icon(Icons.search),
+            icon: const Icon(Icons.mail_outline),
             onPressed: () {
-              // Handle search button press
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const InformasiPemesanan()));
             },
           ),
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () {
-              // Handle profile button press
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const ProfilUMKM()));
             },
           ),
           IconButton(
@@ -111,30 +117,32 @@ class Dashboard extends StatelessWidget {
             ),
             // Gambaran semua Produk yang dijual UMKM
             GridView.count(
-              crossAxisCount: 2, // Jumlah kolom yang ditampilkan
+              crossAxisCount: 2, // Number of columns to display
               shrinkWrap:
                   true, // Allow GridView to take only the space it needs
-              physics: NeverScrollableScrollPhysics(),
-              children: <Widget>[
+              physics: NeverScrollableScrollPhysics(), // Disable scrolling
+              children: [
                 InkWell(
                   onTap: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                PageBarang(product: data.listdata[0])));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            PageBarang(product: data.listdata[0]),
+                      ),
+                    );
                   },
                   child: ProductCard(
                     title: 'Produk 1',
                     imageUrl: 'lib/assets_images/Makanan1.jpg',
                   ),
                 ),
-
-                ProductCard(title: 'Produk 2', imageUrl: 'lib/assets_images/Minuman1.png'),
+                ProductCard(
+                    title: 'Produk 2',
+                    imageUrl: 'lib/assets_images/Minuman1.png'),
                 // Add more previews as needed
               ],
             ),
-
             // Menampilkan List Preview Makanan yang dijual UMKM
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -170,9 +178,11 @@ class Dashboard extends StatelessWidget {
               physics: NeverScrollableScrollPhysics(),
               children: const <Widget>[
                 ProductCard(
-                    title: 'Makanan 1', imageUrl: 'lib/assets_images//Makanan1.jpg'),
+                    title: 'Makanan 1',
+                    imageUrl: 'lib/assets_images//Makanan1.jpg'),
                 ProductCard(
-                    title: 'Makanan 2', imageUrl: 'lib/assets_images/Makanan2.jpg'),
+                    title: 'Makanan 2',
+                    imageUrl: 'lib/assets_images/Makanan2.jpg'),
                 // Add more previews as needed
               ],
             ),
@@ -212,9 +222,11 @@ class Dashboard extends StatelessWidget {
               physics: NeverScrollableScrollPhysics(),
               children: const <Widget>[
                 ProductCard(
-                    title: 'Minuman 1', imageUrl: 'lib/assets_images/Minuman1.png'),
+                    title: 'Minuman 1',
+                    imageUrl: 'lib/assets_images/Minuman1.png'),
                 ProductCard(
-                    title: 'Minuman 2', imageUrl: 'lib/assets_images/Minuman2.jpg'),
+                    title: 'Minuman 2',
+                    imageUrl: 'lib/assets_images/Minuman2.jpg'),
                 // Add more previews as needed
               ],
             ),
@@ -253,8 +265,10 @@ class Dashboard extends StatelessWidget {
                   true, // Allow GridView to take only the space it needs
               physics: NeverScrollableScrollPhysics(), // Disable Scroll
               children: const <Widget>[
-                ProductCard(title: 'Misc 1', imageUrl: 'lib/assets_images/Misc1.png'),
-                ProductCard(title: 'Misc 2', imageUrl: 'lib/assets_images/Misc2.png'),
+                ProductCard(
+                    title: 'Misc 1', imageUrl: 'lib/assets_images/Misc1.png'),
+                ProductCard(
+                    title: 'Misc 2', imageUrl: 'lib/assets_images/Misc2.png'),
                 // Add more previews as needed
               ],
             ),
@@ -277,7 +291,9 @@ class ProductCard extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Image.asset(imageUrl,
-              fit: BoxFit.cover, height: 100, width: 100), // nanti sesuaikan height sama width
+              fit: BoxFit.cover,
+              height: 100,
+              width: 100), // nanti sesuaikan height sama width
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(title, style: const TextStyle(fontSize: 16)),
