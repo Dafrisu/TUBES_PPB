@@ -117,21 +117,26 @@ class Dashboard extends StatelessWidget {
             ),
             // Gambaran semua Produk yang dijual UMKM
             GridView.count(
-              crossAxisCount: 2, // Jumlah kolom yang ditampilkan
+              crossAxisCount: 2, // Number of columns to display
               shrinkWrap:
                   true, // Allow GridView to take only the space it needs
-              physics: NeverScrollableScrollPhysics(),
-              InkWell(
+              physics: NeverScrollableScrollPhysics(), // Disable scrolling
+              children: [
+                InkWell(
                   onTap: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                PageBarang(product: data.listdata[0])));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            PageBarang(product: data.listdata[0]),
+                      ),
+                    );
                   },
                   child: ProductCard(
                     title: 'Produk 1',
-                    imageUrl: 'lib/assets_images/Makanan1.jpg'),
+                    imageUrl: 'lib/assets_images/Makanan1.jpg',
+                  ),
+                ),
                 ProductCard(
                     title: 'Produk 2',
                     imageUrl: 'lib/assets_images/Minuman1.png'),
