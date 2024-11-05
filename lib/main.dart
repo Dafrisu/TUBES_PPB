@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_ppb/animation.dart';
+import 'dashboard/dashboard.dart';
 
 void main() {
   runApp(const MainApp());
@@ -10,8 +10,8 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const SplashScreen(),
+    return const MaterialApp(
+      home: Dashboard()
     );
   }
 }
