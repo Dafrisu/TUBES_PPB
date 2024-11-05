@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/login.dart';
 import 'edit_Profile.dart';
 import 'account_deletion.dart';
 
@@ -31,96 +32,105 @@ class profileSettings extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 20),
-            CircleAvatar(
-              radius: 60,
-              backgroundImage: NetworkImage(userData["profileImageUrl"]),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              userData["displayName"],
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+      body: Center( // Added Center widget here
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start, // Changed to start
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 20),
+              CircleAvatar(
+                radius: 60,
+                backgroundImage: NetworkImage(userData["profileImageUrl"]),
               ),
-            ),
-            const SizedBox(height: 5),
-            Text(
-              userData["email"],
-              style: const TextStyle(fontSize: 16, color: Colors.black),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: 375,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  // Navigate to EditProfile screen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => editProfile()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+              const SizedBox(height: 10),
+              Text(
+                userData["displayName"],
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
-                icon: const Icon(Icons.person),
-                label: const Text('Pengaturan akun'),
               ),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: 375,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  // Handle logout functionality
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+              const SizedBox(height: 5),
+              Text(
+                userData["email"],
+                style: const TextStyle(fontSize: 16, color: Colors.black),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                constraints: const BoxConstraints(maxWidth: 375),
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => editProfile()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
+                  icon: const Icon(Icons.person),
+                  label: const Text('Pengaturan akun'),
                 ),
-                icon: const Icon(Icons.exit_to_app),
-                label: const Text('Sign Out'),
               ),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: 375,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  // Handle account deletion
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AccountDeletion()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+              const SizedBox(height: 16),
+              Container(
+                constraints: const BoxConstraints(maxWidth: 375),
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    // Handle logout functionality
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => login()),
+                    );
+                    
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
+                  icon: const Icon(Icons.exit_to_app),
+                  label: const Text('Sign Out'),
                 ),
-                icon: const Icon(Icons.delete),
-                label: const Text('Hapus Akun'),
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+              Container(
+                constraints: const BoxConstraints(maxWidth: 375),
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AccountDeletion()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  icon: const Icon(Icons.delete),
+                  label: const Text('Hapus Akun'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
