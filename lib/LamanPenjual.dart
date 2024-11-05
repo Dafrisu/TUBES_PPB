@@ -120,7 +120,7 @@ class _PagePenjualState extends State<PagePenjual> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
-                        item['harga'],
+                        'RP.${item['harga']}',
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.green,

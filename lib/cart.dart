@@ -18,6 +18,14 @@ final List<Map<String, dynamic>> listdata = [
 //   }
 // }
 
+void sortcart() {
+  // Salin `listcart` ke `sortedcart`
+  data.sortedcart = List<Map<String, dynamic>>.from(data.listcart);
+
+  // Urutkan `sortedcart` berdasarkan `id_penjual`
+  data.sortedcart.sort((a, b) => a["id_penjual"].compareTo(b["id_penjual"]));
+}
+
 class cart extends StatelessWidget {
   const cart({super.key});
 
@@ -105,7 +113,7 @@ class _cartpagestate extends State<Cartpage> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 SizedBox(height: 5),
-                                Text('${data.listcart[index]["harga"]}'),
+                                Text('RP.${data.listcart[index]["harga"]}'),
                                 Row(
                                   children: [
                                     TextButton(
