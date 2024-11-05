@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'berhasil_hapus_akun.dart';
 
 class AccountDeletion extends StatefulWidget {
   const AccountDeletion({super.key});
@@ -99,11 +100,13 @@ class _AccountDeletionState extends State<AccountDeletion> {
             ),
             const SizedBox(height: 16.0),
             SizedBox(
-              width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
                   // Handle account deletion logic here
-                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DeleteAkun()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
@@ -118,7 +121,6 @@ class _AccountDeletionState extends State<AccountDeletion> {
             ),
             const SizedBox(height: 16.0),
             SizedBox(
-              width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
