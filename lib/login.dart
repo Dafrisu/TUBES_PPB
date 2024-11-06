@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/dashboard/dashboard.dart';
+import 'package:tubes_ppb/formGantiPassword.dart';
+import 'package:tubes_ppb/kurir.dart';
 import 'package:tubes_ppb/landing.dart';
-import 'package:tubes_ppb/masukkanEmail.dart';
+
 import 'package:tubes_ppb/register.dart';
 
 //packages
@@ -13,6 +15,7 @@ class login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
+    final emailController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
@@ -50,6 +53,7 @@ class login extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               TextFormField(
+                controller: emailController,
                 decoration: const InputDecoration(labelText: 'Email'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -80,7 +84,7 @@ class login extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Masukkanemail()),
+                              builder: (context) => const Formgantipassword()),
                         );
                       },
                       child: const Text('Lupa Password?'),
@@ -95,13 +99,24 @@ class login extends StatelessWidget {
                       RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                 ),
                 onPressed: () {
-                  if (formKey.currentState?.validate() == true) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Dashboard(),
-                      ),
-                    );
+                    if (formKey.currentState?.validate() == true) {
+                      if (emailController.text == '@kurir') {
+                        // Navigate to kurir.dart if email matches
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MyApp(), 
+                          ),
+                        );
+                      } else {
+                        // Navigate to dashboard.dart if email does not match
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Dashboard(),
+                          ),
+                        );
+                      }
                   }
                 },
                 child:

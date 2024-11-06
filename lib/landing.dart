@@ -50,7 +50,7 @@ class landingPageState extends State<landingPage> {
                 color: Color.fromARGB(255, 0, 0, 0),
               ),
             ),
-            
+            const SizedBox(height: 30),
             // Image.asset("lib/assets_images/landing_image.jpg",
             //   height: 150, 
             //   width: 150, 
