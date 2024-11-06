@@ -16,9 +16,9 @@ class Screens extends State<Homepage> {
   int pages = 0;
   List<Widget> pagelist = const [
     Dashboard(),
-    InboxPagePembeliUmkm(), //Ganti jadi page chat pembeli umkmk el
-    Dashboard(), // Ganti jadi page riwayat dafa
     cart(),
+    Dashboard(), // Ganti jadi page riwayat dafa
+    InboxPagePembeliUmkm(), 
     ProfileSettings(), 
   ];
 
