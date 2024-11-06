@@ -66,7 +66,7 @@ class landingPageState extends State<landingPage> {
               autoPlayInterval: const Duration(seconds:3), // Set interval berapa detik sebelum otomatis berganti item selanjutnya
               slideIndicator: CircularSlideIndicator(),
             ),
-            // Isi carousel
+            
             items: carouselItems.map((imagePath) {
               return Builder(
                 builder: (BuildContext context) {
