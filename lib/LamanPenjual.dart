@@ -3,34 +3,28 @@ import 'package:tubes_ppb/BarangPenjual.dart';
 import 'Data.dart' as data;
 import 'cart.dart';
 
-void main() {
-  runApp(Penjual());
-}
-
-class Penjual extends StatelessWidget {
-  const Penjual({super.key});
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const PagePenjual(title: 'INI LAMAN PENJUAL'),
-    );
-  }
-}
 
 class PagePenjual extends StatefulWidget {
-  const PagePenjual({super.key, required this.title});
+  final Map<String, dynamic> forpage;
+  const PagePenjual({super.key, required this.title, required this.forpage});
   final String title;
   @override
   State<PagePenjual> createState() => _PagePenjualState();
 }
 
 class _PagePenjualState extends State<PagePenjual> {
+  void setbarang(){
+  data.listdata.forEach((item){
+    if(item["id_penjual"] == widget.forpage["id_penjual"]){
+      data.barangpagepenjual.add(item);
+    }
+  });
+}
+@override
+  void initState(){
+    super.initState();
+    setbarang();
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,9 +63,9 @@ class _PagePenjualState extends State<PagePenjual> {
           mainAxisSpacing: 10,
           childAspectRatio: 3 / 4, // Rasio lebar/tinggi dari tiap item
         ),
-        itemCount: data.listdata.length,
+        itemCount: data.barangpagepenjual.length,
         itemBuilder: (context, index) {
-          final item = data.listdata[index];
+          final item = data.barangpagepenjual[index];
           return InkWell(
               onTap: () {
                 // Mengarahkan ke halaman detail produk
