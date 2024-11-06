@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-void main() {
-  runApp(MyApp());
-}
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -14,19 +10,19 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const InboxPage(),
+      home: const InboxPagePembeliUmkm(),
     );
   }
 }
 
-class InboxPage extends StatefulWidget {
-  const InboxPage({super.key});
+class InboxPagePembeliUmkm extends StatefulWidget {
+  const InboxPagePembeliUmkm({super.key});
 
   @override
-  _InboxPageState createState() => _InboxPageState();
+  _InboxPagePembeliUmkmState createState() => _InboxPagePembeliUmkmState();
 }
 
-class _InboxPageState extends State<InboxPage> {
+class _InboxPagePembeliUmkmState extends State<InboxPagePembeliUmkm> {
   List<InboxItemData> inboxItems = [
     InboxItemData(
       sender: 'UMKM Toko Sukses',
@@ -60,7 +56,14 @@ class _InboxPageState extends State<InboxPage> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xFF658864),
+        backgroundColor: const Color.fromARGB(255, 101, 136, 100),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back,
+              color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         actions: [
           IconButton(
             icon: const Icon(
