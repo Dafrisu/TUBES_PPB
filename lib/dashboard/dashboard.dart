@@ -56,8 +56,10 @@ class Dashboard extends StatelessWidget {
             icon: const Icon(Icons.notifications),
             onPressed: () {
               // Handle notifications button press
-               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => NotificationsScreen()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => NotificationsScreen()));
             },
           ),
         ],
