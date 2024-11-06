@@ -14,19 +14,19 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const InboxPage(),
+      home: const InboxPageKurirUmkm(),
     );
   }
 }
 
-class InboxPage extends StatefulWidget {
-  const InboxPage({super.key});
+class InboxPageKurirUmkm extends StatefulWidget {
+  const InboxPageKurirUmkm({super.key});
 
   @override
-  _InboxPageState createState() => _InboxPageState();
+  _InboxPageKurirUmkmState createState() => _InboxPageKurirUmkmState();
 }
 
-class _InboxPageState extends State<InboxPage> {
+class _InboxPageKurirUmkmState extends State<InboxPageKurirUmkm> {
   List<InboxItemData> inboxItems = [
     InboxItemData(
       sender: 'UMKM Fashion Modern',
@@ -60,7 +60,14 @@ class _InboxPageState extends State<InboxPage> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xFF658864),
+        backgroundColor: const Color.fromARGB(255, 101, 136, 100),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back,
+              color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         actions: [
           IconButton(
             icon: const Icon(

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-class InboxPage extends StatefulWidget {
-  const InboxPage({super.key});
+class InboxPageKurirPembeli extends StatefulWidget {
+  const InboxPageKurirPembeli({super.key});
 
   @override
-  _InboxPageState createState() => _InboxPageState();
+  _InboxPageKurirPembeliState createState() => _InboxPageKurirPembeliState();
 }
 
-class _InboxPageState extends State<InboxPage> {
+class _InboxPageKurirPembeliState extends State<InboxPageKurirPembeli> {
   List<InboxItemData> inboxItems = [
     InboxItemData(
       sender: 'Asep Montir',

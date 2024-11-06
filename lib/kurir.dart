@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tubes_ppb/login.dart';
 import 'Chat/chatKurirPembeli.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -223,7 +219,7 @@ class DeliveryPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const InboxPage(),
+                      builder: (context) => const InboxPageKurirPembeli(),
                     ),
                   );
                 },
