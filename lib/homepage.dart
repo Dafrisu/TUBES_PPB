@@ -5,18 +5,18 @@ import 'dashboard/dashboard.dart'; // import dashboard page darryl
 import 'profile_settings.dart'; // import profile page mahes
 import 'cart.dart'; // import cart page haikal
 
-class Screens extends StatefulWidget {
-  const Screens({super.key});
+class Homepage extends StatefulWidget {
+  const Homepage({super.key});
 
   @override
-  State<Screens> createState() => Homepage();
+  State<Homepage> createState() => Screens();
 }
 
-class Homepage extends State<Screens> {
+class Screens extends State<Homepage> {
   int pages = 0;
   List<Widget> pagelist = const [
     Dashboard(),
-    Dashboard(), //Ganti aja jadi page lu el
+    Dashboard(), //Ganti jadi page chat pembeli umkmk el
     Dashboard(), // Ganti jadi page riwayat dafa
     cart(),
     ProfileSettings(), 

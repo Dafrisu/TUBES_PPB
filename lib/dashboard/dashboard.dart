@@ -7,8 +7,6 @@ import 'dashboard_full_produk.dart';
 import 'dashboard_full_makanan.dart';
 import 'dashboard_full_minuman.dart';
 import 'dashboard_full_misc.dart';
-import 'package:tubes_ppb/profile_settings.dart';
-import 'package:tubes_ppb/inbox_page.dart';
 import 'package:tubes_ppb/notification_page.dart';
 
 // Import package carousel dari pub.dev
@@ -28,28 +26,10 @@ class Dashboard extends StatelessWidget {
             false, // Disable tombol back ketika di navigate ke page ini
         actions: <Widget>[
           const SizedBox(width: 10),
-          // IconButton(
-          //   icon: const Icon(Icons.mail_outline),
-          //   onPressed: () {
-          //     Navigator.push(
-          //         context,
-          //         MaterialPageRoute(
-          //             builder: (context) => const InformasiPemesanan()));
-          //   },
-          // ),
           IconButton(
-            icon: const Icon(Icons.person),
+            icon: const Icon(Icons.search_outlined),
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ProfileSettings()));
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.mail),
-            onPressed: () {
-              // Handle inbox button press
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => InboxPage()));
+              // Handle search logic
             },
           ),
           IconButton(
