@@ -43,7 +43,14 @@ class _InboxPageState extends State<InboxPage> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xFF658864),
+        backgroundColor: const Color.fromARGB(255, 101, 136, 100),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back,
+              color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         actions: [
           IconButton(
             icon: const Icon(
@@ -125,7 +132,6 @@ class MessageSearchDelegate extends SearchDelegate<InboxItemData?> {
       icon: const Icon(
         Icons.arrow_back_outlined,
         color: Colors.black,
-        
       ),
       onPressed: () {
         close(context, null);
@@ -216,7 +222,10 @@ class _KurirPembeliChatPageState extends State<KurirPembeliChatPage> {
       {'text': 'Barang sudah sampai?', 'isSentByUser': false}
     ],
     'Dewi Jaya': [
-      {'text': 'Saya sedang menuju lokasi pengambilan barang.','isSentByUser': true},
+      {
+        'text': 'Saya sedang menuju lokasi pengambilan barang.',
+        'isSentByUser': true
+      },
       {'text': 'Oke, terima kasih informasinya.', 'isSentByUser': false}
     ],
   };

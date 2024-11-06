@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/login.dart';
 import 'Chat/chatKurirPembeli.dart';
 
 void main() {
@@ -16,14 +17,62 @@ class _MyAppState extends State<MyApp> {
   List<NotificationItemData> notifications = [
     NotificationItemData(
       title: 'UMKM',
-      message: 'Bang antar yang ini!',
-      time: '16:20',
+      message: 'Pesanan Anda sedang dalam proses.',
+      time: '08:30',
       isRead: false,
     ),
     NotificationItemData(
       title: 'UMKM',
-      message: 'Cek lagi barangnya ya!',
-      time: '16:30',
+      message: 'Driver sedang menuju lokasi Anda.',
+      time: '09:15',
+      isRead: true,
+    ),
+    NotificationItemData(
+      title: 'UMKM',
+      message: 'Pesanan berhasil diterima oleh kurir.',
+      time: '10:45',
+      isRead: false,
+    ),
+    NotificationItemData(
+      title: 'UMKM',
+      message: 'Kurir sedang di perjalanan ke lokasi Anda.',
+      time: '11:20',
+      isRead: true,
+    ),
+    NotificationItemData(
+      title: 'UMKM',
+      message: 'Pesanan Anda telah diantarkan.',
+      time: '12:00',
+      isRead: false,
+    ),
+    NotificationItemData(
+      title: 'UMKM',
+      message: 'Sistem telah menerima pembayaran.',
+      time: '13:30',
+      isRead: true,
+    ),
+    NotificationItemData(
+      title: 'UMKM',
+      message: 'Jadwal pengiriman baru telah ditambahkan.',
+      time: '14:00',
+      isRead: false,
+    ),
+    NotificationItemData(
+      title: 'UMKM',
+      message: 'Pesanan Anda sedang dikemas oleh penjual.',
+      time: '15:20',
+      isRead: true,
+    ),
+    NotificationItemData(
+      title: 'UMKM',
+      message: 'Penjual meminta Anda meninjau pesanan.',
+      time: '16:45',
+      isRead: false,
+    ),
+    NotificationItemData(
+      title: 'UMKM',
+      message: 'Sistem: Pembaruan status pengiriman telah diterima.',
+      time: '17:30',
       isRead: true,
     ),
   ];
@@ -36,26 +85,14 @@ class _MyAppState extends State<MyApp> {
       isRead: false,
     ),
     InboxItemData(
-      sender: 'Joko Penjual',
+      sender: 'Cahyadi',
       message: 'Barang sudah sampai?',
       time: '14:50',
       isRead: true,
     ),
     InboxItemData(
-      sender: 'Rina Katering',
-      message: 'Pesanan sudah disiapkan!',
-      time: '15:15',
-      isRead: false,
-    ),
-    InboxItemData(
-      sender: 'Budi Sumber',
-      message: 'Kapan bisa ambil barang?',
-      time: '13:45',
-      isRead: true,
-    ),
-    InboxItemData(
       sender: 'Dewi Jaya',
-      message: 'Terima kasih atas pengiriman!',
+      message: 'Oke, terima kasih informasinya.',
       time: '12:30',
       isRead: false,
     ),
@@ -81,35 +118,31 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DeliveryPage(
-        notifications: notifications,
-        inboxMessages: inboxMessages,
-        hasUnreadNotifications: hasUnreadNotifications,
-        hasUnreadInboxMessages: hasUnreadInboxMessages,
-        markAllNotificationsAsRead: markAllNotificationsAsRead,
-        orders: orders
-      ),
+          notifications: notifications,
+          inboxMessages: inboxMessages,
+          hasUnreadNotifications: hasUnreadNotifications,
+          hasUnreadInboxMessages: hasUnreadInboxMessages,
+          markAllNotificationsAsRead: markAllNotificationsAsRead,
+          orders: orders),
     );
   }
 
-    List<OrderItemData> orders = [
+  List<OrderItemData> orders = [
     OrderItemData(
-      itemName: 'Salad',
-      quantity: 1,
-      address: 'Jl. Boulevard no 32',
-      gambar: 'lib/assets_images/Makanan1.jpg'
-    ),
+        itemName: 'Salad',
+        quantity: 1,
+        address: 'Jl. Boulevard no 32',
+        gambar: 'lib/assets_images/Makanan1.jpg'),
     OrderItemData(
-      itemName: 'French Fries',
-      quantity: 2,
-      address: 'Jl. Mangga no 21',
-      gambar: 'lib/assets_images/Makanan4.jpg'
-    ),
+        itemName: 'French Fries',
+        quantity: 2,
+        address: 'Jl. Mangga no 21',
+        gambar: 'lib/assets_images/Makanan4.jpg'),
     OrderItemData(
-      itemName: 'Iced Lemon',
-      quantity: 1,
-      address: 'Jl. Merdeka no 10',
-      gambar: 'lib/assets_images/Minuman4.jpg'
-    ),
+        itemName: 'Iced Lemon',
+        quantity: 1,
+        address: 'Jl. Merdeka no 10',
+        gambar: 'lib/assets_images/Minuman4.jpg'),
   ];
 }
 
@@ -148,7 +181,10 @@ class DeliveryPage extends StatelessWidget {
           Stack(
             children: [
               IconButton(
-                icon: const Icon(Icons.notifications, color: Colors.white,),
+                icon: const Icon(
+                  Icons.notifications,
+                  color: Colors.white,
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -179,7 +215,10 @@ class DeliveryPage extends StatelessWidget {
           Stack(
             children: [
               IconButton(
-                icon: const Icon(Icons.mail_outline, color: Colors.white,),
+                icon: const Icon(
+                  Icons.mail_outline,
+                  color: Colors.white,
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -203,6 +242,20 @@ class DeliveryPage extends StatelessWidget {
                   ),
                 ),
             ],
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.exit_to_app,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const login(),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -238,25 +291,22 @@ class OrderItemData {
   final String address;
   final String gambar;
 
-  OrderItemData({
-    required this.itemName,
-    required this.quantity,
-    required this.address,
-    required this.gambar
-  });
+  OrderItemData(
+      {required this.itemName,
+      required this.quantity,
+      required this.address,
+      required this.gambar});
 }
-
 
 class OrderCard extends StatefulWidget {
   final OrderItemData order;
   const OrderCard({super.key, required this.order});
 
-  
   _OrderCardState createState() => _OrderCardState();
 }
 
 class _OrderCardState extends State<OrderCard> {
-  bool isPressed = false; 
+  bool isPressed = false;
 
   void _onButtonPressed() {
     setState(() {
@@ -305,10 +355,11 @@ class _OrderCardState extends State<OrderCard> {
           ElevatedButton(
             onPressed: _onButtonPressed,
             style: ElevatedButton.styleFrom(
-              backgroundColor: isPressed ? Colors.green : const Color(0xFF7B5400), 
+              backgroundColor:
+                  isPressed ? Colors.green : const Color(0xFF7B5400),
             ),
             child: Text(
-              isPressed ? 'Diantar' : 'Dikemas', 
+              isPressed ? 'Diantar' : 'Dikemas',
               style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
             ),
           ),
@@ -317,8 +368,6 @@ class _OrderCardState extends State<OrderCard> {
     );
   }
 }
-
-
 
 class NotificationPage extends StatefulWidget {
   final List<NotificationItemData> notifications;
@@ -350,7 +399,14 @@ class _NotificationPageState extends State<NotificationPage> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xFF658864),
+        backgroundColor: const Color.fromARGB(255, 101, 136, 100),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back,
+              color: Colors.white), 
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         actions: [
           TextButton(
             onPressed: () {
@@ -426,23 +482,27 @@ class NotificationItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          if (!isRead)
-            Container(
-              width: 8,
-              height: 8,
-              margin: const EdgeInsets.only(right: 10),
-              decoration: const BoxDecoration(
-                color: Colors.orange,
-                shape: BoxShape.circle,
-              ),
-            ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                Row(
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    if (!isRead)
+                      Container(
+                        width: 8,
+                        height: 8,
+                        margin: const EdgeInsets.only(left: 10),
+                        decoration: const BoxDecoration(
+                          color: Colors.orange,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                  ],
                 ),
                 const SizedBox(height: 4),
                 Text(message),
