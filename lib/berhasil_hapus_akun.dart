@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/login.dart';
 
 class DeleteAkun extends StatelessWidget {
   const DeleteAkun({super.key});
@@ -24,7 +25,10 @@ class DeleteAkun extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Navigate to login screen and remove all previous routes
-                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => login()),
+                  );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
