@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_ppb/dashboard/dashboard.dart';
 import 'package:tubes_ppb/formGantiPassword.dart';
 import 'package:tubes_ppb/kurir.dart';
 import 'package:tubes_ppb/landing.dart';
+import 'homepage.dart';
 
 import 'package:tubes_ppb/register.dart';
 
@@ -113,7 +113,7 @@ class login extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Dashboard(),
+                            builder: (context) => Homepage(),
                           ),
                         );
                       }
