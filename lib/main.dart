@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/animation.dart';
+import 'package:provider/provider.dart';
+import 'userdata/user_provider.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => UserProvider(), // Assuming UserProvider extends ChangeNotifier
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {

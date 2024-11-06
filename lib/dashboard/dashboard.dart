@@ -41,7 +41,7 @@ class Dashboard extends StatelessWidget {
             icon: const Icon(Icons.person),
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => profileSettings()));
+                  MaterialPageRoute(builder: (context) => ProfileSettings()));
             },
           ),
           IconButton(
