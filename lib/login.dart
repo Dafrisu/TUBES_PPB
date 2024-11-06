@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tubes_ppb/formGantiPassword.dart';
 import 'package:tubes_ppb/kurir.dart';
 import 'package:tubes_ppb/landing.dart';
-import 'homepage.dart';
-
 import 'package:tubes_ppb/register.dart';
 
 //packages
@@ -34,7 +32,7 @@ class login extends StatelessWidget {
         ),
         centerTitle: true,
         title: Text(
-          'Masuk',
+          'Login!',
           style: GoogleFonts.montserrat(
               fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
         ),
@@ -52,9 +50,11 @@ class login extends StatelessWidget {
                         fontSize: 24, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 20),
+              Text('Email',  
+                  style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w700)),
               TextFormField(
                 controller: emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
+                decoration: const InputDecoration(labelText: 'Masukkan Email'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
@@ -62,9 +62,10 @@ class login extends StatelessWidget {
                   return null;
                 },
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 24),
+              Text('Password', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w700)),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Password'),
+                decoration: const InputDecoration(labelText: 'Masukkan Password',),
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -87,7 +88,7 @@ class login extends StatelessWidget {
                               builder: (context) => const Formgantipassword()),
                         );
                       },
-                      child: const Text('Lupa Password?'),
+                      child: Text('Lupa Password?', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w700)),
                     ),
                   ],
                 ),
@@ -101,15 +102,13 @@ class login extends StatelessWidget {
                 onPressed: () {
                     if (formKey.currentState?.validate() == true) {
                       if (emailController.text == '@kurir') {
-                        // Navigate to kurir.dart if email matches
-                        Navigator.push(
+                          Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => MyApp(), 
                           ),
                         );
                       } else {
-                        // Navigate to dashboard.dart if email does not match
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -126,7 +125,8 @@ class login extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Don't have an account?"),
+                  Text("Tidak Memiliki akun?", 
+                    style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w400)),
                   TextButton(
                     onPressed: () {
                       Navigator.push(
@@ -136,7 +136,7 @@ class login extends StatelessWidget {
                         ),
                       );
                     },
-                    child: const Text('Register'),
+                    child: Text('Register', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w400)),
                   ),
                 ],
               ),
