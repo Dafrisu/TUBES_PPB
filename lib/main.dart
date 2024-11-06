@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/animation.dart';
+import 'package:tubes_ppb/dashboard/dashboard.dart';
 
 void main() {
   runApp(const MainApp());

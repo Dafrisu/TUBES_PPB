@@ -4,6 +4,8 @@ final List<Map<String, dynamic>> colorpalete = [
   {"green": const Color.fromARGB(255, 101, 136, 100)}
 ];
 
+List<Map<String, dynamic>> barangpagepenjual =[];
+
 List<Map<String, dynamic>> listcart = [];
 
 List<Map<String, dynamic>> sortedcart = [];
