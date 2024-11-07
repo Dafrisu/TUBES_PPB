@@ -1,12 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:tubes_ppb/formGantiPassword.dart';
+import 'masukkanEmail.dart';
 import 'homepage.dart';
 import 'package:tubes_ppb/kurir.dart';
 import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/register.dart';
-import 'package:tubes_ppb/dashboard/dashboard.dart';
 
 //packages
 import 'package:google_fonts/google_fonts.dart';
@@ -95,7 +94,7 @@ class login extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Formgantipassword()),
+                              builder: (context) => const Masukkanemail()),
                         );
                       },
                       child: Text('Lupa Password?', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w700)),
@@ -123,7 +122,7 @@ class login extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Dashboard(),
+                            builder: (context) => Homepage(),
                           ),
                         );
                       }
