@@ -7,6 +7,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -62,8 +64,7 @@ class _InboxPagePembeliKurirState extends State<InboxPagePembeliKurir> {
         ),
         backgroundColor: const Color.fromARGB(255, 101, 136, 100),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,
-              color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -231,7 +232,10 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
 
   final Map<String, List<Map<String, dynamic>>> initialMessages = {
     'Kurir Andi': [
-      {'text': 'Apakah Anda sudah siap untuk menerima barang?', 'isSentByUser': false},
+      {
+        'text': 'Apakah Anda sudah siap untuk menerima barang?',
+        'isSentByUser': false
+      },
       {'text': 'Iya, saya sudah siap.', 'isSentByUser': true},
       {'text': 'Saya sudah didepan rumah Anda', 'isSentByUser': false}
     ],
@@ -241,7 +245,10 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
     ],
     'Kurir Cahyadi': [
       {'text': 'Apakah barang sudah siap di antar kak?', 'isSentByUser': true},
-      {'text': 'Kurir sedang menuju lokasi pengambilan barang.', 'isSentByUser': false},
+      {
+        'text': 'Kurir sedang menuju lokasi pengambilan barang.',
+        'isSentByUser': false
+      },
     ],
   };
 

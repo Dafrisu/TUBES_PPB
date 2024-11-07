@@ -7,6 +7,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,7 +40,7 @@ class _InboxPageKurirUmkmState extends State<InboxPageKurirUmkm> {
       sender: 'UMKM Elektronik Pintar',
       message: 'Ya, tolong ambil juga stok di rak bagian atas.',
       time: '09:45',
-      isRead: true, 
+      isRead: true,
     ),
     InboxItemData(
       sender: 'UMKM Kerajinan Tangan',
@@ -62,8 +64,7 @@ class _InboxPageKurirUmkmState extends State<InboxPageKurirUmkm> {
         ),
         backgroundColor: const Color.fromARGB(255, 101, 136, 100),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,
-              color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -231,16 +232,28 @@ class _KurirUmkmChatPageState extends State<KurirUmkmChatPage> {
 
   final Map<String, List<Map<String, dynamic>>> initialMessages = {
     'UMKM Fashion Modern': [
-      {'text': 'Selamat pagi! Saya kurir yang akan mengambil pesanan Anda.', 'isSentByUser': true},
-      {'text': 'Selamat Pagi! Siap, pesanan sudah siap diambil.', 'isSentByUser': false}
+      {
+        'text': 'Selamat pagi! Saya kurir yang akan mengambil pesanan Anda.',
+        'isSentByUser': true
+      },
+      {
+        'text': 'Selamat Pagi! Siap, pesanan sudah siap diambil.',
+        'isSentByUser': false
+      }
     ],
     'UMKM Elektronik Pintar': [
       {'text': 'Ada tambahan barang yang perlu diambil?', 'isSentByUser': true},
-      {'text': 'Ya, tolong ambil juga stok di rak bagian atas.', 'isSentByUser': false}
+      {
+        'text': 'Ya, tolong ambil juga stok di rak bagian atas.',
+        'isSentByUser': false
+      }
     ],
     'UMKM Kerajinan Tangan': [
       {'text': 'Baik, saya akan segera ke sana.', 'isSentByUser': true},
-      {'text': 'Terima kasih, jangan lupa cek resi setelah pengiriman!', 'isSentByUser': false}
+      {
+        'text': 'Terima kasih, jangan lupa cek resi setelah pengiriman!',
+        'isSentByUser': false
+      }
     ],
   };
 

@@ -18,16 +18,16 @@ class Screens extends State<Homepage> {
     Dashboard(),
     cart(),
     RiwayatPembelian(), // Ganti jadi page riwayat dafa
-    InboxPagePembeliUmkm(), 
-    ProfileSettings(), 
+    InboxPagePembeliUmkm(),
+    ProfileSettings(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
-        children: pagelist,
         index: pages,
+        children: pagelist,
       ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
