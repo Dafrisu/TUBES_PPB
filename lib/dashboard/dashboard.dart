@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/BarangPenjual.dart';
 import 'package:tubes_ppb/Data.dart' as data;
-import 'package:tubes_ppb/pages/informasi_pemesanan.dart';
-import 'package:tubes_ppb/pages/profil_umkm.dart';
 import 'dashboard_full_produk.dart';
 import 'dashboard_full_makanan.dart';
 import 'dashboard_full_minuman.dart';
@@ -62,17 +60,20 @@ class Dashboard extends StatelessWidget {
                 slideIndicator: CircularSlideIndicator(),
               ),
               // Isi carousel
-              items: [1, 2, 3, 4, 5].map((i) {
+              items: [
+                'lib/assets_images/Minuman1.png',
+                'lib/assets_images/Minuman2.jpg',
+                'lib/assets_images/Makanan1.jpg',
+                'lib/assets_images/Misc1.png',
+                'lib/assets_images/Produk1.png',
+              ].map((img) {
                 return Builder(
                   builder: (BuildContext context) {
                     return Container(
                         width: MediaQuery.of(context).size.width,
                         margin: EdgeInsets.symmetric(horizontal: 5.0),
                         decoration: BoxDecoration(color: Colors.amber),
-                        child: Text(
-                          'Gambar $i',
-                          style: TextStyle(fontSize: 16.0),
-                        ));
+                        child: Image.asset(img, fit: BoxFit.cover));
                   },
                 );
               }).toList(),
