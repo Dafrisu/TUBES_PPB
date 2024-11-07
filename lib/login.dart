@@ -113,9 +113,6 @@ class login extends StatelessWidget {
                     if (formKey.currentState?.validate() == true) {
                       _showNotification();
                       if (emailController.text == '@kurir') {
-
-                      if (emailController.text.contains('@kurir')) {
-
                           Navigator.push(
                           context,
                           MaterialPageRoute(
