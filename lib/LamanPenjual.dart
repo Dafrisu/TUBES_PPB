@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:tubes_ppb/BarangPenjual.dart';
 import 'Data.dart' as data;
 import 'cart.dart';
@@ -13,12 +14,11 @@ class PagePenjual extends StatefulWidget {
 }
 
 class _PagePenjualState extends State<PagePenjual> {
-  void setbarang(){
-  data.listdata.forEach((item){
-    if(item["id_penjual"] == widget.forpage["id_penjual"]){
-      data.barangpagepenjual.add(item);
-    }
-  });
+  Future<void> setbarang() async{
+  data.barangpagepenjual = data.listdata
+        .where((item) => item["id_penjual"] == widget.forpage["id_penjual"])
+        .toList();
+    setState(() {}); 
 }
 @override
   void initState(){
@@ -56,76 +56,82 @@ class _PagePenjualState extends State<PagePenjual> {
         ),
       ),
       body: SafeArea(
+        child: LiquidPullToRefresh(
+          onRefresh: setbarang,
+          showChildOpacityTransition: false,
+          color: Colors.white24,
+          backgroundColor: data.colorpalete[0]["green"],
           child: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // 2 kotak dalam satu baris
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          childAspectRatio: 3 / 4, // Rasio lebar/tinggi dari tiap item
-        ),
-        itemCount: data.barangpagepenjual.length,
-        itemBuilder: (context, index) {
-          final item = data.barangpagepenjual[index];
-          return InkWell(
-              onTap: () {
-                // Mengarahkan ke halaman detail produk
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PageBarang(product: item),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, // 2 kotak dalam satu baris
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            childAspectRatio: 3 / 4, // Rasio lebar/tinggi dari tiap item
+          ),
+          itemCount: data.barangpagepenjual.length,
+          itemBuilder: (context, index) {
+            final item = data.barangpagepenjual[index];
+            return InkWell(
+                onTap: () {
+                  // Mengarahkan ke halaman detail produk
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PageBarang(product: item),
+                    ),
+                  );
+                },
+                child: Card(
+                  elevation: 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Gambar produk
+                      Expanded(
+                        child: item['img'] != ''
+                            ? Image.network(
+                                item['img'],
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: 100,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Icon(Icons.image_not_supported),
+                              )
+                            : const Icon(Icons.image,
+                                size: 100), // Placeholder jika img kosong
+                      ),
+                      SizedBox(height: 8),
+                      // Nama produk
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          item['nama'],
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      // Harga produk
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          'RP.${item['harga']}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.green,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              },
-              child: Card(
-                elevation: 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Gambar produk
-                    Expanded(
-                      child: item['img'] != ''
-                          ? Image.network(
-                              item['img'],
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: 100,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Icon(Icons.image_not_supported),
-                            )
-                          : const Icon(Icons.image,
-                              size: 100), // Placeholder jika img kosong
-                    ),
-                    SizedBox(height: 8),
-                    // Nama produk
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        item['nama'],
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    // Harga produk
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        'RP.${item['harga']}',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.green,
-                        ),
-                      ),
-                    ),
-                  ],
+                ));
+          },
                 ),
-              ));
-        },
-      )),
+        )),
     );
   }
 }
