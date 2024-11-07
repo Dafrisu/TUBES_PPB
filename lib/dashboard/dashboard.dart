@@ -127,9 +127,15 @@ class Dashboard extends StatelessWidget {
                     imageUrl: 'lib/assets_images/Makanan1.jpg',
                   ),
                 ),
-                ProductCard(
-                    title: 'Produk 2',
-                    imageUrl: 'lib/assets_images/Minuman1.png'),
+                InkWell(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) =>PageBarang(product: data.listdata[4])),
+                    );
+                  },
+                  child: ProductCard(
+                      title: 'Produk 2',
+                      imageUrl: 'lib/assets_images/Minuman1.png'),
+                ),
                 // Add more previews as needed
               ],
             ),
