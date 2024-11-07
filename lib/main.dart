@@ -6,7 +6,8 @@ import 'userdata/user_provider.dart';
 void main() {
   runApp(
     ChangeNotifierProvider(
-      create: (context) => UserProvider(), // Assuming UserProvider extends ChangeNotifier
+      create: (context) =>
+          UserProvider(), // Assuming UserProvider extends ChangeNotifier
       child: const MainApp(),
     ),
   );
@@ -22,4 +23,3 @@ class MainApp extends StatelessWidget {
     );
   }
 }
-
