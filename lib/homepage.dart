@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Chat/chatPembeliUmkm.dart'; // import page chat el
-import ''; // import page riwayat dafa
+import 'riwayat_pembelian.dart'; // import page riwayat dafa
 import 'dashboard/dashboard.dart'; // import dashboard page darryl
 import 'profile_settings.dart'; // import profile page mahes
 import 'cart.dart'; // import cart page haikal
@@ -17,7 +17,7 @@ class Screens extends State<Homepage> {
   List<Widget> pagelist = const [
     Dashboard(),
     cart(),
-    Dashboard(), // Ganti jadi page riwayat dafa
+    RiwayatPembelian(), // Ganti jadi page riwayat dafa
     InboxPagePembeliUmkm(), 
     ProfileSettings(), 
   ];
