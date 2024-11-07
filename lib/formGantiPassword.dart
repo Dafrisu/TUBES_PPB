@@ -1,4 +1,5 @@
 import 'package:tubes_ppb/login.dart';
+import 'package:tubes_ppb/riwayat_pembelian.dart';
 import 'package:tubes_ppb/verifikasi.dart';
 import 'package:flutter/material.dart';
 
@@ -49,7 +50,7 @@ class Formgantipassword extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const login(),
+                        builder: (context) => const RiwayatPembelian(),
                       ),
                     );
                   }
