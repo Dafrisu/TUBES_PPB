@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-
-void main() {
-  runApp(const MyApp());
-}
+import 'package:tubes_ppb/login.dart';
+import 'Chat/chatKurirPembeli.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -17,14 +13,62 @@ class _MyAppState extends State<MyApp> {
   List<NotificationItemData> notifications = [
     NotificationItemData(
       title: 'UMKM',
-      message: 'Bang antar yang ini!',
-      time: '16:20',
+      message: 'Pesanan Anda sedang dalam proses.',
+      time: '08:30',
       isRead: false,
     ),
     NotificationItemData(
       title: 'UMKM',
-      message: 'Cek lagi barangnya ya!',
-      time: '16:30',
+      message: 'Driver sedang menuju lokasi Anda.',
+      time: '09:15',
+      isRead: true,
+    ),
+    NotificationItemData(
+      title: 'UMKM',
+      message: 'Pesanan berhasil diterima oleh kurir.',
+      time: '10:45',
+      isRead: false,
+    ),
+    NotificationItemData(
+      title: 'UMKM',
+      message: 'Kurir sedang di perjalanan ke lokasi Anda.',
+      time: '11:20',
+      isRead: true,
+    ),
+    NotificationItemData(
+      title: 'UMKM',
+      message: 'Pesanan Anda telah diantarkan.',
+      time: '12:00',
+      isRead: false,
+    ),
+    NotificationItemData(
+      title: 'UMKM',
+      message: 'Sistem telah menerima pembayaran.',
+      time: '13:30',
+      isRead: true,
+    ),
+    NotificationItemData(
+      title: 'UMKM',
+      message: 'Jadwal pengiriman baru telah ditambahkan.',
+      time: '14:00',
+      isRead: false,
+    ),
+    NotificationItemData(
+      title: 'UMKM',
+      message: 'Pesanan Anda sedang dikemas oleh penjual.',
+      time: '15:20',
+      isRead: true,
+    ),
+    NotificationItemData(
+      title: 'UMKM',
+      message: 'Penjual meminta Anda meninjau pesanan.',
+      time: '16:45',
+      isRead: false,
+    ),
+    NotificationItemData(
+      title: 'UMKM',
+      message: 'Sistem: Pembaruan status pengiriman telah diterima.',
+      time: '17:30',
       isRead: true,
     ),
   ];
@@ -37,10 +81,16 @@ class _MyAppState extends State<MyApp> {
       isRead: false,
     ),
     InboxItemData(
-      sender: 'Dina Sari',
-      message: 'Besok aja ya',
-      time: '15:45',
+      sender: 'Cahyadi',
+      message: 'Barang sudah sampai?',
+      time: '14:50',
       isRead: true,
+    ),
+    InboxItemData(
+      sender: 'Dewi Jaya',
+      message: 'Oke, terima kasih informasinya.',
+      time: '12:30',
+      isRead: false,
     ),
   ];
 
@@ -64,35 +114,31 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DeliveryPage(
-        notifications: notifications,
-        inboxMessages: inboxMessages,
-        hasUnreadNotifications: hasUnreadNotifications,
-        hasUnreadInboxMessages: hasUnreadInboxMessages,
-        markAllNotificationsAsRead: markAllNotificationsAsRead,
-        orders: orders
-      ),
+          notifications: notifications,
+          inboxMessages: inboxMessages,
+          hasUnreadNotifications: hasUnreadNotifications,
+          hasUnreadInboxMessages: hasUnreadInboxMessages,
+          markAllNotificationsAsRead: markAllNotificationsAsRead,
+          orders: orders),
     );
   }
 
-    List<OrderItemData> orders = [
+  List<OrderItemData> orders = [
     OrderItemData(
-      itemName: 'Salad',
-      quantity: 1,
-      address: 'Jl. Boulevard no 32',
-      gambar: 'lib/assets_images/Makanan1.jpg'
-    ),
+        itemName: 'Salad',
+        quantity: 1,
+        address: 'Jl. Boulevard no 32',
+        gambar: 'lib/assets_images/Makanan1.jpg'),
     OrderItemData(
-      itemName: 'French Fries',
-      quantity: 2,
-      address: 'Jl. Mangga no 21',
-      gambar: 'lib/assets_images/Makanan4.jpg'
-    ),
+        itemName: 'French Fries',
+        quantity: 2,
+        address: 'Jl. Mangga no 21',
+        gambar: 'lib/assets_images/Makanan4.jpg'),
     OrderItemData(
-      itemName: 'Iced Lemon',
-      quantity: 1,
-      address: 'Jl. Merdeka no 10',
-      gambar: 'lib/assets_images/Minuman4.jpg'
-    ),
+        itemName: 'Iced Lemon',
+        quantity: 1,
+        address: 'Jl. Merdeka no 10',
+        gambar: 'lib/assets_images/Minuman4.jpg'),
   ];
 }
 
@@ -131,7 +177,10 @@ class DeliveryPage extends StatelessWidget {
           Stack(
             children: [
               IconButton(
-                icon: const Icon(Icons.notifications, color: Colors.white,),
+                icon: const Icon(
+                  Icons.notifications,
+                  color: Colors.white,
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -162,12 +211,15 @@ class DeliveryPage extends StatelessWidget {
           Stack(
             children: [
               IconButton(
-                icon: const Icon(Icons.mail_outline, color: Colors.white,),
+                icon: const Icon(
+                  Icons.mail_outline,
+                  color: Colors.white,
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const InboxPage(),
+                      builder: (context) => const InboxPageKurirPembeli(),
                     ),
                   );
                 },
@@ -186,6 +238,43 @@ class DeliveryPage extends StatelessWidget {
                   ),
                 ),
             ],
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.exit_to_app,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text("Konfirmasi"),
+                    content: const Text("Apakah Anda yakin ingin keluar?"),
+                    actions: [
+                      TextButton(
+                        child: const Text("Batal"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: const Text("Ya"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const login(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
           ),
         ],
       ),
@@ -221,18 +310,28 @@ class OrderItemData {
   final String address;
   final String gambar;
 
-  OrderItemData({
-    required this.itemName,
-    required this.quantity,
-    required this.address,
-    required this.gambar
-  });
+  OrderItemData(
+      {required this.itemName,
+      required this.quantity,
+      required this.address,
+      required this.gambar});
 }
 
-
-class OrderCard extends StatelessWidget {
+class OrderCard extends StatefulWidget {
   final OrderItemData order;
   const OrderCard({super.key, required this.order});
+
+  _OrderCardState createState() => _OrderCardState();
+}
+
+class _OrderCardState extends State<OrderCard> {
+  bool isPressed = false;
+
+  void _onButtonPressed() {
+    setState(() {
+      isPressed = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -250,7 +349,7 @@ class OrderCard extends StatelessWidget {
             height: 80,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(order.gambar),
+                image: AssetImage(widget.order.gambar),
                 fit: BoxFit.cover,
               ),
             ),
@@ -261,360 +360,30 @@ class OrderCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  order.itemName,
+                  widget.order.itemName,
                   style: const TextStyle(
                       fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
-                Text('Jumlah: ${order.quantity}'),
-                Text(order.address),
+                Text('Jumlah: ${widget.order.quantity}'),
+                Text(widget.order.address),
               ],
             ),
           ),
           const SizedBox(width: 16),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: _onButtonPressed,
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF7B5400),
+              backgroundColor:
+                  isPressed ? Colors.green : const Color(0xFF7B5400),
             ),
-            child: const Text(
-              'Dikemas',
-              style: TextStyle(color: Color(0xFFE6AF2E)),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class InboxPage extends StatefulWidget {
-  const InboxPage({super.key});
-
-  @override
-  _InboxPageState createState() => _InboxPageState();
-}
-
-class _InboxPageState extends State<InboxPage> {
-  List<InboxItemData> inboxItems = [
-    InboxItemData(
-      sender: 'Asep Montir',
-      message: 'Siipp',
-      time: '16:20',
-      isRead: false,
-    ),
-    InboxItemData(
-      sender: 'Joko Penjual',
-      message: 'Barang sudah sampai?',
-      time: '14:50',
-      isRead: true,
-    ),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          'Kotak Masuk',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: const Color(0xFF658864),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.white,),
-            onPressed: () {
-              showSearch(
-                context: context,
-                delegate: MessageSearchDelegate(
-                  inboxMessages: inboxItems,
-                  onSelected: (selectedMessage) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            ChatPage(sender: selectedMessage.sender),
-                      ),
-                    );
-                  },
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-      body: ListView.builder(
-        itemCount: inboxItems.length,
-        itemBuilder: (context, index) {
-          final item = inboxItems[index];
-          return ListTile(
-            leading: const CircleAvatar(
-              backgroundColor: Colors.grey,
-              child: Icon(Icons.person),
-            ),
-            title: Text(item.sender),
-            subtitle: Text(item.message),
-            trailing: Text(item.time),
-            onTap: () {
-              setState(() {
-                item.isRead = true;
-              });
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ChatPage(sender: item.sender)),
-              );
-            },
-          );
-        },
-      ),
-    );
-  }
-}
-
-class MessageSearchDelegate extends SearchDelegate<InboxItemData> {
-  final List<InboxItemData> inboxMessages;
-  final ValueChanged<InboxItemData> onSelected;
-
-  MessageSearchDelegate(
-      {required this.inboxMessages, required this.onSelected});
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-        },
-      ),
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () {
-        close;
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    final results = inboxMessages
-        .where((message) =>
-            message.sender.toLowerCase().contains(query.toLowerCase()))
-        .toList();
-
-    return ListView.builder(
-      itemCount: results.length,
-      itemBuilder: (context, index) {
-        final result = results[index];
-        return ListTile(
-          title: Text(result.sender),
-          subtitle: Text(result.message),
-          onTap: () {
-            onSelected(result);
-            close(context, result);
-          },
-        );
-      },
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    final suggestions = inboxMessages
-        .where((message) =>
-            message.sender.toLowerCase().startsWith(query.toLowerCase()))
-        .toList();
-
-    return ListView.builder(
-      itemCount: suggestions.length,
-      itemBuilder: (context, index) {
-        final suggestion = suggestions[index];
-        return ListTile(
-          title: Text(suggestion.sender),
-          onTap: () {
-            query = suggestion.sender;
-            onSelected(suggestion);
-          },
-        );
-      },
-    );
-  }
-}
-
-class InboxItemData {
-  final String sender;
-  final String message;
-  final String time;
-  bool isRead;
-
-  InboxItemData({
-    required this.sender,
-    required this.message,
-    required this.time,
-    this.isRead = false,
-  });
-}
-
-class ChatPage extends StatefulWidget {
-  final String sender;
-
-  const ChatPage({super.key, required this.sender});
-
-  @override
-  _ChatPageState createState() => _ChatPageState();
-}
-
-class _ChatPageState extends State<ChatPage> {
-  List<Map<String, dynamic>> messages = [];
-  final TextEditingController _messageController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _loadMessages();
-  }
-
-  Future<void> _loadMessages() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? savedMessages = prefs.getString(widget.sender);
-
-    if (savedMessages != null) {
-      List<dynamic> decodedMessages = json.decode(savedMessages);
-      setState(() {
-        messages = List<Map<String, dynamic>>.from(decodedMessages);
-      });
-    } else {
-      setState(() {
-        messages = [
-          {'text': 'Pesanan saya mana?', 'isSentByUser': false},
-          {'text': 'Siap Otw', 'isSentByUser': true},
-          {'text': 'Okay', 'isSentByUser': false},
-        ];
-      });
-    }
-  }
-
-  Future<void> _saveMessages() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(widget.sender, json.encode(messages));
-  }
-
-  void _sendMessage() {
-    String messageText = _messageController.text.trim();
-    if (messageText.isNotEmpty) {
-      setState(() {
-        messages.add({'text': messageText, 'isSentByUser': true});
-      });
-      _messageController.clear();
-      _saveMessages(); 
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.sender,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: const Color(0xFF658864),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                final message = messages[index];
-                return Row(
-                  mainAxisAlignment: message['isSentByUser']
-                      ? MainAxisAlignment.end
-                      : MainAxisAlignment.start,
-                  children: [
-                    if (!message['isSentByUser'])
-                      const CircleAvatar(
-                        radius: 15,
-                        backgroundImage: AssetImage(''), 
-                      ),
-                    if (!message['isSentByUser']) const SizedBox(width: 8),
-                    ChatBubble(
-                      text: message['text'],
-                      isSentByUser: message['isSentByUser'],
-                    ),
-                    if (message['isSentByUser']) const SizedBox(width: 8),
-                    if (message['isSentByUser'])
-                      const CircleAvatar(
-                        radius: 15,
-                        backgroundImage: AssetImage(''), 
-                      ),
-                  ],
-                );
-              },
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            color: Colors.grey[200],
-            child: Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {},
-                ),
-                Expanded(
-                  child: TextField(
-                    controller: _messageController,
-                    decoration: const InputDecoration(
-                      hintText: 'Type a message',
-                      border: InputBorder.none,
-                    ),
-                    onSubmitted: (value) => _sendMessage(),
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.send),
-                  onPressed: _sendMessage,
-                ),
-              ],
+            child: Text(
+              isPressed ? 'Diantar' : 'Dikemas',
+              style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class ChatBubble extends StatelessWidget {
-  final String text;
-  final bool isSentByUser;
-
-  const ChatBubble({super.key, required this.text, required this.isSentByUser});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: isSentByUser ? Colors.green[200] : Colors.grey[300],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Text(text),
     );
   }
 }
@@ -649,7 +418,13 @@ class _NotificationPageState extends State<NotificationPage> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: const Color(0xFF658864),
+        backgroundColor: const Color.fromARGB(255, 101, 136, 100),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         actions: [
           TextButton(
             onPressed: () {
@@ -725,23 +500,27 @@ class NotificationItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          if (!isRead)
-            Container(
-              width: 8,
-              height: 8,
-              margin: const EdgeInsets.only(right: 10),
-              decoration: const BoxDecoration(
-                color: Colors.orange,
-                shape: BoxShape.circle,
-              ),
-            ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                Row(
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    if (!isRead)
+                      Container(
+                        width: 8,
+                        height: 8,
+                        margin: const EdgeInsets.only(left: 10),
+                        decoration: const BoxDecoration(
+                          color: Colors.orange,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                  ],
                 ),
                 const SizedBox(height: 4),
                 Text(message),

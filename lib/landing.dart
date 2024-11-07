@@ -50,7 +50,7 @@ class landingPageState extends State<landingPage> {
                 color: Color.fromARGB(255, 0, 0, 0),
               ),
             ),
-            
+            const SizedBox(height: 30),
             // Image.asset("lib/assets_images/landing_image.jpg",
             //   height: 150, 
             //   width: 150, 
@@ -66,7 +66,7 @@ class landingPageState extends State<landingPage> {
               autoPlayInterval: const Duration(seconds:3), // Set interval berapa detik sebelum otomatis berganti item selanjutnya
               slideIndicator: CircularSlideIndicator(),
             ),
-            // Isi carousel
+            
             items: carouselItems.map((imagePath) {
               return Builder(
                 builder: (BuildContext context) {

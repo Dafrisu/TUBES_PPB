@@ -38,6 +38,11 @@ dependencies:
   flutter_carousel_widget: ^3.1.0
   timelines: ^0.1.0
   shared_preferences: ^2.3.2
+  provider: ^6.1.2
+  cached_network_image: ^3.4.1
+  email_validator: '^2.1.17'
+  flutter_native_splash: ^2.4.2
+  liquid_pull_to_refresh: ^3.0.1
 
 dev_dependencies:
   flutter_test:
