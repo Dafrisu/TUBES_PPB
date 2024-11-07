@@ -68,6 +68,13 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
       'Pesanan Dikirim',
       'Pesanan Diterima',
     ];
+    final List<String> waktuOrder = [
+      '13.00',
+      '13.05',
+      '13.25',
+      '13.27',
+      '13.56',
+    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -114,200 +121,234 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return SimpleDialog(
-                              children: [
-                                FixedTimeline.tileBuilder(
-                                  builder:
-                                      TimelineTileBuilder.connectedFromStyle(
-                                    contentsAlign: ContentsAlign.reverse,
-                                    oppositeContentsBuilder: (context, index) =>
-                                        Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text('22/12/2021'),
-                                    ),
-                                    contentsBuilder: (context, index) => Card(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text('Pesanan Dikemas'),
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: SimpleDialog(
+                                children: [
+                                  Center(
+                                    child: Container(
+                                      padding: EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom:
+                                              BorderSide(color: Colors.black),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        "Informasi Riwayat Pengantaran",
+                                        style: TextStyle(
+                                          color: Color.fromARGB(
+                                              255, 101, 136, 100),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
-                                    connectorStyleBuilder: (context, index) =>
-                                        ConnectorStyle.solidLine,
-                                    indicatorStyleBuilder: (context, index) =>
-                                        IndicatorStyle.dot,
-                                    itemCount: 4,
                                   ),
-                                ),
-                                Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.8,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.8,
-                                  padding: EdgeInsets.all(15),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 15),
-                                        child: Center(
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              border: Border(
-                                                bottom: BorderSide(
-                                                    color: Colors.black),
-                                              ),
-                                            ),
-                                            child: Text(
-                                              "Informasi Riwayat Pembelian",
-                                              style: TextStyle(
-                                                color: Color.fromARGB(
-                                                    255, 101, 136, 100),
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  FixedTimeline.tileBuilder(
+                                    builder:
+                                        TimelineTileBuilder.connectedFromStyle(
+                                      contentsAlign: ContentsAlign.reverse,
+                                      oppositeContentsBuilder:
+                                          (context, index) => Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(waktuOrder[index]),
+                                      ),
+                                      contentsBuilder: (context, index) => Card(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(events[index]),
                                         ),
                                       ),
-                                      // Column(children: [
-                                      //   Center(
-                                      //     child: Text(
-                                      //       "Invoice : INV/20220713/DRS/91207310",
-                                      //       style: TextStyle(
-                                      //         fontSize: 12,
-                                      //       ),
-                                      //     ),
-                                      //   )
-                                      // ]),
-                                      Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Container(
-                                                height: 80,
-                                                width: 80,
-                                                decoration: BoxDecoration(
-                                                  image: DecorationImage(
-                                                    image: NetworkImage(
-                                                        dataPesanan[index]
-                                                            ['gambar']),
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 10,
-                                                    left: 10,
-                                                    right: 10),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      "Detail Produk :",
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Color.fromARGB(
-                                                            255, 101, 136, 100),
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      dataPesanan[index]
-                                                          ['namaBarang'],
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                        'Jumlah Barang : ${dataPesanan[index]['jumlah']}'),
-                                                    Text(
-                                                        'Total harga : ${dataPesanan[index]['jumlah']} x ${dataPesanan[index]['totalHarga']}'),
-                                                  ],
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 5),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 2),
-                                            child: Text(
-                                              "Detail Pengantaran",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Color.fromARGB(
-                                                    255, 101, 136, 100),
-                                              ),
-                                            ),
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Alamat Pengiriman :',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              const SizedBox(width: 8),
-                                              Expanded(
-                                                child: Align(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Text(
-                                                    dataPesanan[index]
-                                                        ['alamat'],
-                                                    softWrap: true,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 0),
+                                      connectorStyleBuilder: (context, index) =>
+                                          ConnectorStyle.solidLine,
+                                      indicatorStyleBuilder: (context, index) =>
+                                          IndicatorStyle.dot,
+                                      itemCount: 4,
+                                    ),
+                                  ),
+                                  Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.8,
+                                    padding: EdgeInsets.all(15),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 15),
+                                          child: Center(
                                             child: Container(
                                               decoration: BoxDecoration(
                                                 border: Border(
                                                   bottom: BorderSide(
-                                                    color: Colors.black,
-                                                  ),
+                                                      color: Colors.black),
+                                                ),
+                                              ),
+                                              child: Text(
+                                                "Informasi Riwayat Pembelian",
+                                                style: TextStyle(
+                                                  color: Color.fromARGB(
+                                                      255, 101, 136, 100),
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
+                                        ),
+                                        // Column(children: [
+                                        //   Center(
+                                        //     child: Text(
+                                        //       "Invoice : INV/20220713/DRS/91207310",
+                                        //       style: TextStyle(
+                                        //         fontSize: 12,
+                                        //       ),
+                                        //     ),
+                                        //   )
+                                        // ]),
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  height: 80,
+                                                  width: 80,
+                                                  decoration: BoxDecoration(
+                                                    image: DecorationImage(
+                                                      image: NetworkImage(
+                                                          dataPesanan[index]
+                                                              ['gambar']),
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 10,
+                                                          left: 10,
+                                                          right: 10),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        "Detail Produk :",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              101,
+                                                              136,
+                                                              100),
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        dataPesanan[index]
+                                                            ['namaBarang'],
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14,
+                                                        ),
+                                                        softWrap: true,
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                      Text(
+                                                          'Jumlah Barang : ${dataPesanan[index]['jumlah']}'),
+                                                      Text(
+                                                          'Total harga : ${dataPesanan[index]['jumlah']} x ${dataPesanan[index]['totalHarga']}'),
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 5),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border(
+                                                bottom: BorderSide(
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 2),
+                                              child: Text(
+                                                "Detail Pengantaran",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 101, 136, 100),
+                                                ),
+                                              ),
+                                            ),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Alamat Pengiriman :',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Expanded(
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      dataPesanan[index]
+                                                          ['alamat'],
+                                                      softWrap: true,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 0),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  border: Border(
+                                                    bottom: BorderSide(
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
                             );
                           },
                         );
