@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/formGantiPassword.dart';
+import 'homepage.dart';
 import 'package:tubes_ppb/kurir.dart';
 import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/register.dart';
@@ -101,7 +102,7 @@ class login extends StatelessWidget {
                 ),
                 onPressed: () {
                     if (formKey.currentState?.validate() == true) {
-                      if (emailController.text == '@kurir') {
+                      if (emailController.text.contains('@kurir')) {
                           Navigator.push(
                           context,
                           MaterialPageRoute(
