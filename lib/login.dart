@@ -1,19 +1,12 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/formGantiPassword.dart';
 import 'homepage.dart';
 import 'package:tubes_ppb/kurir.dart';
 import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/register.dart';
-import 'package:tubes_ppb/dashboard/dashboard.dart';
 
 //packages
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
 
 class login extends StatelessWidget {
   const login({super.key});
@@ -22,8 +15,6 @@ class login extends StatelessWidget {
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     final emailController = TextEditingController();
-
-    _initializeNotifications();
 
     return Scaffold(
       appBar: AppBar(
@@ -111,8 +102,12 @@ class login extends StatelessWidget {
                 ),
                 onPressed: () {
                     if (formKey.currentState?.validate() == true) {
+<<<<<<< HEAD
                       _showNotification();
                       if (emailController.text == '@kurir') {
+=======
+                      if (emailController.text.contains('@kurir')) {
+>>>>>>> parent of b219038 (Merge pull request #68 from Dafrisu/fersya-branch)
                           Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -123,14 +118,14 @@ class login extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Dashboard(),
+                            builder: (context) => Homepage(),
                           ),
                         );
                       }
                   }
                 },
                 child:
-                  Text('Masuk', style: GoogleFonts.montserrat(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700)),
+                    const Text('Masuk', style: TextStyle(color: Colors.white)),
               ),
               const SizedBox(height: 10),
               Row(
@@ -158,33 +153,3 @@ class login extends StatelessWidget {
     );
   }
 }
-
-void _initializeNotifications() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
-
-    final InitializationSettings initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid);
-
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-  }
-
-  Future<void> _showNotification() async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      'your_channel_id',
-      'your_channel_name',
-      channelDescription: 'your_channel_description',
-      importance: Importance.max,
-      priority: Priority.high,
-      showWhen: false,
-    );
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(
-      Random().nextInt(100),
-      'Login Berhasil',
-      'Anda Telah Login!',
-      platformChannelSpecifics,
-    );
-  }
