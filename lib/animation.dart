@@ -35,8 +35,7 @@ class animation extends StatelessWidget {
   }
 }
 
-
-class SplashScreen  extends StatefulWidget{
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
@@ -57,213 +56,193 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green,
-      body: Stack(
-        children: [
-          ClipPath(
-            clipper: ClipperFirst(),
-            child: Container(
-              color: Colors.white,
-              height: MediaQuery.of(context).size.height,
+        backgroundColor: Colors.green,
+        body: Stack(
+          children: [
+            ClipPath(
+              clipper: ClipperFirst(),
+              child: Container(
+                color: Colors.white,
+                height: MediaQuery.of(context).size.height,
               ),
-          ),
-          ClipPath(
-            clipper: ClipperTwo(),
-            child: Container(
-              color: const Color.fromARGB(255, 211, 211, 211),
-              height: MediaQuery.of(context).size.height,
-              ),
-          ),
-          ClipPath(
-            clipper: ClipperThird(),
-            child: Container(
-              color: Colors.grey,
-              height: MediaQuery.of(context).size.height,
-              ),
-          ),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'lib/assets_images/sample 1 copy.png',
-                  width: 200, 
-                  height: 200, 
-                  fit: BoxFit.cover
-                  ),
-                Text("UMKMku", 
-                    style: GoogleFonts.montserrat(
-                      color: Colors.white, 
-                      fontWeight: FontWeight.w700, 
-                      fontSize: 48
-                    )
-                ),
-                
-                
-              ],
             ),
-          ),
-
-          
-        ],
-      )
-    );
+            ClipPath(
+              clipper: ClipperTwo(),
+              child: Container(
+                color: const Color.fromARGB(255, 211, 211, 211),
+                height: MediaQuery.of(context).size.height,
+              ),
+            ),
+            ClipPath(
+              clipper: ClipperThird(),
+              child: Container(
+                color: Colors.grey,
+                height: MediaQuery.of(context).size.height,
+              ),
+            ),
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset('lib/assets_images/sample 1 copy.png',
+                      width: 200, height: 200, fit: BoxFit.cover),
+                  Text("UMKMku",
+                      style: GoogleFonts.montserrat(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 48)),
+                ],
+              ),
+            ),
+          ],
+        ));
   }
 }
 
-class ClipperFirst extends  CustomClipper<Path> {
+class ClipperFirst extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
-    final double _xScaling = size.width / 414;
-    final double _yScaling = size.height / 896;
-    
-    double topOffset = 0; 
+    final double xScaling = size.width / 414;
+    final double yScaling = size.height / 896;
+
+    double topOffset = 0;
     double horizontalOffset = 50; // Clipper Horizontal Offset
 
     double verticalOffset = -200; // Clipper Vertical Offset
 
-    path.moveTo(0 + horizontalOffset, topOffset + verticalOffset); // Move the starting point down by verticalOffset
-    path.lineTo((147.0454 * _xScaling) + horizontalOffset, (316.99870000000004 * _yScaling) + verticalOffset);
+    path.moveTo(
+        0 + horizontalOffset,
+        topOffset +
+            verticalOffset); // Move the starting point down by verticalOffset
+    path.lineTo((147.0454 * xScaling) + horizontalOffset,
+        (316.99870000000004 * yScaling) + verticalOffset);
     path.cubicTo(
-      (126.7714 * _xScaling) + horizontalOffset, 
-      (289.06170000000003 * _yScaling) + verticalOffset,
-      (132.9834 * _xScaling) + horizontalOffset, 
-      (249.97969999999998 * _yScaling) + verticalOffset,
-      (160.9204 * _xScaling) + horizontalOffset, 
-      (229.7057 * _yScaling) + verticalOffset
-    );
+        (126.7714 * xScaling) + horizontalOffset,
+        (289.06170000000003 * yScaling) + verticalOffset,
+        (132.9834 * xScaling) + horizontalOffset,
+        (249.97969999999998 * yScaling) + verticalOffset,
+        (160.9204 * xScaling) + horizontalOffset,
+        (229.7057 * yScaling) + verticalOffset);
     path.cubicTo(
-      (160.9204 * _xScaling) + horizontalOffset, 
-      (229.7057 * _yScaling) + verticalOffset,
-      (339.7844 * _xScaling) + horizontalOffset, 
-      (99.90370000000001 * _yScaling) + verticalOffset,
-      (339.7844 * _xScaling) + horizontalOffset, 
-      (99.90370000000001 * _yScaling) + verticalOffset
-    );
+        (160.9204 * xScaling) + horizontalOffset,
+        (229.7057 * yScaling) + verticalOffset,
+        (339.7844 * xScaling) + horizontalOffset,
+        (99.90370000000001 * yScaling) + verticalOffset,
+        (339.7844 * xScaling) + horizontalOffset,
+        (99.90370000000001 * yScaling) + verticalOffset);
     path.cubicTo(
-      (367.72040000000004 * _xScaling) + horizontalOffset, 
-      (79.62989999999999 * _yScaling) + verticalOffset,
-      (406.8034 * _xScaling) + horizontalOffset, 
-      (85.84190000000001 * _yScaling) + verticalOffset,
-      (427.07640000000004 * _xScaling) + horizontalOffset, 
-      (113.77850000000001 * _yScaling) + verticalOffset
-    );
+        (367.72040000000004 * xScaling) + horizontalOffset,
+        (79.62989999999999 * yScaling) + verticalOffset,
+        (406.8034 * xScaling) + horizontalOffset,
+        (85.84190000000001 * yScaling) + verticalOffset,
+        (427.07640000000004 * xScaling) + horizontalOffset,
+        (113.77850000000001 * yScaling) + verticalOffset);
     path.cubicTo(
-      (447.35040000000004 * _xScaling) + horizontalOffset, 
-      (141.7147 * _yScaling) + verticalOffset,
-      (441.13840000000005 * _xScaling) + horizontalOffset, 
-      (180.7977 * _yScaling) + verticalOffset,
-      (413.2024 * _xScaling) + horizontalOffset, 
-      (201.0707 * _yScaling) + verticalOffset
-    );
+        (447.35040000000004 * xScaling) + horizontalOffset,
+        (141.7147 * yScaling) + verticalOffset,
+        (441.13840000000005 * xScaling) + horizontalOffset,
+        (180.7977 * yScaling) + verticalOffset,
+        (413.2024 * xScaling) + horizontalOffset,
+        (201.0707 * yScaling) + verticalOffset);
     path.cubicTo(
-      (413.2024 * _xScaling) + horizontalOffset, 
-      (201.0707 * _yScaling) + verticalOffset,
-      (234.3384 * _xScaling) + horizontalOffset, 
-      (330.87370000000004 * _yScaling) + verticalOffset,
-      (234.3384 * _xScaling) + horizontalOffset, 
-      (330.87370000000004 * _yScaling) + verticalOffset
-    );
+        (413.2024 * xScaling) + horizontalOffset,
+        (201.0707 * yScaling) + verticalOffset,
+        (234.3384 * xScaling) + horizontalOffset,
+        (330.87370000000004 * yScaling) + verticalOffset,
+        (234.3384 * xScaling) + horizontalOffset,
+        (330.87370000000004 * yScaling) + verticalOffset);
     path.cubicTo(
-      (206.4014 * _xScaling) + horizontalOffset, 
-      (351.14770000000004 * _yScaling) + verticalOffset,
-      (167.3194 * _xScaling) + horizontalOffset, 
-      (344.9357 * _yScaling) + verticalOffset,
-      (147.0454 * _xScaling) + horizontalOffset, 
-      (316.99870000000004 * _yScaling) + verticalOffset
-    );
+        (206.4014 * xScaling) + horizontalOffset,
+        (351.14770000000004 * yScaling) + verticalOffset,
+        (167.3194 * xScaling) + horizontalOffset,
+        (344.9357 * yScaling) + verticalOffset,
+        (147.0454 * xScaling) + horizontalOffset,
+        (316.99870000000004 * yScaling) + verticalOffset);
     path.cubicTo(
-      (147.0454 * _xScaling) + horizontalOffset, 
-      (316.99870000000004 * _yScaling) + verticalOffset,
-      (147.0454 * _xScaling) + horizontalOffset, 
-      (316.99870000000004 * _yScaling) + verticalOffset,
-      (147.0454 * _xScaling) + horizontalOffset, 
-      (316.99870000000004 * _yScaling) + verticalOffset
-    );
+        (147.0454 * xScaling) + horizontalOffset,
+        (316.99870000000004 * yScaling) + verticalOffset,
+        (147.0454 * xScaling) + horizontalOffset,
+        (316.99870000000004 * yScaling) + verticalOffset,
+        (147.0454 * xScaling) + horizontalOffset,
+        (316.99870000000004 * yScaling) + verticalOffset);
 
     return path;
   }
-
 
   @override
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
     // TODO: implement shouldReclip
     throw UnimplementedError();
   }
-
 }
 
-
-class ClipperTwo extends  CustomClipper<Path> {
+class ClipperTwo extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
-    final double _xScaling = size.width / 414;
-    final double _yScaling = size.height / 896;
-    
-    double topOffset = 0; 
+    final double xScaling = size.width / 414;
+    final double yScaling = size.height / 896;
+
+    double topOffset = 0;
     double horizontalOffset = 116; // Clipper Horizontal Axis
     double verticalOffset = -107; // Clipper Vertical Axis
 
-    path.moveTo(0 + horizontalOffset, topOffset + verticalOffset); // Move the starting point down by verticalOffset
-    path.lineTo((147.0454 * _xScaling) + horizontalOffset, (316.99870000000004 * _yScaling) + verticalOffset);
+    path.moveTo(
+        0 + horizontalOffset,
+        topOffset +
+            verticalOffset); // Move the starting point down by verticalOffset
+    path.lineTo((147.0454 * xScaling) + horizontalOffset,
+        (316.99870000000004 * yScaling) + verticalOffset);
     path.cubicTo(
-      (126.7714 * _xScaling) + horizontalOffset, 
-      (289.06170000000003 * _yScaling) + verticalOffset,
-      (132.9834 * _xScaling) + horizontalOffset, 
-      (249.97969999999998 * _yScaling) + verticalOffset,
-      (160.9204 * _xScaling) + horizontalOffset, 
-      (229.7057 * _yScaling) + verticalOffset
-    );
+        (126.7714 * xScaling) + horizontalOffset,
+        (289.06170000000003 * yScaling) + verticalOffset,
+        (132.9834 * xScaling) + horizontalOffset,
+        (249.97969999999998 * yScaling) + verticalOffset,
+        (160.9204 * xScaling) + horizontalOffset,
+        (229.7057 * yScaling) + verticalOffset);
     path.cubicTo(
-      (160.9204 * _xScaling) + horizontalOffset, 
-      (229.7057 * _yScaling) + verticalOffset,
-      (339.7844 * _xScaling) + horizontalOffset, 
-      (99.90370000000001 * _yScaling) + verticalOffset,
-      (339.7844 * _xScaling) + horizontalOffset, 
-      (99.90370000000001 * _yScaling) + verticalOffset
-    );
+        (160.9204 * xScaling) + horizontalOffset,
+        (229.7057 * yScaling) + verticalOffset,
+        (339.7844 * xScaling) + horizontalOffset,
+        (99.90370000000001 * yScaling) + verticalOffset,
+        (339.7844 * xScaling) + horizontalOffset,
+        (99.90370000000001 * yScaling) + verticalOffset);
     path.cubicTo(
-      (367.72040000000004 * _xScaling) + horizontalOffset, 
-      (79.62989999999999 * _yScaling) + verticalOffset,
-      (406.8034 * _xScaling) + horizontalOffset, 
-      (85.84190000000001 * _yScaling) + verticalOffset,
-      (427.07640000000004 * _xScaling) + horizontalOffset, 
-      (113.77850000000001 * _yScaling) + verticalOffset
-    );
+        (367.72040000000004 * xScaling) + horizontalOffset,
+        (79.62989999999999 * yScaling) + verticalOffset,
+        (406.8034 * xScaling) + horizontalOffset,
+        (85.84190000000001 * yScaling) + verticalOffset,
+        (427.07640000000004 * xScaling) + horizontalOffset,
+        (113.77850000000001 * yScaling) + verticalOffset);
     path.cubicTo(
-      (447.35040000000004 * _xScaling) + horizontalOffset, 
-      (141.7147 * _yScaling) + verticalOffset,
-      (441.13840000000005 * _xScaling) + horizontalOffset, 
-      (180.7977 * _yScaling) + verticalOffset,
-      (413.2024 * _xScaling) + horizontalOffset, 
-      (201.0707 * _yScaling) + verticalOffset
-    );
+        (447.35040000000004 * xScaling) + horizontalOffset,
+        (141.7147 * yScaling) + verticalOffset,
+        (441.13840000000005 * xScaling) + horizontalOffset,
+        (180.7977 * yScaling) + verticalOffset,
+        (413.2024 * xScaling) + horizontalOffset,
+        (201.0707 * yScaling) + verticalOffset);
     path.cubicTo(
-      (413.2024 * _xScaling) + horizontalOffset, 
-      (201.0707 * _yScaling) + verticalOffset,
-      (234.3384 * _xScaling) + horizontalOffset, 
-      (330.87370000000004 * _yScaling) + verticalOffset,
-      (234.3384 * _xScaling) + horizontalOffset, 
-      (330.87370000000004 * _yScaling) + verticalOffset
-    );
+        (413.2024 * xScaling) + horizontalOffset,
+        (201.0707 * yScaling) + verticalOffset,
+        (234.3384 * xScaling) + horizontalOffset,
+        (330.87370000000004 * yScaling) + verticalOffset,
+        (234.3384 * xScaling) + horizontalOffset,
+        (330.87370000000004 * yScaling) + verticalOffset);
     path.cubicTo(
-      (206.4014 * _xScaling) + horizontalOffset, 
-      (351.14770000000004 * _yScaling) + verticalOffset,
-      (167.3194 * _xScaling) + horizontalOffset, 
-      (344.9357 * _yScaling) + verticalOffset,
-      (147.0454 * _xScaling) + horizontalOffset, 
-      (316.99870000000004 * _yScaling) + verticalOffset
-    );
+        (206.4014 * xScaling) + horizontalOffset,
+        (351.14770000000004 * yScaling) + verticalOffset,
+        (167.3194 * xScaling) + horizontalOffset,
+        (344.9357 * yScaling) + verticalOffset,
+        (147.0454 * xScaling) + horizontalOffset,
+        (316.99870000000004 * yScaling) + verticalOffset);
     path.cubicTo(
-      (147.0454 * _xScaling) + horizontalOffset, 
-      (316.99870000000004 * _yScaling) + verticalOffset,
-      (147.0454 * _xScaling) + horizontalOffset, 
-      (316.99870000000004 * _yScaling) + verticalOffset,
-      (147.0454 * _xScaling) + horizontalOffset, 
-      (316.99870000000004 * _yScaling) + verticalOffset
-    );
+        (147.0454 * xScaling) + horizontalOffset,
+        (316.99870000000004 * yScaling) + verticalOffset,
+        (147.0454 * xScaling) + horizontalOffset,
+        (316.99870000000004 * yScaling) + verticalOffset,
+        (147.0454 * xScaling) + horizontalOffset,
+        (316.99870000000004 * yScaling) + verticalOffset);
 
     return path;
   }
@@ -275,75 +254,72 @@ class ClipperTwo extends  CustomClipper<Path> {
   }
 }
 
-class ClipperThird extends  CustomClipper<Path> {
-    @override
-    Path getClip(Size size) {
+class ClipperThird extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
     Path path = Path();
-    final double _xScaling = size.width / 414;
-    final double _yScaling = size.height / 896;
-    
-    double topOffset = 0; 
+    final double xScaling = size.width / 414;
+    final double yScaling = size.height / 896;
+
+    double topOffset = 0;
     double horizontalOffset = 180; // Clipper Horizontal Axis
     double verticalOffset = -8; // Clipper Vertical Axis
 
-    path.moveTo(0 + horizontalOffset, topOffset + verticalOffset); // Move the starting point down by verticalOffset
-    path.lineTo((147.0454 * _xScaling) + horizontalOffset, (316.99870000000004 * _yScaling) + verticalOffset);
+    path.moveTo(
+        0 + horizontalOffset,
+        topOffset +
+            verticalOffset); // Move the starting point down by verticalOffset
+    path.lineTo((147.0454 * xScaling) + horizontalOffset,
+        (316.99870000000004 * yScaling) + verticalOffset);
     path.cubicTo(
-      (126.7714 * _xScaling) + horizontalOffset, 
-      (289.06170000000003 * _yScaling) + verticalOffset,
-      (132.9834 * _xScaling) + horizontalOffset, 
-      (249.97969999999998 * _yScaling) + verticalOffset,
-      (160.9204 * _xScaling) + horizontalOffset, 
-      (229.7057 * _yScaling) + verticalOffset
-    );
+        (126.7714 * xScaling) + horizontalOffset,
+        (289.06170000000003 * yScaling) + verticalOffset,
+        (132.9834 * xScaling) + horizontalOffset,
+        (249.97969999999998 * yScaling) + verticalOffset,
+        (160.9204 * xScaling) + horizontalOffset,
+        (229.7057 * yScaling) + verticalOffset);
     path.cubicTo(
-      (160.9204 * _xScaling) + horizontalOffset, 
-      (229.7057 * _yScaling) + verticalOffset,
-      (339.7844 * _xScaling) + horizontalOffset, 
-      (99.90370000000001 * _yScaling) + verticalOffset,
-      (339.7844 * _xScaling) + horizontalOffset, 
-      (99.90370000000001 * _yScaling) + verticalOffset
-    );
+        (160.9204 * xScaling) + horizontalOffset,
+        (229.7057 * yScaling) + verticalOffset,
+        (339.7844 * xScaling) + horizontalOffset,
+        (99.90370000000001 * yScaling) + verticalOffset,
+        (339.7844 * xScaling) + horizontalOffset,
+        (99.90370000000001 * yScaling) + verticalOffset);
     path.cubicTo(
-      (367.72040000000004 * _xScaling) + horizontalOffset, 
-      (79.62989999999999 * _yScaling) + verticalOffset,
-      (406.8034 * _xScaling) + horizontalOffset, 
-      (85.84190000000001 * _yScaling) + verticalOffset,
-      (427.07640000000004 * _xScaling) + horizontalOffset, 
-      (113.77850000000001 * _yScaling) + verticalOffset
-    );
+        (367.72040000000004 * xScaling) + horizontalOffset,
+        (79.62989999999999 * yScaling) + verticalOffset,
+        (406.8034 * xScaling) + horizontalOffset,
+        (85.84190000000001 * yScaling) + verticalOffset,
+        (427.07640000000004 * xScaling) + horizontalOffset,
+        (113.77850000000001 * yScaling) + verticalOffset);
     path.cubicTo(
-      (447.35040000000004 * _xScaling) + horizontalOffset, 
-      (141.7147 * _yScaling) + verticalOffset,
-      (441.13840000000005 * _xScaling) + horizontalOffset, 
-      (180.7977 * _yScaling) + verticalOffset,
-      (413.2024 * _xScaling) + horizontalOffset, 
-      (201.0707 * _yScaling) + verticalOffset
-    );
+        (447.35040000000004 * xScaling) + horizontalOffset,
+        (141.7147 * yScaling) + verticalOffset,
+        (441.13840000000005 * xScaling) + horizontalOffset,
+        (180.7977 * yScaling) + verticalOffset,
+        (413.2024 * xScaling) + horizontalOffset,
+        (201.0707 * yScaling) + verticalOffset);
     path.cubicTo(
-      (413.2024 * _xScaling) + horizontalOffset, 
-      (201.0707 * _yScaling) + verticalOffset,
-      (234.3384 * _xScaling) + horizontalOffset, 
-      (330.87370000000004 * _yScaling) + verticalOffset,
-      (234.3384 * _xScaling) + horizontalOffset, 
-      (330.87370000000004 * _yScaling) + verticalOffset
-    );
+        (413.2024 * xScaling) + horizontalOffset,
+        (201.0707 * yScaling) + verticalOffset,
+        (234.3384 * xScaling) + horizontalOffset,
+        (330.87370000000004 * yScaling) + verticalOffset,
+        (234.3384 * xScaling) + horizontalOffset,
+        (330.87370000000004 * yScaling) + verticalOffset);
     path.cubicTo(
-      (206.4014 * _xScaling) + horizontalOffset, 
-      (351.14770000000004 * _yScaling) + verticalOffset,
-      (167.3194 * _xScaling) + horizontalOffset, 
-      (344.9357 * _yScaling) + verticalOffset,
-      (147.0454 * _xScaling) + horizontalOffset, 
-      (316.99870000000004 * _yScaling) + verticalOffset
-    );
+        (206.4014 * xScaling) + horizontalOffset,
+        (351.14770000000004 * yScaling) + verticalOffset,
+        (167.3194 * xScaling) + horizontalOffset,
+        (344.9357 * yScaling) + verticalOffset,
+        (147.0454 * xScaling) + horizontalOffset,
+        (316.99870000000004 * yScaling) + verticalOffset);
     path.cubicTo(
-      (147.0454 * _xScaling) + horizontalOffset, 
-      (316.99870000000004 * _yScaling) + verticalOffset,
-      (147.0454 * _xScaling) + horizontalOffset, 
-      (316.99870000000004 * _yScaling) + verticalOffset,
-      (147.0454 * _xScaling) + horizontalOffset, 
-      (316.99870000000004 * _yScaling) + verticalOffset
-    );
+        (147.0454 * xScaling) + horizontalOffset,
+        (316.99870000000004 * yScaling) + verticalOffset,
+        (147.0454 * xScaling) + horizontalOffset,
+        (316.99870000000004 * yScaling) + verticalOffset,
+        (147.0454 * xScaling) + horizontalOffset,
+        (316.99870000000004 * yScaling) + verticalOffset);
 
     return path;
   }
