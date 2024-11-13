@@ -327,7 +327,7 @@ class _KurirUmkmChatPageState extends State<KurirUmkmChatPage> {
                             AssetImage('lib/assets_images/Profilepic.png'),
                       ),
                     if (!message['isSentByUser']) const SizedBox(width: 8),
-                    ChatBubble(
+                    chatBubbleKurirUmkm(
                       text: message['text'],
                       isSentByUser: message['isSentByUser'],
                     ),
@@ -344,14 +344,14 @@ class _KurirUmkmChatPageState extends State<KurirUmkmChatPage> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(8),
-            color: Colors.grey[200],
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(30), // Rounded corners
+            ),
             child: Row(
               children: [
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {},
-                ),
                 Expanded(
                   child: TextField(
                     controller: _messageController,
@@ -375,15 +375,18 @@ class _KurirUmkmChatPageState extends State<KurirUmkmChatPage> {
   }
 }
 
-class ChatBubble extends StatelessWidget {
+class chatBubbleKurirUmkm extends StatelessWidget {
   final String text;
   final bool isSentByUser;
 
-  const ChatBubble({super.key, required this.text, required this.isSentByUser});
+  const chatBubbleKurirUmkm({super.key, required this.text, required this.isSentByUser});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width * 0.7, 
+      ),
       margin: const EdgeInsets.symmetric(vertical: 4),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
