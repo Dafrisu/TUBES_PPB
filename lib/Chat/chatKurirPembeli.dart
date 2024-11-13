@@ -45,8 +45,7 @@ class _InboxPageKurirPembeliState extends State<InboxPageKurirPembeli> {
         ),
         backgroundColor: const Color.fromARGB(255, 101, 136, 100),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,
-              color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -300,7 +299,7 @@ class _KurirPembeliChatPageState extends State<KurirPembeliChatPage> {
                             AssetImage('lib/assets_images/Profilepic.png'),
                       ),
                     if (!message['isSentByUser']) const SizedBox(width: 8),
-                    ChatBubble(
+                    chatBubbleKurirPembeli(
                       text: message['text'],
                       isSentByUser: message['isSentByUser'],
                     ),
@@ -317,14 +316,14 @@ class _KurirPembeliChatPageState extends State<KurirPembeliChatPage> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(8),
-            color: Colors.grey[200],
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(30), // Rounded corners
+            ),
             child: Row(
               children: [
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {},
-                ),
                 Expanded(
                   child: TextField(
                     controller: _messageController,
@@ -348,15 +347,19 @@ class _KurirPembeliChatPageState extends State<KurirPembeliChatPage> {
   }
 }
 
-class ChatBubble extends StatelessWidget {
+class chatBubbleKurirPembeli extends StatelessWidget {
   final String text;
   final bool isSentByUser;
 
-  const ChatBubble({super.key, required this.text, required this.isSentByUser});
+  const chatBubbleKurirPembeli(
+      {super.key, required this.text, required this.isSentByUser});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width * 0.7,
+      ),
       margin: const EdgeInsets.symmetric(vertical: 4),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(

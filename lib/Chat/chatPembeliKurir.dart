@@ -322,7 +322,7 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                             AssetImage('lib/assets_images/Profilepic.png'),
                       ),
                     if (!message['isSentByUser']) const SizedBox(width: 8),
-                    ChatBubble(
+                    chatBubblePembeliKurir(
                       text: message['text'],
                       isSentByUser: message['isSentByUser'],
                     ),
@@ -339,14 +339,14 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(8),
-            color: Colors.grey[200],
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(30), // Rounded corners
+            ),
             child: Row(
               children: [
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {},
-                ),
                 Expanded(
                   child: TextField(
                     controller: _messageController,
@@ -370,15 +370,18 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
   }
 }
 
-class ChatBubble extends StatelessWidget {
+class chatBubblePembeliKurir extends StatelessWidget {
   final String text;
   final bool isSentByUser;
 
-  const ChatBubble({super.key, required this.text, required this.isSentByUser});
+  const chatBubblePembeliKurir({super.key, required this.text, required this.isSentByUser});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width * 0.7, 
+      ),
       margin: const EdgeInsets.symmetric(vertical: 4),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
