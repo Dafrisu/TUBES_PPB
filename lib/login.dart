@@ -22,8 +22,6 @@ class login extends StatelessWidget {
     final formKey = GlobalKey<FormState>();
     final emailController = TextEditingController();
 
-    _initializeNotifications();
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(76, 175, 80, 1),

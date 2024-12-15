@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/landing.dart';
-
 import 'verifikasi.dart';
-
 //packages
 import 'package:google_fonts/google_fonts.dart';
 
@@ -30,7 +28,7 @@ class register extends StatelessWidget {
         ),
         centerTitle: true,
         title: Text(
-          'Registrasi',
+          'Masuk',
           style: GoogleFonts.montserrat(
               fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
         ),
