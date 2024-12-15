@@ -7,6 +7,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,7 +40,7 @@ class _InboxPageKurirUmkmState extends State<InboxPageKurirUmkm> {
       sender: 'UMKM Elektronik Pintar',
       message: 'Ya, tolong ambil juga stok di rak bagian atas.',
       time: '09:45',
-      isRead: true, 
+      isRead: true,
     ),
     InboxItemData(
       sender: 'UMKM Kerajinan Tangan',
@@ -62,8 +64,7 @@ class _InboxPageKurirUmkmState extends State<InboxPageKurirUmkm> {
         ),
         backgroundColor: const Color.fromARGB(255, 101, 136, 100),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,
-              color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -231,16 +232,28 @@ class _KurirUmkmChatPageState extends State<KurirUmkmChatPage> {
 
   final Map<String, List<Map<String, dynamic>>> initialMessages = {
     'UMKM Fashion Modern': [
-      {'text': 'Selamat pagi! Saya kurir yang akan mengambil pesanan Anda.', 'isSentByUser': true},
-      {'text': 'Selamat Pagi! Siap, pesanan sudah siap diambil.', 'isSentByUser': false}
+      {
+        'text': 'Selamat pagi! Saya kurir yang akan mengambil pesanan Anda.',
+        'isSentByUser': true
+      },
+      {
+        'text': 'Selamat Pagi! Siap, pesanan sudah siap diambil.',
+        'isSentByUser': false
+      }
     ],
     'UMKM Elektronik Pintar': [
       {'text': 'Ada tambahan barang yang perlu diambil?', 'isSentByUser': true},
-      {'text': 'Ya, tolong ambil juga stok di rak bagian atas.', 'isSentByUser': false}
+      {
+        'text': 'Ya, tolong ambil juga stok di rak bagian atas.',
+        'isSentByUser': false
+      }
     ],
     'UMKM Kerajinan Tangan': [
       {'text': 'Baik, saya akan segera ke sana.', 'isSentByUser': true},
-      {'text': 'Terima kasih, jangan lupa cek resi setelah pengiriman!', 'isSentByUser': false}
+      {
+        'text': 'Terima kasih, jangan lupa cek resi setelah pengiriman!',
+        'isSentByUser': false
+      }
     ],
   };
 
@@ -314,7 +327,7 @@ class _KurirUmkmChatPageState extends State<KurirUmkmChatPage> {
                             AssetImage('lib/assets_images/Profilepic.png'),
                       ),
                     if (!message['isSentByUser']) const SizedBox(width: 8),
-                    ChatBubble(
+                    chatBubbleKurirUmkm(
                       text: message['text'],
                       isSentByUser: message['isSentByUser'],
                     ),
@@ -331,14 +344,14 @@ class _KurirUmkmChatPageState extends State<KurirUmkmChatPage> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(8),
-            color: Colors.grey[200],
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(30), // Rounded corners
+            ),
             child: Row(
               children: [
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {},
-                ),
                 Expanded(
                   child: TextField(
                     controller: _messageController,
@@ -362,15 +375,18 @@ class _KurirUmkmChatPageState extends State<KurirUmkmChatPage> {
   }
 }
 
-class ChatBubble extends StatelessWidget {
+class chatBubbleKurirUmkm extends StatelessWidget {
   final String text;
   final bool isSentByUser;
 
-  const ChatBubble({super.key, required this.text, required this.isSentByUser});
+  const chatBubbleKurirUmkm({super.key, required this.text, required this.isSentByUser});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width * 0.7, 
+      ),
       margin: const EdgeInsets.symmetric(vertical: 4),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(

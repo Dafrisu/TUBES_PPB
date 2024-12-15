@@ -43,6 +43,8 @@ dependencies:
   email_validator: '^2.1.17'
   flutter_native_splash: ^2.4.2
   liquid_pull_to_refresh: ^3.0.1
+  particles_flutter: ^1.0.1
+  flutter_local_notifications: ^18.0.1
 
 dev_dependencies:
   flutter_test:

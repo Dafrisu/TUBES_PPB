@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/landing.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import 'verifikasi.dart';
-
 //packages
-import 'package:email_validator/email_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 
 class register extends StatelessWidget {
   const register({super.key});
@@ -46,12 +41,15 @@ class register extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Text('Register',
-                  style: GoogleFonts.montserrat(fontSize: 32, fontWeight: FontWeight.bold)),
+                  style: GoogleFonts.montserrat(
+                      fontSize: 32, fontWeight: FontWeight.bold)),
               const SizedBox(height: 20),
               Text('Email',
-                style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w700)),
+                  style: GoogleFonts.montserrat(
+                      fontSize: 16, fontWeight: FontWeight.w700)),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Masukkan Email anda'),
+                decoration:
+                    const InputDecoration(labelText: 'Masukkan Email anda'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
@@ -60,8 +58,9 @@ class register extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 10),
-              Text('Masukkan Password', 
-                style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w700)),
+              Text('Masukkan Password',
+                  style: GoogleFonts.montserrat(
+                      fontSize: 16, fontWeight: FontWeight.w700)),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Password'),
                 obscureText: true,
@@ -73,7 +72,9 @@ class register extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 10),
-              Text('Confirm Password', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w700)),
+              Text('Confirm Password',
+                  style: GoogleFonts.montserrat(
+                      fontSize: 16, fontWeight: FontWeight.w700)),
               TextFormField(
                 decoration:
                     const InputDecoration(labelText: 'Confirm Your Password'),
@@ -84,11 +85,14 @@ class register extends StatelessWidget {
                   }
                   return null;
                 },
-              ),const SizedBox(height: 10),
+              ),
+              const SizedBox(height: 10),
               Text('Telephone Number',
-                style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w700)),
+                  style: GoogleFonts.montserrat(
+                      fontSize: 16, fontWeight: FontWeight.w700)),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Enter Your Telephone Number'),
+                decoration: const InputDecoration(
+                    labelText: 'Enter Your Telephone Number'),
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -99,11 +103,10 @@ class register extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                  style: ElevatedButton.styleFrom(
+                style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
                   shape:
                       RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                      
                 ),
                 onPressed: () {
                   if (formKey.currentState?.validate() == true) {
@@ -120,20 +123,23 @@ class register extends StatelessWidget {
                   }
                 },
                 child: Text('Register!',
-                  style: GoogleFonts.montserrat(
-                      fontSize: 20, color: Colors.white)
-                      ),
+                    style: GoogleFonts.montserrat(
+                        fontSize: 20, color: Colors.white)),
               ),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Already have an account?',  style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w400)),
+                  Text('Already have an account?',
+                      style: GoogleFonts.montserrat(
+                          fontSize: 16, fontWeight: FontWeight.w400)),
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text('Login',  style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w400)),
+                    child: Text('Login',
+                        style: GoogleFonts.montserrat(
+                            fontSize: 16, fontWeight: FontWeight.w400)),
                   ),
                 ],
               ),

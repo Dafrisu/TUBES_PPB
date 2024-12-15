@@ -84,7 +84,7 @@ class _cartpagestate extends State<Cartpage> {
                           child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
+                          SizedBox(
                             width: 100,
                             height: 100,
                             child: Image.network(
