@@ -175,7 +175,7 @@ class Dashboard extends StatelessWidget {
               children: const <Widget>[
                 ProductCard(
                     title: 'Makanan 1',
-                    imageUrl: 'lib/assets_images//Makanan1.jpg'),
+                    imageUrl: 'lib/assets_images/Makanan1.jpg'),
                 ProductCard(
                     title: 'Makanan 2',
                     imageUrl: 'lib/assets_images/Makanan2.jpg'),
