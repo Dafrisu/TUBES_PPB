@@ -84,7 +84,7 @@ class _SplashScreenState extends State<SplashScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset('lib/assets_images/sample 1 copy.png',
+                  Image.asset('lib/assets_images/Sample 1 copy.png',
                       width: 200, height: 200, fit: BoxFit.cover),
                   Text("UMKMku",
                       style: GoogleFonts.montserrat(

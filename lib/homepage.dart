@@ -40,26 +40,26 @@ class Screens extends State<Homepage> {
           BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined),
               label: 'Home',
-              backgroundColor: Color.fromRGBO(76, 175, 80, 1)),
+              backgroundColor: Color.fromARGB(255, 101, 136, 100)),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart_outlined),
             label: 'Keranjang',
-            backgroundColor: Color.fromRGBO(76, 175, 80, 1),
+            backgroundColor: Color.fromARGB(255, 101, 136, 100),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_bag_outlined),
             label: 'Riwayat',
-            backgroundColor: Color.fromRGBO(76, 175, 80, 1),
+            backgroundColor: Color.fromARGB(255, 101, 136, 100),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat_bubble_outline),
             label: 'Pesan',
-            backgroundColor: Color.fromRGBO(76, 175, 80, 1),
+            backgroundColor: Color.fromARGB(255, 101, 136, 100),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             label: 'Profil',
-            backgroundColor: Color.fromRGBO(76, 175, 80, 1),
+            backgroundColor: Color.fromARGB(255, 101, 136, 100),
           ),
         ],
       ),

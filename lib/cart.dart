@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/component/appbar.dart';
 import 'Data.dart' as data;
 
 final List<Map<String, dynamic>> colorpalete = [
@@ -46,23 +47,7 @@ class _cartpagestate extends State<Cartpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        centerTitle: true,
-        title: Text(
-          widget.title,
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        backgroundColor: colorpalete[0]["green"],
-      ),
+      appBar: AppBarUMKMku(titleText: 'Keranjang'),
       body: Column(
         children: [
           if (data.listcart.isEmpty)
