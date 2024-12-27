@@ -65,7 +65,7 @@ class landingPageState extends State<landingPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'lib/assets_images/sample 1 copy.png',
+                  'lib/assets_images/Sample 1 copy.png',
                   width: 200,
                   height: 200,
                   fit: BoxFit.cover,
