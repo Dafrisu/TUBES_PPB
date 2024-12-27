@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/landing.dart';
 
-import 'verifikasi.dart';
+import 'Dafa_verifikasi.dart';
 
 //packages
 import 'package:google_fonts/google_fonts.dart';

@@ -8,12 +8,12 @@ import 'animation.dart';
 void main() {
   runApp(
     ChangeNotifierProvider(
-      create: (context) =>
-          UserProvider(), // Assuming UserProvider extends ChangeNotifier
+      create: (context) => UserProvider(),
       child: const MainApp(),
     ),
   );
 }
+
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
