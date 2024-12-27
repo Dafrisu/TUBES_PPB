@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/component/product_card.dart';
 
 class FullMakananPage extends StatelessWidget {
   const FullMakananPage({super.key});
@@ -45,29 +46,6 @@ class FullMakananPage extends StatelessWidget {
           ProductCard(title: 'Makanan 3', imageUrl: 'lib/assets_images/Makanan3.jpg'),
           ProductCard(title: 'Makanan 4', imageUrl: 'lib/assets_images/Makanan4.jpg'),
           // Add more products as needed
-        ],
-      ),
-    );
-  }
-}
-
-class ProductCard extends StatelessWidget {
-  final String title;
-  final String imageUrl;
-
-  const ProductCard({super.key, required this.title, required this.imageUrl});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        children: <Widget>[
-          Image.asset(imageUrl,
-              fit: BoxFit.cover, height: 100, width: 100), // nanti sesuaikan height sama width
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(title, style: const TextStyle(fontSize: 16)),
-          ),
         ],
       ),
     );
