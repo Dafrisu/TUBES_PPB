@@ -30,7 +30,7 @@ class register extends StatelessWidget {
         ),
         centerTitle: true,
         title: Text(
-          'Registrasi',
+          'Masuk',
           style: GoogleFonts.montserrat(
               fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
         ),
