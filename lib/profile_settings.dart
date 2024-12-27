@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:tubes_ppb/component/appbar.dart';
 import 'package:tubes_ppb/edit_profile.dart';
 import 'package:tubes_ppb/login.dart';
 import 'account_deletion.dart';
@@ -17,14 +18,7 @@ class ProfileSettings extends StatelessWidget {
 
         return Scaffold(
           backgroundColor: const Color(0xFFC4D79D),
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ),
+          appBar: AppBarUMKMku(titleText: 'Profil'),
           body: Center(
             child: Padding(
               padding: const EdgeInsets.all(16.0),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:timelines/timelines.dart';
+import 'component/appbar.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -76,14 +77,7 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Riwayat Pembelian'),
-        centerTitle: true,
-        titleTextStyle: TextStyle(
-          fontSize: 24,
-          color: Color.fromARGB(255, 101, 136, 100),
-        ),
-      ),
+      appBar: AppBarUMKMku(titleText: 'Riwayat Pembelian'),
       body: SafeArea(
         child: ListView.builder(
           itemCount: dataPesanan.length,
