@@ -11,8 +11,8 @@ import 'package:tubes_ppb/register.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+//     FlutterLocalNotificationsPlugin();
 
 class login extends StatelessWidget {
   const login({super.key});
@@ -115,7 +115,7 @@ class login extends StatelessWidget {
                 ),
                 onPressed: () {
                   if (formKey.currentState?.validate() == true) {
-                    _showNotification();
+                    // _showNotification();
                     if (emailController.text == '@kurir') {
                       Navigator.push(
                         context,
@@ -169,32 +169,32 @@ class login extends StatelessWidget {
   }
 }
 
-void _initializeNotifications() async {
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('app_icon');
+// void _initializeNotifications() async {
+//   const AndroidInitializationSettings initializationSettingsAndroid =
+//       AndroidInitializationSettings('app_icon');
 
-  final InitializationSettings initializationSettings =
-      InitializationSettings(android: initializationSettingsAndroid);
+//   final InitializationSettings initializationSettings =
+//       InitializationSettings(android: initializationSettingsAndroid);
 
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-}
+//   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+// }
 
-Future<void> _showNotification() async {
-  const AndroidNotificationDetails androidPlatformChannelSpecifics =
-      AndroidNotificationDetails(
-    'your_channel_id',
-    'your_channel_name',
-    channelDescription: 'your_channel_description',
-    importance: Importance.max,
-    priority: Priority.high,
-    showWhen: false,
-  );
-  const NotificationDetails platformChannelSpecifics =
-      NotificationDetails(android: androidPlatformChannelSpecifics);
-  await flutterLocalNotificationsPlugin.show(
-    Random().nextInt(100),
-    'Login Berhasil',
-    'Anda Telah Login!',
-    platformChannelSpecifics,
-  );
-}
+// Future<void> _showNotification() async {
+//   const AndroidNotificationDetails androidPlatformChannelSpecifics =
+//       AndroidNotificationDetails(
+//     'your_channel_id',
+//     'your_channel_name',
+//     channelDescription: 'your_channel_description',
+//     importance: Importance.max,
+//     priority: Priority.high,
+//     showWhen: false,
+//   );
+//   const NotificationDetails platformChannelSpecifics =
+//       NotificationDetails(android: androidPlatformChannelSpecifics);
+//   await flutterLocalNotificationsPlugin.show(
+//     Random().nextInt(100),
+//     'Login Berhasil',
+//     'Anda Telah Login!',
+//     platformChannelSpecifics,
+//   );
+// }
