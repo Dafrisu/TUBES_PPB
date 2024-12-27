@@ -9,7 +9,7 @@ class AppBarUMKMku extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
+      backgroundColor: const Color.fromARGB(255, 101, 136, 100),
       automaticallyImplyLeading: true,
       centerTitle: true,
       title: Text(
