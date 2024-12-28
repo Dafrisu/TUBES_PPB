@@ -63,7 +63,8 @@ class _PageBarangState extends State<PageBarang> {
                   ),
                 ),
                 child: widget.product["img"] != ''
-                    ? Image.network(widget.product["img"])
+                    ? Icon(Icons.image,
+                        size: 100) //Image.network(widget.product["img"])
                     : Icon(Icons.image, size: 100),
               ),
 
@@ -81,7 +82,7 @@ class _PageBarangState extends State<PageBarang> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.product["nama"],
+                      widget.product["nama_barang"],
                       style: GoogleFonts.montserrat(
                           textStyle: const TextStyle(fontSize: 30)),
                     ),
@@ -112,7 +113,7 @@ class _PageBarangState extends State<PageBarang> {
                       textAlign: TextAlign.start,
                     ),
                     ExpandableText(
-                      widget.product["deskripsi"],
+                      widget.product["deskripsi_barang"],
                       style: GoogleFonts.montserrat(
                           textStyle: const TextStyle(fontSize: 14)),
                       textAlign: TextAlign.justify,
@@ -143,7 +144,8 @@ class _PageBarangState extends State<PageBarang> {
                 child: Center(
                   child: ListTile(
                     contentPadding: EdgeInsets.symmetric(vertical: 16),
-                    title: Text('${widget.product["seller"]}'),
+                    title: Text(
+                        'testSeller'), // this NYI Text('${widget.product["seller"]}'),
                     leading: const CircleAvatar(
                       backgroundImage: NetworkImage(
                           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWW0xcyFQPL6DIne-s-4nHzmBuIMCN12FioA&s"),
