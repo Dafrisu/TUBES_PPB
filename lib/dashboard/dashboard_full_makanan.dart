@@ -42,7 +42,7 @@ class FullMakananPage extends StatelessWidget {
         ],
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchData(),
+        future: fetchMakanan(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
