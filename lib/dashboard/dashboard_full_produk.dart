@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/api/api_service.dart';
+import 'package:tubes_ppb/component/product_card.dart';
 
 class FullProdukPage extends StatelessWidget {
   const FullProdukPage({super.key});
@@ -37,38 +39,35 @@ class FullProdukPage extends StatelessWidget {
           ),
         ],
       ),
-      body: GridView.count(
-        crossAxisCount: 2, // Number of columns
-        children: const <Widget>[
-          ProductCard(title: 'Produk 1', imageUrl: 'lib/assets_images/Produk1.png'),
-          ProductCard(title: 'Produk 2', imageUrl: 'lib/assets_images/Produk2.png'),
-          ProductCard(title: 'Produk 3', imageUrl: 'lib/assets_images/Produk3.png'),
-          ProductCard(title: 'Produk 4', imageUrl: 'lib/assets_images/Produk4.png'),
-          // Add more products as needed
-        ],
-      ),
-    );
-  }
-}
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: fetchProduk(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No data available'));
+          }
 
-class ProductCard extends StatelessWidget {
-  final String title;
-  final String imageUrl;
+          final data = snapshot.data!;
 
-  const ProductCard({super.key, required this.title, required this.imageUrl});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        children: <Widget>[
-          Image.asset(imageUrl,
-              fit: BoxFit.cover, height: 100, width: 100), // nanti sesuaikan height sama width
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(title, style: const TextStyle(fontSize: 16)),
-          ),
-        ],
+          return GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, // kolom
+              childAspectRatio: 0.75,
+            ),
+            itemCount: data.length,
+            physics: const AlwaysScrollableScrollPhysics(), 
+            itemBuilder: (context, index) {
+              final item = data[index];
+              return ProductCard(
+                title: item['nama_barang'],
+                imageUrl: item['image_url'],
+              );
+            },
+          );
+        },
       ),
     );
   }

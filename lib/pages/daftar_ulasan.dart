@@ -18,7 +18,7 @@ class DaftarUlasan extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Overall Rating: 5',
+                      'Overall Rating: 4.1',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,

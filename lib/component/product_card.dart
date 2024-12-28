@@ -13,8 +13,8 @@ class ProductCard extends StatelessWidget {
         children: <Widget>[
           Image.asset(imageUrl,
               fit: BoxFit.cover,
-              height: 100,
-              width: 100), // nanti sesuaikan height sama width
+              height: 150,
+              width: 150), // nanti sesuaikan height sama width
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(title, style: const TextStyle(fontSize: 16)),
