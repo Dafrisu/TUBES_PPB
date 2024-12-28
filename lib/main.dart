@@ -10,12 +10,6 @@ import 'package:tubes_ppb/dashboard/dashboard_test.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  try {
-    final data = await fetchData();
-    print(data);
-  } catch (e) {
-    print('Error: $e');
-  }
   
   runApp(
     ChangeNotifierProvider(
