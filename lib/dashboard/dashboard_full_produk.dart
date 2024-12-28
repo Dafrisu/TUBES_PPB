@@ -40,7 +40,7 @@ class FullProdukPage extends StatelessWidget {
         ],
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchData(),
+        future: fetchProduk(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

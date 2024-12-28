@@ -42,7 +42,7 @@ class FullMakananPage extends StatelessWidget {
         ],
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchData(),
+        future: fetchMakanan(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -65,7 +65,7 @@ class FullMakananPage extends StatelessWidget {
               final item = data[index];
               return ProductCard(
                 title: item['nama_barang'],
-                imageUrl: 'lib/assets_images/Minuman1.png',
+                imageUrl: item['image_url']
               );
             },
           );
