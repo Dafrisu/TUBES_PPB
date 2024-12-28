@@ -39,7 +39,7 @@ class FullMiscPage extends StatelessWidget {
         ],
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchMisc(),
+        future: fetchDataByType('Misc'),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

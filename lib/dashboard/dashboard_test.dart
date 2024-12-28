@@ -16,7 +16,7 @@ class DashboardDua extends StatelessWidget {
         title: const Text('Data Fetch Example'),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchProduk(),
+        future: fetchData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
