@@ -80,322 +80,51 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
       '13.56',
     ];
 
-    // return Scaffold(
-    //   appBar: AppBarUMKMku(titleText: 'Riwayat Pembelian'),
-    //   body: SafeArea(
-    //     child: ListView.builder(
-    //       itemCount: dataPesanan.length,
-    //       itemBuilder: (context, index) {
-    //         return Card(
-    //           shape: RoundedRectangleBorder(
-    //               borderRadius: BorderRadius.circular(20),
-    //               side: BorderSide(color: Color.fromARGB(255, 101, 136, 100))),
-    //           child: Column(
-    //             mainAxisSize: MainAxisSize.min,
-    //             children: [
-    //               ListTile(
-    //                 leading: CircleAvatar(
-    //                   backgroundImage:
-    //                       NetworkImage(dataPesanan[index]['gambar']),
-    //                   radius: 30,
-    //                 ),
-    //                 title: Text(dataPesanan[index]['namaBarang']),
-    //                 subtitle: Column(
-    //                   crossAxisAlignment: CrossAxisAlignment.start,
-    //                   mainAxisAlignment: MainAxisAlignment.start,
-    //                   children: [
-    //                     Text(
-    //                         'Total Harga : ${dataPesanan[index]['totalHarga']}'),
-    //                     Text('Jumlah Barang : ${dataPesanan[index]['jumlah']}'),
-    //                   ],
-    //                 ),
-    //                 trailing: IconButton(
-    //                   icon: Icon(
-    //                     Icons.info_outline,
-    //                     color: Color.fromARGB(255, 101, 136, 100),
-    //                   ),
-    //                   onPressed: () {
-    //                     showDialog(
-    //                       context: context,
-    //                       builder: (BuildContext context) {
-    //                         return Padding(
-    //                           padding: const EdgeInsets.only(bottom: 10),
-    //                           child: SimpleDialog(
-    //                             children: [
-    //                               Center(
-    //                                 child: Container(
-    //                                   padding: EdgeInsets.all(8),
-    //                                   decoration: BoxDecoration(
-    //                                     border: Border(
-    //                                       bottom:
-    //                                           BorderSide(color: Colors.black),
-    //                                     ),
-    //                                   ),
-    //                                   child: Text(
-    //                                     "Informasi Riwayat Pengantaran",
-    //                                     style: TextStyle(
-    //                                       color: Color.fromARGB(
-    //                                           255, 101, 136, 100),
-    //                                       fontSize: 16,
-    //                                       fontWeight: FontWeight.bold,
-    //                                     ),
-    //                                   ),
-    //                                 ),
-    //                               ),
-    //                               SizedBox(
-    //                                 height: 10,
-    //                               ),
-    //                               FixedTimeline.tileBuilder(
-    //                                 builder:
-    //                                     TimelineTileBuilder.connectedFromStyle(
-    //                                   contentsAlign: ContentsAlign.reverse,
-    //                                   oppositeContentsBuilder:
-    //                                       (context, index) => Padding(
-    //                                     padding: const EdgeInsets.all(8.0),
-    //                                     child: Text(waktuOrder[index]),
-    //                                   ),
-    //                                   contentsBuilder: (context, index) => Card(
-    //                                     child: Padding(
-    //                                       padding: const EdgeInsets.all(8.0),
-    //                                       child: Text(events[index]),
-    //                                     ),
-    //                                   ),
-    //                                   connectorStyleBuilder: (context, index) =>
-    //                                       ConnectorStyle.solidLine,
-    //                                   indicatorStyleBuilder: (context, index) =>
-    //                                       IndicatorStyle.dot,
-    //                                   itemCount: 4,
-    //                                 ),
-    //                               ),
-    //                               Container(
-    //                                 width:
-    //                                     MediaQuery.of(context).size.width * 0.8,
-    //                                 padding: EdgeInsets.all(15),
-    //                                 child: Column(
-    //                                   crossAxisAlignment:
-    //                                       CrossAxisAlignment.start,
-    //                                   mainAxisAlignment:
-    //                                       MainAxisAlignment.start,
-    //                                   children: [
-    //                                     Padding(
-    //                                       padding:
-    //                                           const EdgeInsets.only(bottom: 15),
-    //                                       child: Center(
-    //                                         child: Container(
-    //                                           decoration: BoxDecoration(
-    //                                             border: Border(
-    //                                               bottom: BorderSide(
-    //                                                   color: Colors.black),
-    //                                             ),
-    //                                           ),
-    //                                           child: Text(
-    //                                             "Informasi Riwayat Pembelian",
-    //                                             style: TextStyle(
-    //                                               color: Color.fromARGB(
-    //                                                   255, 101, 136, 100),
-    //                                               fontSize: 16,
-    //                                               fontWeight: FontWeight.bold,
-    //                                             ),
-    //                                           ),
-    //                                         ),
-    //                                       ),
-    //                                     ),
-    //                                     Column(
-    //                                       children: [
-    //                                         Row(
-    //                                           children: [
-    //                                             Container(
-    //                                               height: 80,
-    //                                               width: 80,
-    //                                               decoration: BoxDecoration(
-    //                                                 image: DecorationImage(
-    //                                                   image: NetworkImage(
-    //                                                       dataPesanan[index]
-    //                                                           ['gambar']),
-    //                                                   fit: BoxFit.cover,
-    //                                                 ),
-    //                                               ),
-    //                                             ),
-    //                                             Padding(
-    //                                               padding:
-    //                                                   const EdgeInsets.only(
-    //                                                       bottom: 10,
-    //                                                       left: 10,
-    //                                                       right: 10),
-    //                                               child: Column(
-    //                                                 crossAxisAlignment:
-    //                                                     CrossAxisAlignment
-    //                                                         .start,
-    //                                                 children: [
-    //                                                   Text(
-    //                                                     "Detail Produk :",
-    //                                                     style: TextStyle(
-    //                                                       fontWeight:
-    //                                                           FontWeight.bold,
-    //                                                       color: Color.fromARGB(
-    //                                                           255,
-    //                                                           101,
-    //                                                           136,
-    //                                                           100),
-    //                                                     ),
-    //                                                   ),
-    //                                                   Text(
-    //                                                     dataPesanan[index]
-    //                                                         ['namaBarang'],
-    //                                                     style: TextStyle(
-    //                                                       fontWeight:
-    //                                                           FontWeight.bold,
-    //                                                       fontSize: 14,
-    //                                                     ),
-    //                                                     softWrap: true,
-    //                                                     maxLines: 2,
-    //                                                     overflow: TextOverflow
-    //                                                         .ellipsis,
-    //                                                   ),
-    //                                                   Text(
-    //                                                       'Jumlah Barang : ${dataPesanan[index]['jumlah']}'),
-    //                                                   Text(
-    //                                                       'Total harga : ${dataPesanan[index]['jumlah']} x ${dataPesanan[index]['totalHarga']}'),
-    //                                                 ],
-    //                                               ),
-    //                                             )
-    //                                           ],
-    //                                         ),
-    //                                       ],
-    //                                     ),
-    //                                     Padding(
-    //                                       padding:
-    //                                           const EdgeInsets.only(bottom: 5),
-    //                                       child: Container(
-    //                                         decoration: BoxDecoration(
-    //                                           border: Border(
-    //                                             bottom: BorderSide(
-    //                                               color: Colors.black,
-    //                                             ),
-    //                                           ),
-    //                                         ),
-    //                                       ),
-    //                                     ),
-    //                                     Column(
-    //                                       crossAxisAlignment:
-    //                                           CrossAxisAlignment.start,
-    //                                       children: [
-    //                                         Padding(
-    //                                           padding: const EdgeInsets.only(
-    //                                               bottom: 2),
-    //                                           child: Text(
-    //                                             "Detail Pengantaran",
-    //                                             style: TextStyle(
-    //                                               fontWeight: FontWeight.bold,
-    //                                               color: Color.fromARGB(
-    //                                                   255, 101, 136, 100),
-    //                                             ),
-    //                                           ),
-    //                                         ),
-    //                                         Row(
-    //                                           crossAxisAlignment:
-    //                                               CrossAxisAlignment.start,
-    //                                           children: [
-    //                                             Text(
-    //                                               'Alamat Pengiriman :',
-    //                                               style: TextStyle(
-    //                                                 fontWeight: FontWeight.bold,
-    //                                               ),
-    //                                             ),
-    //                                             const SizedBox(width: 8),
-    //                                             Expanded(
-    //                                               child: Align(
-    //                                                 alignment:
-    //                                                     Alignment.centerLeft,
-    //                                                 child: Text(
-    //                                                   dataPesanan[index]
-    //                                                       ['alamat'],
-    //                                                   softWrap: true,
-    //                                                 ),
-    //                                               ),
-    //                                             ),
-    //                                           ],
-    //                                         ),
-    //                                         Padding(
-    //                                           padding: const EdgeInsets.only(
-    //                                               bottom: 0),
-    //                                           child: Container(
-    //                                             decoration: BoxDecoration(
-    //                                               border: Border(
-    //                                                 bottom: BorderSide(
-    //                                                   color: Colors.black,
-    //                                                 ),
-    //                                               ),
-    //                                             ),
-    //                                           ),
-    //                                         ),
-    //                                       ],
-    //                                     ),
-    //                                   ],
-    //                                 ),
-    //                               )
-    //                             ],
-    //                           ),
-    //                         );
-    //                       },
-    //                     );
-    //                   },
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //         );
-    //       },
-    //     ),
-    //   ),
-    // );
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Riwayat Pembelian'),
-      ),
-      body: SafeArea(
-        child: FutureBuilder<List<Map<String, dynamic>>>(
-          future: fetchriwayatpembelian(),
+      appBar: AppBarUMKMku(titleText: 'Riwayat Pembelian'),
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+          future: dataPesanan,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
             } else if (snapshot.hasError) {
               return Center(
-                  child: Text('Terjadi kesalahan: ${snapshot.error}'));
+                child: Text('Error: ${snapshot.error}'),
+              );
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(child: Text('Data tidak ditemukan'));
+              return const Center(
+                child: Text('No data available'),
+              );
             }
 
-            final dataPesanan = snapshot.data!;
-
+            final data = snapshot.data!;
             return ListView.builder(
-              itemCount: dataPesanan.length,
+              itemCount: data.length,
               itemBuilder: (context, index) {
                 return Card(
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    side: BorderSide(
-                      color: Color.fromARGB(255, 101, 136, 100),
-                    ),
-                  ),
+                      borderRadius: BorderRadius.circular(20),
+                      side: BorderSide(
+                          color: Color.fromARGB(255, 101, 136, 100))),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       ListTile(
                         leading: CircleAvatar(
                           backgroundImage:
-                              NetworkImage(dataPesanan[index]['gambar']),
+                              NetworkImage(data[index]['image_url']),
                           radius: 30,
                         ),
-                        title: Text(dataPesanan[index]['namaBarang']),
+                        title: Text(data[index]['nama_barang']),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            Text('Total Harga : ${data[index]['total_harga']}'),
                             Text(
-                                'Total Harga : ${dataPesanan[index]['totalHarga']}'),
-                            Text(
-                                'Jumlah Barang : ${dataPesanan[index]['jumlah']}'),
+                                'Jumlah Barang : ${data[index]['kuantitas_barang']}'),
                           ],
                         ),
                         trailing: IconButton(
@@ -431,7 +160,9 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                                           ),
                                         ),
                                       ),
-                                      SizedBox(height: 10),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       FixedTimeline.tileBuilder(
                                         builder: TimelineTileBuilder
                                             .connectedFromStyle(
@@ -458,7 +189,183 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                                           itemCount: 4,
                                         ),
                                       ),
-                                      // Tambahkan informasi tambahan lainnya sesuai kebutuhan
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                        padding: EdgeInsets.all(15),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 15),
+                                              child: Center(
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border(
+                                                      bottom: BorderSide(
+                                                          color: Colors.black),
+                                                    ),
+                                                  ),
+                                                  child: Text(
+                                                    "Informasi Riwayat Pembelian",
+                                                    style: TextStyle(
+                                                      color: Color.fromARGB(
+                                                          255, 101, 136, 100),
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                      height: 80,
+                                                      width: 80,
+                                                      decoration: BoxDecoration(
+                                                        image: DecorationImage(
+                                                          image: NetworkImage(
+                                                              data[index]
+                                                                  ['gambar']),
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              bottom: 10,
+                                                              left: 10,
+                                                              right: 10),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            "Detail Produk :",
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: Color
+                                                                  .fromARGB(
+                                                                      255,
+                                                                      101,
+                                                                      136,
+                                                                      100),
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            data[index]
+                                                                ['nama_barang'],
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 14,
+                                                            ),
+                                                            softWrap: true,
+                                                            maxLines: 2,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
+                                                          Text(
+                                                              'Jumlah Barang : ${data[index]['kuantitas_barang']}'),
+                                                          Text(
+                                                              'Total harga : ${data[index]['total_harga']}'),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 5),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  border: Border(
+                                                    bottom: BorderSide(
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 2),
+                                                  child: Text(
+                                                    "Detail Pengantaran",
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Color.fromARGB(
+                                                          255, 101, 136, 100),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Alamat Pengiriman :',
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 8),
+                                                    Expanded(
+                                                      child: Align(
+                                                        alignment: Alignment
+                                                            .centerLeft,
+                                                        child: Text(
+                                                          data[index][
+                                                              'alamat_pembeli'],
+                                                          softWrap: true,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 0),
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      border: Border(
+                                                        bottom: BorderSide(
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      )
                                     ],
                                   ),
                                 );
@@ -472,9 +379,7 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                 );
               },
             );
-          },
-        ),
-      ),
+          }),
     );
   }
 }

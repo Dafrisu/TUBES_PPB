@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future<List<Map<String, dynamic>>> fetchProduk() async {
+Future<List<Map<String, dynamic>>> fetchData() async {
   final response =
       await http.get(Uri.parse('https://umkmapi.azurewebsites.net/produk'));
 
@@ -15,13 +15,16 @@ Future<List<Map<String, dynamic>>> fetchProduk() async {
 
     return listProperties;
   } else {
-    throw Exception('Gagal load Produk UMKM');
+    throw Exception('Failed to load data');
   }
 }
 
-Future<List<Map<String, dynamic>>> fetchMakanan() async {
-  final response = await http
-      .get(Uri.parse('https://umkmapi.azurewebsites.net/produk/makanan'));
+Future<List<Map<String, dynamic>>> fetchDataByType(String tipeBarang) async {
+  // Construct the URL with the query parameter
+  final response = await http.get(
+    Uri.parse(
+        'https://umkmapi.azurewebsites.net/produkbytipe/tipe?tipe_barang=$tipeBarang'),
+  );
 
   if (response.statusCode == 200) {
     // Decode the response body as a List
@@ -33,25 +36,7 @@ Future<List<Map<String, dynamic>>> fetchMakanan() async {
 
     return listProperties;
   } else {
-    throw Exception('Gagal load Makanan UMKM');
-  }
-}
-
-Future<List<Map<String, dynamic>>> fetchMinuman() async {
-  final response = await http
-      .get(Uri.parse('https://umkmapi.azurewebsites.net/produk/minuman'));
-
-  if (response.statusCode == 200) {
-    // Decode the response body as a List
-    final List<dynamic> data = jsonDecode(response.body);
-
-    // Cast the List<dynamic> to List<Map<String, dynamic>>
-    final List<Map<String, dynamic>> listProperties =
-        data.cast<Map<String, dynamic>>();
-
-    return listProperties;
-  } else {
-    throw Exception('Gagal load Minuman UMKM');
+    throw Exception('Failed to load data');
   }
 }
 
@@ -75,17 +60,22 @@ Future<List<Map<String, dynamic>>> fetchMisc() async {
 
 //API buat riwayat Pembelian
 Future<List<Map<String, dynamic>>> fetchriwayatpembelian() async {
-  final response = await http
-      .get(Uri.parse('https://umkmapi.azurewebsites.net/getriwayatpesanan'));
+  try {
+    final response = await http
+        .get(Uri.parse('https://umkmapi.azurewebsites.net/getriwayatpesanan'));
 
-  if (response.statusCode == 200) {
-    final List<dynamic> data = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
 
-    final List<Map<String, dynamic>> listProperties =
-        data.cast<Map<String, dynamic>>();
+      final List<Map<String, dynamic>> listProperties =
+          data.cast<Map<String, dynamic>>();
 
-    return listProperties;
-  } else {
-    throw Exception('Gagal load Riwayat Pesanan');
+      return listProperties;
+    } else {
+      throw Exception('Gagal load Riwayat Pesanan');
+    }
+  } catch (error) {
+    print(error);
+    return [];
   }
 }

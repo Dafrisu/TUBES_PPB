@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_ppb/BarangPenjual.dart';
 import 'package:tubes_ppb/component/product_card.dart';
 
 // buat API
@@ -43,7 +42,7 @@ class FullMakananPage extends StatelessWidget {
         ],
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchMakanan(),
+        future: fetchDataByType('Makanan'),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -61,18 +60,12 @@ class FullMakananPage extends StatelessWidget {
               childAspectRatio: 0.75,
             ),
             itemCount: data.length,
-            physics: const AlwaysScrollableScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(), 
             itemBuilder: (context, index) {
               final item = data[index];
-              return InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PageBarang(product: item)));
-                },
-                child: ProductCard(
-                    title: item['nama_barang'], imageUrl: item['image_url']),
+              return ProductCard(
+                title: item['nama_barang'],
+                imageUrl: item['image_url']
               );
             },
           );
