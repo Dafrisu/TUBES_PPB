@@ -20,7 +20,7 @@ Future<List<Map<String, dynamic>>> fetchData() async {
 Future<List<Map<String, dynamic>>> fetchDataByType(String tipeBarang) async {
   // Construct the URL with the query parameter
   final response = await http.get(
-    Uri.parse('https://umkmapi.azurewebsites.net/produk/tipe?tipe_barang=$tipeBarang'),
+    Uri.parse('https://umkmapi.azurewebsites.net/produkbytipe/tipe?tipe_barang=$tipeBarang'),
   );
 
   if (response.statusCode == 200) {
