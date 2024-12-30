@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Chat/chatPembeliUmkm.dart'; // import page chat el
-import 'riwayat_pembelian.dart'; // import page riwayat dafa
+import 'Dafa_riwayat_pembelian.dart'; // import page riwayat dafa
 import 'dashboard/dashboard.dart'; // import dashboard page darryl
 import 'profile_settings.dart'; // import profile page mahes
 import 'cart.dart'; // import cart page haikal

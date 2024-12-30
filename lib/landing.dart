@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/login.dart';
-import 'package:tubes_ppb/register.dart';
+import 'package:tubes_ppb/Dafa_register.dart';
 
 //package
 import 'package:google_fonts/google_fonts.dart';
