@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:timelines/timelines.dart';
 import 'component/appbar.dart';
-import 'api/api_service.dart';
+import 'api/Dafa_api_getriwayaPembelian.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
