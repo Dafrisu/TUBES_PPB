@@ -57,5 +57,3 @@ Future<List<Map<String, dynamic>>> fetchMisc() async {
     throw Exception('Gagal load Misc UMKM');
   }
 }
-
-
