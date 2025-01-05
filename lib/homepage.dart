@@ -26,8 +26,8 @@ class Screens extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
-        children: pagelist,
         index: pages,
+        children: pagelist,
       ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {

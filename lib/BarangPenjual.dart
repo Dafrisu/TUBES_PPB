@@ -7,7 +7,7 @@ import 'cart.dart';
 
 class PageBarang extends StatefulWidget {
   final Map<String, dynamic> product;
-  const PageBarang({Key? key, required this.product}) : super(key: key);
+  const PageBarang({super.key, required this.product});
 
   @override
   State<PageBarang> createState() => _PageBarangState();
@@ -242,12 +242,12 @@ class _PageBarangState extends State<PageBarang> {
                     bool itemFound = false;
 
                     // jika barang sudah ada di keranjang
-                    dataprovider.listcart.forEach((item) {
+                    for (var item in dataprovider.listcart) {
                       if (item["nama"] == widget.product["nama"]) {
                         item["qty"] += 1;
                         itemFound = true;
                       }
-                    });
+                    }
 
                     // jika barang belum ada di keranjang
                     if (!itemFound) {

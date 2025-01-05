@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/formGantiPassword.dart';
-import 'homepage.dart';
 import 'package:tubes_ppb/kurir.dart';
 import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/register.dart';
@@ -10,10 +9,10 @@ import 'package:tubes_ppb/dashboard/dashboard.dart';
 
 //packages
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+//     FlutterLocalNotificationsPlugin();
 
 class login extends StatelessWidget {
   const login({super.key});
@@ -22,8 +21,9 @@ class login extends StatelessWidget {
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     final emailController = TextEditingController();
+    final passwordController = TextEditingController();
 
-    _initializeNotifications();
+    // _initializeNotifications();
 
     return Scaffold(
       appBar: AppBar(
@@ -76,6 +76,7 @@ class login extends StatelessWidget {
               Text('Password', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w700)),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Masukkan Password',),
+                controller: passwordController,
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -111,7 +112,7 @@ class login extends StatelessWidget {
                 ),
                 onPressed: () {
                     if (formKey.currentState?.validate() == true) {
-                      _showNotification();
+                      // _showNotification();
                       if (emailController.text == '@kurir') {
                           Navigator.push(
                           context,
@@ -159,32 +160,32 @@ class login extends StatelessWidget {
   }
 }
 
-void _initializeNotifications() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
+// void _initializeNotifications() async {
+//     const AndroidInitializationSettings initializationSettingsAndroid =
+//         AndroidInitializationSettings('app_icon');
 
-    final InitializationSettings initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid);
+//     final InitializationSettings initializationSettings =
+//         InitializationSettings(android: initializationSettingsAndroid);
 
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-  }
+//     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+//   }
 
-  Future<void> _showNotification() async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      'your_channel_id',
-      'your_channel_name',
-      channelDescription: 'your_channel_description',
-      importance: Importance.max,
-      priority: Priority.high,
-      showWhen: false,
-    );
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(
-      Random().nextInt(100),
-      'Login Berhasil',
-      'Anda Telah Login!',
-      platformChannelSpecifics,
-    );
-  }
+  // Future<void> _showNotification() async {
+  //   const AndroidNotificationDetails androidPlatformChannelSpecifics =
+  //       AndroidNotificationDetails(
+  //     'your_channel_id',
+  //     'your_channel_name',
+  //     channelDescription: 'your_channel_description',
+  //     importance: Importance.max,
+  //     priority: Priority.high,
+  //     showWhen: false,
+  //   );
+  //   const NotificationDetails platformChannelSpecifics =
+  //       NotificationDetails(android: androidPlatformChannelSpecifics);
+  //   await flutterLocalNotificationsPlugin.show(
+  //     Random().nextInt(100),
+  //     'Login Berhasil',
+  //     'Anda Telah Login !',
+  //     platformChannelSpecifics,
+  //   );
+  // }
