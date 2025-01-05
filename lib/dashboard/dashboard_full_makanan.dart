@@ -60,13 +60,11 @@ class FullMakananPage extends StatelessWidget {
               childAspectRatio: 0.75,
             ),
             itemCount: data.length,
-            physics: const AlwaysScrollableScrollPhysics(), 
+            physics: const AlwaysScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               final item = data[index];
-              return ProductCard(
-                title: item['nama_barang'],
-                imageUrl: item['image_url']
-              );
+              return ProductCardURL(
+                  title: item['nama_barang'], imageUrl: item['image_url']);
             },
           );
         },
