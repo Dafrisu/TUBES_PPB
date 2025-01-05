@@ -1,11 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:tubes_ppb/formGantiPassword.dart';
+import 'masukkanEmail.dart';
+import 'homepage.dart';
 import 'package:tubes_ppb/kurir.dart';
 import 'package:tubes_ppb/landing.dart';
-import 'package:tubes_ppb/register.dart';
-import 'package:tubes_ppb/dashboard/dashboard.dart';
+import 'package:tubes_ppb/Dafa_register.dart';
 
 //packages
 import 'package:google_fonts/google_fonts.dart';
@@ -21,9 +21,6 @@ class login extends StatelessWidget {
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-
-    // _initializeNotifications();
 
     return Scaffold(
       appBar: AppBar(
@@ -60,8 +57,9 @@ class login extends StatelessWidget {
                         fontSize: 24, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 20),
-              Text('Email',  
-                  style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w700)),
+              Text('Email',
+                  style: GoogleFonts.montserrat(
+                      fontSize: 16, fontWeight: FontWeight.w700)),
               TextFormField(
                 controller: emailController,
                 decoration: const InputDecoration(labelText: 'Masukkan Email'),
@@ -73,10 +71,13 @@ class login extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 24),
-              Text('Password', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w700)),
+              Text('Password',
+                  style: GoogleFonts.montserrat(
+                      fontSize: 16, fontWeight: FontWeight.w700)),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Masukkan Password',),
-                controller: passwordController,
+                decoration: const InputDecoration(
+                  labelText: 'Masukkan Password',
+                ),
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -96,10 +97,12 @@ class login extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Formgantipassword()),
+                              builder: (context) => const Masukkanemail()),
                         );
                       },
-                      child: Text('Lupa Password?', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w700)),
+                      child: Text('Lupa Password?',
+                          style: GoogleFonts.montserrat(
+                              fontSize: 16, fontWeight: FontWeight.w700)),
                     ),
                   ],
                 ),
@@ -111,34 +114,38 @@ class login extends StatelessWidget {
                       RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                 ),
                 onPressed: () {
-                    if (formKey.currentState?.validate() == true) {
-                      // _showNotification();
-                      if (emailController.text == '@kurir') {
-                          Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MyApp(), 
-                          ),
-                        );
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Dashboard(),
-                          ),
-                        );
-                      }
+                  if (formKey.currentState?.validate() == true) {
+                    // _showNotification();
+                    if (emailController.text == '@kurir') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyApp(),
+                        ),
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Homepage(),
+                        ),
+                      );
+                    }
                   }
                 },
-                child:
-                  Text('Masuk', style: GoogleFonts.montserrat(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w700)),
+                child: Text('Masuk',
+                    style: GoogleFonts.montserrat(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700)),
               ),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Tidak Memiliki akun?", 
-                    style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w400)),
+                  Text("Tidak Memiliki akun?",
+                      style: GoogleFonts.montserrat(
+                          fontSize: 16, fontWeight: FontWeight.w400)),
                   TextButton(
                     onPressed: () {
                       Navigator.push(
@@ -148,7 +155,9 @@ class login extends StatelessWidget {
                         ),
                       );
                     },
-                    child: Text('Register', style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w400)),
+                    child: Text('Register',
+                        style: GoogleFonts.montserrat(
+                            fontSize: 16, fontWeight: FontWeight.w400)),
                   ),
                 ],
               ),
@@ -161,31 +170,31 @@ class login extends StatelessWidget {
 }
 
 // void _initializeNotifications() async {
-//     const AndroidInitializationSettings initializationSettingsAndroid =
-//         AndroidInitializationSettings('app_icon');
+//   const AndroidInitializationSettings initializationSettingsAndroid =
+//       AndroidInitializationSettings('app_icon');
 
-//     final InitializationSettings initializationSettings =
-//         InitializationSettings(android: initializationSettingsAndroid);
+//   final InitializationSettings initializationSettings =
+//       InitializationSettings(android: initializationSettingsAndroid);
 
-//     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-//   }
+//   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+// }
 
-  // Future<void> _showNotification() async {
-  //   const AndroidNotificationDetails androidPlatformChannelSpecifics =
-  //       AndroidNotificationDetails(
-  //     'your_channel_id',
-  //     'your_channel_name',
-  //     channelDescription: 'your_channel_description',
-  //     importance: Importance.max,
-  //     priority: Priority.high,
-  //     showWhen: false,
-  //   );
-  //   const NotificationDetails platformChannelSpecifics =
-  //       NotificationDetails(android: androidPlatformChannelSpecifics);
-  //   await flutterLocalNotificationsPlugin.show(
-  //     Random().nextInt(100),
-  //     'Login Berhasil',
-  //     'Anda Telah Login !',
-  //     platformChannelSpecifics,
-  //   );
-  // }
+// Future<void> _showNotification() async {
+//   const AndroidNotificationDetails androidPlatformChannelSpecifics =
+//       AndroidNotificationDetails(
+//     'your_channel_id',
+//     'your_channel_name',
+//     channelDescription: 'your_channel_description',
+//     importance: Importance.max,
+//     priority: Priority.high,
+//     showWhen: false,
+//   );
+//   const NotificationDetails platformChannelSpecifics =
+//       NotificationDetails(android: androidPlatformChannelSpecifics);
+//   await flutterLocalNotificationsPlugin.show(
+//     Random().nextInt(100),
+//     'Login Berhasil',
+//     'Anda Telah Login!',
+//     platformChannelSpecifics,
+//   );
+// }

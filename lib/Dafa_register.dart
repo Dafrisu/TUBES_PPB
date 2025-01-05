@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/landing.dart';
 
-import 'verifikasi.dart';
+import 'Dafa_verifikasi.dart';
 
 //packages
 import 'package:google_fonts/google_fonts.dart';
@@ -30,7 +30,7 @@ class register extends StatelessWidget {
         ),
         centerTitle: true,
         title: Text(
-          'Registrasi',
+          'Masuk',
           style: GoogleFonts.montserrat(
               fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
         ),
@@ -60,53 +60,6 @@ class register extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 10),
-              Text('Username',
-                  style: GoogleFonts.montserrat(
-                      fontSize: 16, fontWeight: FontWeight.w700)),
-              TextFormField(
-                decoration: const InputDecoration(
-                    labelText: 'Enter Your Username'),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your Username';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 10),
-              
-             Text('Alamat',
-                  style: GoogleFonts.montserrat(
-                      fontSize: 16, fontWeight: FontWeight.w700)),
-              TextFormField(
-                decoration: const InputDecoration(
-                    labelText: 'Enter Your Alamat'),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your Alamat';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 10),
-
-              Text('Telephone Number',
-                  style: GoogleFonts.montserrat(
-                      fontSize: 16, fontWeight: FontWeight.w700)),
-              TextFormField(
-                decoration: const InputDecoration(
-                    labelText: 'Enter Your Telephone Number'),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your telephone number';
-                  }
-                  return null;
-                },
-              ),
-
               Text('Masukkan Password',
                   style: GoogleFonts.montserrat(
                       fontSize: 16, fontWeight: FontWeight.w700)),
@@ -121,7 +74,6 @@ class register extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 10),
-
               Text('Confirm Password',
                   style: GoogleFonts.montserrat(
                       fontSize: 16, fontWeight: FontWeight.w700)),
@@ -137,7 +89,20 @@ class register extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 10),
-              
+              Text('Telephone Number',
+                  style: GoogleFonts.montserrat(
+                      fontSize: 16, fontWeight: FontWeight.w700)),
+              TextFormField(
+                decoration: const InputDecoration(
+                    labelText: 'Enter Your Telephone Number'),
+                obscureText: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your telephone number';
+                  }
+                  return null;
+                },
+              ),
               const SizedBox(height: 20),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(

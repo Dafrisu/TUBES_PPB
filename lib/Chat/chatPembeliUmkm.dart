@@ -1,3 +1,4 @@
+// chatPembeliUmkm
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -28,19 +29,22 @@ class _InboxPagePembeliUmkmState extends State<InboxPagePembeliUmkm> {
   List<InboxItemData> inboxItems = [
     InboxItemData(
       sender: 'UMKM Toko Sukses',
-      message: 'Terima kasih telah melakukan pembayaran. Pesanan Anda sedang diproses.',
+      message:
+          'Terima kasih telah melakukan pembayaran. Pesanan Anda sedang diproses.',
       time: '12:00',
       isRead: false,
     ),
     InboxItemData(
       sender: 'UMKM Makanan Sehat',
-      message: 'Hai! Kami sedang menyiapkan barang Anda. Estimasi pengiriman adalah 2 hari.',
+      message:
+          'Hai! Kami sedang menyiapkan barang Anda. Estimasi pengiriman adalah 2 hari.',
       time: '11:30',
       isRead: true,
     ),
     InboxItemData(
       sender: 'UMKM Kerajinan Tangan',
-      message: 'Kami ingin memberitahukan bahwa barang yang Anda pesan telah dikirim. Cek resi ya!',
+      message:
+          'Kami ingin memberitahukan bahwa barang yang Anda pesan telah dikirim. Cek resi ya!',
       time: '10:00',
       isRead: false,
     ),
@@ -60,8 +64,7 @@ class _InboxPagePembeliUmkmState extends State<InboxPagePembeliUmkm> {
         ),
         backgroundColor: const Color.fromARGB(255, 101, 136, 100),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,
-              color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -229,14 +232,28 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
 
   final Map<String, List<Map<String, dynamic>>> initialMessages = {
     'UMKM Toko Sukses': [
-      {'text': 'Selamat pagi! Apakah Anda sudah menerima pesanan Anda?', 'isSentByUser': false},
+      {
+        'text': 'Selamat pagi! Apakah Anda sudah menerima pesanan Anda?',
+        'isSentByUser': false
+      },
     ],
     'UMKM Makanan Sehat': [
-      {'text': 'Selamat siang kak, apakah barang bisa di kirim hari ini?', 'isSentByUser': true},
-      {'text': 'Hai! Kami sedang menyiapkan barang Anda. Estimasi pengiriman adalah 2 hari.', 'isSentByUser': false}
+      {
+        'text': 'Selamat siang kak, apakah barang bisa di kirim hari ini?',
+        'isSentByUser': true
+      },
+      {
+        'text':
+            'Hai! Kami sedang menyiapkan barang Anda. Estimasi pengiriman adalah 2 hari.',
+        'isSentByUser': false
+      }
     ],
     'UMKM Kerajinan Tangan': [
-      {'text': 'Kami ingin memberitahukan bahwa barang yang Anda pesan telah dikirim. Cek resi ya!', 'isSentByUser': false}
+      {
+        'text':
+            'Kami ingin memberitahukan bahwa barang yang Anda pesan telah dikirim. Cek resi ya!',
+        'isSentByUser': false
+      }
     ],
   };
 
@@ -310,7 +327,7 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                             AssetImage('lib/assets_images/Profilepic.png'),
                       ),
                     if (!message['isSentByUser']) const SizedBox(width: 8),
-                    ChatBubble(
+                    chatBubblePembeliUmkm(
                       text: message['text'],
                       isSentByUser: message['isSentByUser'],
                     ),
@@ -327,14 +344,14 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(8),
-            color: Colors.grey[200],
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(30), // Rounded corners
+            ),
             child: Row(
               children: [
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {},
-                ),
                 Expanded(
                   child: TextField(
                     controller: _messageController,
@@ -358,15 +375,18 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
   }
 }
 
-class ChatBubble extends StatelessWidget {
+class chatBubblePembeliUmkm extends StatelessWidget {
   final String text;
   final bool isSentByUser;
 
-  const ChatBubble({super.key, required this.text, required this.isSentByUser});
+  const chatBubblePembeliUmkm({super.key, required this.text, required this.isSentByUser});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width * 0.7, // Limits bubble width to 70% of screen width
+      ),
       margin: const EdgeInsets.symmetric(vertical: 4),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(

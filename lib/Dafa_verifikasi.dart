@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tubes_ppb/formGantiPassword.dart';
+import 'package:tubes_ppb/Dafa_formGantiPassword.dart';
 import 'package:tubes_ppb/login.dart';
 import 'package:google_fonts/google_fonts.dart';
 

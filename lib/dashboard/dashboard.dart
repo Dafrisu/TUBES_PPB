@@ -6,6 +6,7 @@ import 'dashboard_full_makanan.dart';
 import 'dashboard_full_minuman.dart';
 import 'dashboard_full_misc.dart';
 import 'package:tubes_ppb/notification_page.dart';
+import 'package:tubes_ppb/component/product_card.dart';
 
 // Import package carousel dari pub.dev
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
@@ -175,7 +176,7 @@ class Dashboard extends StatelessWidget {
               children: const <Widget>[
                 ProductCard(
                     title: 'Makanan 1',
-                    imageUrl: 'lib/assets_images//Makanan1.jpg'),
+                    imageUrl: 'lib/assets_images/Makanan1.jpg'),
                 ProductCard(
                     title: 'Makanan 2',
                     imageUrl: 'lib/assets_images/Makanan2.jpg'),
@@ -270,31 +271,6 @@ class Dashboard extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class ProductCard extends StatelessWidget {
-  final String title;
-  final String imageUrl;
-
-  const ProductCard({super.key, required this.title, required this.imageUrl});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        children: <Widget>[
-          Image.asset(imageUrl,
-              fit: BoxFit.cover,
-              height: 100,
-              width: 100), // nanti sesuaikan height sama width
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(title, style: const TextStyle(fontSize: 16)),
-          ),
-        ],
       ),
     );
   }
