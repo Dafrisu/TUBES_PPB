@@ -69,7 +69,7 @@ class FullProdukPage extends StatelessWidget {
                       MaterialPageRoute(
                           builder: (context) => PageBarang(product: item)));
                 },
-                child: ProductCard(
+                child: ProductCardURL(
                   title: item['nama_barang'],
                   imageUrl: item['image_url'],
                 ),

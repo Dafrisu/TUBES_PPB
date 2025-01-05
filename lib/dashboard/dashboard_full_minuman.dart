@@ -9,7 +9,8 @@ class FullMinumanPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Minuman', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        title: const Text('Minuman',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         actions: <Widget>[
           const SizedBox(width: 10),
           IconButton(
@@ -57,10 +58,10 @@ class FullMinumanPage extends StatelessWidget {
               childAspectRatio: 0.75,
             ),
             itemCount: data.length,
-            physics: const AlwaysScrollableScrollPhysics(), 
+            physics: const AlwaysScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               final item = data[index];
-              return ProductCard(
+              return ProductCardURL(
                 title: item['nama_barang'],
                 imageUrl: item['image_url'],
               );
