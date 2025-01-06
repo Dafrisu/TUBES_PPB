@@ -114,9 +114,8 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                     children: [
                       ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: Colors.red,
-
-                          //NetworkImage(data[index]['image_url']),
+                          backgroundImage:
+                              NetworkImage(data[index]['image_url']),
                           radius: 30,
                         ),
                         title: Text(data[index]['nama_barang']),
