@@ -4,7 +4,7 @@ final List<Map<String, dynamic>> colorpalete = [
   {"green": const Color.fromARGB(255, 101, 136, 100)}
 ];
 
-List<Map<String, dynamic>> barangpagepenjual =[];
+List<Map<String, dynamic>> barangpagepenjual = [];
 
 List<Map<String, dynamic>> listcart = [];
 
@@ -14,7 +14,7 @@ List<Map<String, dynamic>> listdata = [
   {
     "id_penjual": "pjl01",
     "nama":
-        "Fantech ATOM PRO SERIES Wireless Keyboard Mechanical Gaming Hotswap",
+        "Fantech ATOM PRO SERIES Wireless Keyboard Mechanical Gaming Hotswap ",
     "harga": "490.000",
     "img":
         'https://images.tokopedia.net/img/cache/900/VqbcmM/2024/3/28/79bd45c3-03ef-4e06-85cf-d8c2987010f6.jpg',
