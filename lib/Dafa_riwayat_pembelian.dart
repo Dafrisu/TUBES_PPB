@@ -98,11 +98,12 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                 child: Text('No data available'),
               );
             }
-
             final data = snapshot.data!;
             return ListView.builder(
               itemCount: data.length,
               itemBuilder: (context, index) {
+                String imageUrl = data[index]['image_url'] ?? '';
+                print(imageUrl);
                 return Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -113,9 +114,8 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                     children: [
                       ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: Colors.red,
-
-                          //NetworkImage(data[index]['image_url']),
+                          backgroundImage:
+                              NetworkImage(data[index]['image_url']),
                           radius: 30,
                         ),
                         title: Text(data[index]['nama_barang']),
@@ -234,10 +234,9 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                                                       width: 80,
                                                       decoration: BoxDecoration(
                                                         image: DecorationImage(
-                                                          image: NetworkImage(''
-                                                              // data[index]
-                                                              //     ['gambar']
-                                                              ),
+                                                          image: NetworkImage(
+                                                              data[index][
+                                                                  'image_url']),
                                                           fit: BoxFit.cover,
                                                         ),
                                                       ),
