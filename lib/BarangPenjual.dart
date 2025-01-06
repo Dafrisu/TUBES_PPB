@@ -198,7 +198,7 @@ class _PageBarangState extends State<PageBarang> {
                                       MaterialPageRoute(
                                           builder: (context) => PagePenjual(
                                                 title: '',
-                                                forpage: widget.product,
+                                                id_umkm: ID_umkm,
                                               )));
                                 },
                               ),
