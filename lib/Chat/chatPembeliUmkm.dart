@@ -63,6 +63,7 @@ class _InboxPagePembeliUmkmState extends State<InboxPagePembeliUmkm> {
                       MaterialPageRoute(
                         builder: (context) => PembeliUmkmChatPage(
                           sender: selectedMessage['username'],
+                          id_umkm: selectedMessage['id_umkm'],
                         ),
                       ),
                     );
@@ -87,6 +88,8 @@ class _InboxPagePembeliUmkmState extends State<InboxPagePembeliUmkm> {
           }
 
           final inboxMessages = snapshot.data!;
+          inboxMessages.sort((a, b) => b['id_chat'].compareTo(a['id_chat']));
+
           return ListView.builder(
             itemCount: inboxMessages.length,
             itemBuilder: (context, index) {
@@ -103,8 +106,8 @@ class _InboxPagePembeliUmkmState extends State<InboxPagePembeliUmkm> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          PembeliUmkmChatPage(sender: item['username']),
+                      builder: (context) => PembeliUmkmChatPage(
+                          sender: item['username'], id_umkm: item['id_umkm']),
                     ),
                   );
                 },
@@ -164,10 +167,14 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
         }
 
         final results = snapshot.data!.where((message) {
-          return message['username']
-              .toLowerCase()
-              .contains(query.toLowerCase());
+          final usernameMatches =
+              message['username'].toLowerCase().contains(query.toLowerCase());
+          final messageMatches =
+              message['message'].toLowerCase().contains(query.toLowerCase());
+          return usernameMatches || messageMatches;
         }).toList();
+
+        results.sort((a, b) => b['id_chat'].compareTo(a['id_chat']));
 
         return ListView.builder(
           itemCount: results.length,
@@ -195,8 +202,10 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
 
 class PembeliUmkmChatPage extends StatefulWidget {
   final String sender;
+  final int id_umkm;
 
-  const PembeliUmkmChatPage({super.key, required this.sender});
+  const PembeliUmkmChatPage(
+      {super.key, required this.sender, required this.id_umkm});
 
   @override
   _PembeliUmkmChatPageState createState() => _PembeliUmkmChatPageState();
@@ -204,46 +213,6 @@ class PembeliUmkmChatPage extends StatefulWidget {
 
 class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
   final TextEditingController _messageController = TextEditingController();
-
-  Future<List<Map<String, dynamic>>> fetchMessages() async {
-    try {
-      final response = await http.get(
-          Uri.parse('https://umkmapi.azurewebsites.net/message/msgPembeli/1'));
-
-      if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
-        return data.cast<Map<String, dynamic>>();
-      } else {
-        throw Exception('Failed to load messages');
-      }
-    } catch (error) {
-      print('Error fetching messages: $error');
-      return [];
-    }
-  }
-
-  Future<void> sendMessage(String text) async {
-    try {
-      final response = await http.post(
-        Uri.parse(
-            'https://umkmapi.azurewebsites.net/sendchat/pembelikeumkm/1/1'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'id_pembeli': 1,
-          'id_umkm': 1, // Adjust as needed
-          'message': text,
-          'sent_at': DateTime.now().toIso8601String(),
-          'is_read': false,
-        }),
-      );
-
-      if (response.statusCode != 200) {
-        throw Exception('Failed to send message');
-      }
-    } catch (error) {
-      print('Error sending message: $error');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -259,7 +228,7 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
         backgroundColor: const Color(0xFF658864),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchMessages(),
+        future: fetchchatpembeli(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -280,6 +249,7 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                   itemBuilder: (context, index) {
                     final message = messages[index];
                     final isReceiverUMKM = message['receiver_type'] == "UMKM";
+
                     return Row(
                       mainAxisAlignment: isReceiverUMKM
                           ? MainAxisAlignment.end
@@ -327,7 +297,8 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                         ),
                         onSubmitted: (value) async {
                           if (value.trim().isNotEmpty) {
-                            await sendMessage(value.trim());
+                            await sendMessagePembeliKeUMKM(
+                                1, value.trim(), widget.id_umkm, 'UMKM');
                             setState(() {});
                             _messageController.clear();
                           }
@@ -338,7 +309,11 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                       icon: const Icon(Icons.send),
                       onPressed: () async {
                         if (_messageController.text.trim().isNotEmpty) {
-                          await sendMessage(_messageController.text.trim());
+                          await sendMessagePembeliKeUMKM(
+                              1,
+                              _messageController.text.trim(),
+                              widget.id_umkm,
+                              'UMKM');
                           setState(() {});
                           _messageController.clear();
                         }

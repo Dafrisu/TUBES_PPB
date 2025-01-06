@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -25,19 +26,20 @@ Future<List<Map<String, dynamic>>> fetchchatpembeli() async {
 
 // API untuk mengirim pesan dari pembeli ke UMKM
 Future<Map<String, dynamic>> sendMessagePembeliKeUMKM(
-    int idPembeli, int idUMKM, Map<String, dynamic> data) async {
+    int idPembeli, String text, int id_umkm, String data) async {
   try {
     final response = await http.post(
-      Uri.parse('https://umkmapi.azurewebsites.net/sendchat/pembelikeumkm/1/1'),
+      Uri.parse(
+          'https://umkmapi.azurewebsites.net/sendchat/pembelikeumkm/1/$id_umkm'),
       headers: {
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
-        'id_pembeli': idPembeli,
-        'id_umkm': idUMKM,
-        'message': data['message'],
-        'sent_at': data['sent_at'],
-        'is_read': data['is_read'],
+        'id_pembeli': 1,
+        'id_umkm': id_umkm,
+        'message': text,
+        'sent_at': DateTime.now().toIso8601String(),
+        'is_read': false,
         'id_kurir': null,
         'receiver_type': "UMKM",
       }),
@@ -75,5 +77,40 @@ Future<List<Map<String, dynamic>>> fetchchatkurir() async {
   } catch (error) {
     print(error);
     return [];
+  }
+}
+
+// API untuk mengirim pesan dari pembeli ke UMKM
+Future<Map<String, dynamic>> sendMessagePembeliKeKurir(
+    int idPembeli, int idKurir, Map<String, dynamic> data) async {
+  try {
+    final response = await http.post(
+      Uri.parse(
+          'https://umkmapi.azurewebsites.net/sendchat/pembelikekurir/:id_pembeli/:id_kurir'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'id_pembeli': idPembeli,
+        'id_kurir': idKurir,
+        'message': data['message'],
+        'sent_at': data['sent_at'],
+        'is_read': data['is_read'],
+        'id_umkm': null,
+        'receiver_type': "UMKM",
+      }),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      print('Message sent successfully: $responseData');
+      return responseData;
+    } else {
+      throw Exception(
+          'Gagal mengirim pesan. Status code: ${response.statusCode}');
+    }
+  } catch (error) {
+    print('Error: $error');
+    return {'error': error.toString()};
   }
 }
