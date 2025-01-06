@@ -98,11 +98,12 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                 child: Text('No data available'),
               );
             }
-
             final data = snapshot.data!;
             return ListView.builder(
               itemCount: data.length,
               itemBuilder: (context, index) {
+                String imageUrl = data[index]['image_url'] ?? '';
+                print(imageUrl);
                 return Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -234,8 +235,8 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                                                       decoration: BoxDecoration(
                                                         image: DecorationImage(
                                                           image: NetworkImage(
-                                                              data[index]
-                                                                  ['gambar']),
+                                                              data[index][
+                                                                  'image_url']),
                                                           fit: BoxFit.cover,
                                                         ),
                                                       ),
