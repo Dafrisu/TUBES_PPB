@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'lib/api/Raphael_api_chat.dart';
+import 'package:http/http.dart' as http;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -26,29 +28,7 @@ class InboxPagePembeliUmkm extends StatefulWidget {
 }
 
 class _InboxPagePembeliUmkmState extends State<InboxPagePembeliUmkm> {
-  List<InboxItemData> inboxItems = [
-    InboxItemData(
-      sender: 'UMKM Toko Sukses',
-      message:
-          'Terima kasih telah melakukan pembayaran. Pesanan Anda sedang diproses.',
-      time: '12:00',
-      isRead: false,
-    ),
-    InboxItemData(
-      sender: 'UMKM Makanan Sehat',
-      message:
-          'Hai! Kami sedang menyiapkan barang Anda. Estimasi pengiriman adalah 2 hari.',
-      time: '11:30',
-      isRead: true,
-    ),
-    InboxItemData(
-      sender: 'UMKM Kerajinan Tangan',
-      message:
-          'Kami ingin memberitahukan bahwa barang yang Anda pesan telah dikirim. Cek resi ya!',
-      time: '10:00',
-      isRead: false,
-    ),
-  ];
+  Future<List<Map<String, dynamic>>> getchatpembeli = fetchchatpembeli();
 
   @override
   Widget build(BuildContext context) {
@@ -64,28 +44,26 @@ class _InboxPagePembeliUmkmState extends State<InboxPagePembeliUmkm> {
         ),
         backgroundColor: const Color.fromARGB(255, 101, 136, 100),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         actions: [
           IconButton(
-            icon: const Icon(
-              Icons.search,
-              color: Colors.white,
-            ),
+            icon: const Icon(Icons.search, color: Colors.white),
             onPressed: () {
               showSearch(
                 context: context,
                 delegate: MessageSearchDelegate(
-                  inboxMessages: inboxItems,
+                  getchatpembeli: getchatpembeli,
                   onSelected: (selectedMessage) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            PembeliUmkmChatPage(sender: selectedMessage.sender),
+                        builder: (context) => PembeliUmkmChatPage(
+                          sender: selectedMessage['username'],
+                        ),
                       ),
                     );
                   },
@@ -95,27 +73,41 @@ class _InboxPagePembeliUmkmState extends State<InboxPagePembeliUmkm> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: inboxItems.length,
-        itemBuilder: (context, index) {
-          final item = inboxItems[index];
-          return ListTile(
-            leading: const CircleAvatar(
-              backgroundColor: Colors.grey,
-              child: Icon(Icons.person),
-            ),
-            title: Text(item.sender),
-            subtitle: Text(item.message),
-            trailing: Text(item.time),
-            onTap: () {
-              setState(() {
-                item.isRead = true;
-              });
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        PembeliUmkmChatPage(sender: item.sender)),
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: getchatpembeli,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Terjadi kesalahan: ${snapshot.error}'),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('Tidak ada pesan.'));
+          }
+
+          final inboxMessages = snapshot.data!;
+          return ListView.builder(
+            itemCount: inboxMessages.length,
+            itemBuilder: (context, index) {
+              final item = inboxMessages[index];
+              return ListTile(
+                leading: const CircleAvatar(
+                  backgroundColor: Colors.grey,
+                  child: Icon(Icons.person),
+                ),
+                title: Text(item['username']),
+                subtitle: Text(item['message']),
+                trailing: Text(item['sent_at']),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          PembeliUmkmChatPage(sender: item['username']),
+                    ),
+                  );
+                },
               );
             },
           );
@@ -125,18 +117,20 @@ class _InboxPagePembeliUmkmState extends State<InboxPagePembeliUmkm> {
   }
 }
 
-class MessageSearchDelegate extends SearchDelegate<InboxItemData?> {
-  final List<InboxItemData> inboxMessages;
-  final ValueChanged<InboxItemData> onSelected;
+class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
+  final Future<List<Map<String, dynamic>>> getchatpembeli;
+  final ValueChanged<Map<String, dynamic>> onSelected;
 
-  MessageSearchDelegate(
-      {required this.inboxMessages, required this.onSelected});
+  MessageSearchDelegate({
+    required this.getchatpembeli,
+    required this.onSelected,
+  });
 
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: const Icon(Icons.clear, color: Colors.black),
+        icon: const Icon(Icons.clear),
         onPressed: () {
           query = '';
         },
@@ -147,10 +141,7 @@ class MessageSearchDelegate extends SearchDelegate<InboxItemData?> {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: const Icon(
-        Icons.arrow_back,
-        color: Colors.black,
-      ),
+      icon: const Icon(Icons.arrow_back),
       onPressed: () {
         close(context, null);
       },
@@ -159,21 +150,37 @@ class MessageSearchDelegate extends SearchDelegate<InboxItemData?> {
 
   @override
   Widget buildResults(BuildContext context) {
-    final results = inboxMessages
-        .where((message) =>
-            message.sender.toLowerCase().contains(query.toLowerCase()))
-        .toList();
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: getchatpembeli,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Terjadi kesalahan: ${snapshot.error}'),
+          );
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('Tidak ada pesan.'));
+        }
 
-    return ListView.builder(
-      itemCount: results.length,
-      itemBuilder: (context, index) {
-        final result = results[index];
-        return ListTile(
-          title: Text(result.sender),
-          subtitle: Text(result.message),
-          onTap: () {
-            onSelected(result);
-            close(context, result);
+        final results = snapshot.data!.where((message) {
+          return message['username']
+              .toLowerCase()
+              .contains(query.toLowerCase());
+        }).toList();
+
+        return ListView.builder(
+          itemCount: results.length,
+          itemBuilder: (context, index) {
+            final result = results[index];
+            return ListTile(
+              title: Text(result['username']),
+              subtitle: Text(result['message']),
+              onTap: () {
+                onSelected(result);
+                close(context, result);
+              },
+            );
           },
         );
       },
@@ -182,39 +189,8 @@ class MessageSearchDelegate extends SearchDelegate<InboxItemData?> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final suggestions = inboxMessages
-        .where((message) =>
-            message.sender.toLowerCase().startsWith(query.toLowerCase()))
-        .toList();
-
-    return ListView.builder(
-      itemCount: suggestions.length,
-      itemBuilder: (context, index) {
-        final suggestion = suggestions[index];
-        return ListTile(
-          title: Text(suggestion.sender),
-          onTap: () {
-            query = suggestion.sender;
-            onSelected(suggestion);
-          },
-        );
-      },
-    );
+    return buildResults(context);
   }
-}
-
-class InboxItemData {
-  final String sender;
-  final String message;
-  final String time;
-  bool isRead;
-
-  InboxItemData({
-    required this.sender,
-    required this.message,
-    required this.time,
-    this.isRead = false,
-  });
 }
 
 class PembeliUmkmChatPage extends StatefulWidget {
@@ -227,70 +203,45 @@ class PembeliUmkmChatPage extends StatefulWidget {
 }
 
 class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
-  List<Map<String, dynamic>> messages = [];
   final TextEditingController _messageController = TextEditingController();
 
-  final Map<String, List<Map<String, dynamic>>> initialMessages = {
-    'UMKM Toko Sukses': [
-      {
-        'text': 'Selamat pagi! Apakah Anda sudah menerima pesanan Anda?',
-        'isSentByUser': false
-      },
-    ],
-    'UMKM Makanan Sehat': [
-      {
-        'text': 'Selamat siang kak, apakah barang bisa di kirim hari ini?',
-        'isSentByUser': true
-      },
-      {
-        'text':
-            'Hai! Kami sedang menyiapkan barang Anda. Estimasi pengiriman adalah 2 hari.',
-        'isSentByUser': false
+  Future<List<Map<String, dynamic>>> fetchMessages() async {
+    try {
+      final response = await http.get(
+          Uri.parse('https://umkmapi.azurewebsites.net/message/msgPembeli/1'));
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        return data.cast<Map<String, dynamic>>();
+      } else {
+        throw Exception('Failed to load messages');
       }
-    ],
-    'UMKM Kerajinan Tangan': [
-      {
-        'text':
-            'Kami ingin memberitahukan bahwa barang yang Anda pesan telah dikirim. Cek resi ya!',
-        'isSentByUser': false
-      }
-    ],
-  };
-
-  @override
-  void initState() {
-    super.initState();
-    _loadMessages();
-  }
-
-  Future<void> _loadMessages() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? savedMessages = prefs.getString(widget.sender);
-
-    if (savedMessages != null) {
-      setState(() {
-        messages = List<Map<String, dynamic>>.from(json.decode(savedMessages));
-      });
-    } else {
-      setState(() {
-        messages = initialMessages[widget.sender] ?? [];
-      });
+    } catch (error) {
+      print('Error fetching messages: $error');
+      return [];
     }
   }
 
-  Future<void> _saveMessages() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(widget.sender, json.encode(messages));
-  }
+  Future<void> sendMessage(String text) async {
+    try {
+      final response = await http.post(
+        Uri.parse(
+            'https://umkmapi.azurewebsites.net/sendchat/pembelikeumkm/1/1'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'id_pembeli': 1,
+          'id_umkm': 1, // Adjust as needed
+          'message': text,
+          'sent_at': DateTime.now().toIso8601String(),
+          'is_read': false,
+        }),
+      );
 
-  void _sendMessage() {
-    String messageText = _messageController.text.trim();
-    if (messageText.isNotEmpty) {
-      setState(() {
-        messages.add({'text': messageText, 'isSentByUser': true});
-      });
-      _messageController.clear();
-      _saveMessages();
+      if (response.statusCode != 200) {
+        throw Exception('Failed to send message');
+      }
+    } catch (error) {
+      print('Error sending message: $error');
     }
   }
 
@@ -307,69 +258,98 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
         ),
         backgroundColor: const Color(0xFF658864),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                final message = messages[index];
-                return Row(
-                  mainAxisAlignment: message['isSentByUser']
-                      ? MainAxisAlignment.end
-                      : MainAxisAlignment.start,
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: fetchMessages(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No messages available.'));
+          }
+
+          final messages = snapshot.data!;
+
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    final message = messages[index];
+                    final isReceiverUMKM = message['receiver_type'] == "UMKM";
+                    return Row(
+                      mainAxisAlignment: isReceiverUMKM
+                          ? MainAxisAlignment.end
+                          : MainAxisAlignment.start,
+                      children: [
+                        if (!isReceiverUMKM)
+                          const CircleAvatar(
+                            radius: 15,
+                            backgroundImage:
+                                AssetImage('lib/assets_images/Profilepic.png'),
+                          ),
+                        if (!isReceiverUMKM) const SizedBox(width: 8),
+                        chatBubblePembeliUmkm(
+                          text: message['message'],
+                          isReceiverUMKM: isReceiverUMKM,
+                        ),
+                        if (isReceiverUMKM) const SizedBox(width: 8),
+                        if (isReceiverUMKM)
+                          const CircleAvatar(
+                            radius: 15,
+                            backgroundImage:
+                                AssetImage('lib/assets_images/Profilepic.png'),
+                          ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                margin: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(30), // Rounded corners
+                ),
+                child: Row(
                   children: [
-                    if (!message['isSentByUser'])
-                      const CircleAvatar(
-                        radius: 15,
-                        backgroundImage:
-                            AssetImage('lib/assets_images/Profilepic.png'),
+                    Expanded(
+                      child: TextField(
+                        controller: _messageController,
+                        decoration: const InputDecoration(
+                          hintText: 'Type a message',
+                          border: InputBorder.none,
+                        ),
+                        onSubmitted: (value) async {
+                          if (value.trim().isNotEmpty) {
+                            await sendMessage(value.trim());
+                            setState(() {});
+                            _messageController.clear();
+                          }
+                        },
                       ),
-                    if (!message['isSentByUser']) const SizedBox(width: 8),
-                    chatBubblePembeliUmkm(
-                      text: message['text'],
-                      isSentByUser: message['isSentByUser'],
                     ),
-                    if (message['isSentByUser']) const SizedBox(width: 8),
-                    if (message['isSentByUser'])
-                      const CircleAvatar(
-                        radius: 15,
-                        backgroundImage:
-                            AssetImage('lib/assets_images/Profilepic.png'),
-                      ),
+                    IconButton(
+                      icon: const Icon(Icons.send),
+                      onPressed: () async {
+                        if (_messageController.text.trim().isNotEmpty) {
+                          await sendMessage(_messageController.text.trim());
+                          setState(() {});
+                          _messageController.clear();
+                        }
+                      },
+                    ),
                   ],
-                );
-              },
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(30), // Rounded corners
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _messageController,
-                    decoration: const InputDecoration(
-                      hintText: 'Type a message',
-                      border: InputBorder.none,
-                    ),
-                    onSubmitted: (value) => _sendMessage(),
-                  ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.send),
-                  onPressed: _sendMessage,
-                ),
-              ],
-            ),
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -377,20 +357,21 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
 
 class chatBubblePembeliUmkm extends StatelessWidget {
   final String text;
-  final bool isSentByUser;
+  final bool isReceiverUMKM;
 
-  const chatBubblePembeliUmkm({super.key, required this.text, required this.isSentByUser});
+  const chatBubblePembeliUmkm(
+      {super.key, required this.text, required this.isReceiverUMKM});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width * 0.7, // Limits bubble width to 70% of screen width
+        maxWidth: MediaQuery.of(context).size.width * 0.7,
       ),
       margin: const EdgeInsets.symmetric(vertical: 4),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: isSentByUser ? Colors.green[200] : Colors.grey[300],
+        color: !isReceiverUMKM ? Colors.grey[300] : Colors.green[200],
         borderRadius: BorderRadius.circular(10),
       ),
       child: Text(text),
