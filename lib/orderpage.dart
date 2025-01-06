@@ -168,7 +168,7 @@ class _OrderPageState extends State<OrderPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Ongkos Kirim',
+                                  'Ongkos',
                                   style: TextStyle(fontSize: 16),
                                 ),
                                 Text(
