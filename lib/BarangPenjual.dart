@@ -74,9 +74,10 @@ class _PageBarangState extends State<PageBarang> {
                           bottom: BorderSide(color: Colors.black),
                         ),
                       ),
-                      child: data["image_url"] != ''
-                          ? Image.asset(data["image_url"])
-                          : Icon(Icons.image, size: 100),
+                      child:
+                          data["image_url"] != '' || data["image_url"] != null
+                              ? Image.network(data["image_url"])
+                              : Icon(Icons.image, size: 100),
                     ),
 
                     // Name and Price
