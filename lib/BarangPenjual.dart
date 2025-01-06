@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/Data.dart' as dataprovider;
 import 'package:tubes_ppb/api/api_getprodukbyID.dart';
+import 'package:tubes_ppb/api/api_getprofileumkm.dart';
 import 'package:tubes_ppb/LamanPenjual.dart';
 import 'cart.dart';
 
@@ -61,6 +62,7 @@ class _PageBarangState extends State<PageBarang> {
               }
 
               final data = snapshot.data!;
+              final ID_umkm = data['id_umkm'];
               return SingleChildScrollView(
                 child: Column(
                   children: [
@@ -152,40 +154,57 @@ class _PageBarangState extends State<PageBarang> {
                     ),
 
                     // Seller Information
-                    Card(
-                      color: Colors.white,
-                      child: Center(
-                        child: ListTile(
-                          contentPadding: EdgeInsets.symmetric(vertical: 16),
-                          title: Text(
-                              'testSeller'), // this NYI Text('${widget.product["seller"]}'),
-                          leading: const CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWW0xcyFQPL6DIne-s-4nHzmBuIMCN12FioA&s"),
-                            radius: 30,
-                          ),
-                          trailing: OutlinedButton(
-                            onPressed: () {},
-                            style: OutlinedButton.styleFrom(
-                                minimumSize: Size(30, 40)),
-                            child: const Text(
-                              "Hubungi Penjual",
-                              style: TextStyle(fontSize: 12),
+                    FutureBuilder(
+                        future: getumkm(ID_umkm),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Center(
+                                child: Text('Error: ${snapshot.error}'));
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
+                            return const Center(
+                                child: Text('No data available'));
+                          }
+                          final umkm = snapshot.data!;
+                          return Card(
+                            color: Colors.white,
+                            child: Center(
+                              child: ListTile(
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 16),
+                                title: Text(
+                                    '${umkm['username']}'), // this NYI Text('${widget.product["seller"]}'),
+                                leading: const CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWW0xcyFQPL6DIne-s-4nHzmBuIMCN12FioA&s"),
+                                  radius: 30,
+                                ),
+                                trailing: OutlinedButton(
+                                  onPressed: () {},
+                                  style: OutlinedButton.styleFrom(
+                                      minimumSize: Size(30, 40)),
+                                  child: const Text(
+                                    "Hubungi Penjual",
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => PagePenjual(
+                                                title: '',
+                                                forpage: widget.product,
+                                              )));
+                                },
+                              ),
                             ),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => PagePenjual(
-                                          title: '',
-                                          forpage: widget.product,
-                                        )));
-                          },
-                        ),
-                      ),
-                    ),
-
+                          );
+                        }),
                     // card untuk ulasan (might change the listtile cuz why not?)
                     Align(
                       alignment: Alignment.centerLeft,
