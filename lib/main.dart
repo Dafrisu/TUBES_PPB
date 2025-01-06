@@ -7,10 +7,9 @@ import 'animation.dart';
 import 'api/api_service.dart';
 import 'package:tubes_ppb/dashboard/dashboard_test.dart';
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   runApp(
     ChangeNotifierProvider(
       create: (context) => UserProvider(),
@@ -18,7 +17,6 @@ Future<void> main() async {
     ),
   );
 }
-
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
