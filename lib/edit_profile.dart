@@ -1,67 +1,156 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'userdata/user_model.dart';
-import 'userdata/user_provider.dart';
+import 'package:tubes_ppb/profile_settings.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({super.key});
+  final String userId;
+  final Function onProfileUpdated; // Callback function
+
+  const EditProfile({super.key, required this.userId, required this.onProfileUpdated});
 
   @override
   State<EditProfile> createState() => _EditProfileState();
 }
 
 class _EditProfileState extends State<EditProfile> {
-  // Controllers for text fields
   late TextEditingController fullNameController;
   late TextEditingController emailController;
   late TextEditingController phoneController;
   late TextEditingController addressController;
   late TextEditingController usernameController;
   late TextEditingController passwordController;
+  late TextEditingController profilePictureController;
+
+  bool isLoading = true;
+  String profilePictureUrl = '';
 
   @override
   void initState() {
     super.initState();
-    // Initialize controllers with current user data
-    final user = Provider.of<UserProvider>(context, listen: false).user;
-    fullNameController = TextEditingController(text: user.fullName);
-    emailController = TextEditingController(text: user.email);
-    phoneController = TextEditingController(text: user.phone);
-    addressController = TextEditingController(text: user.address);
-    usernameController = TextEditingController(text: user.username);
-    passwordController = TextEditingController(text: user.password);
+    fullNameController = TextEditingController();
+    emailController = TextEditingController();
+    phoneController = TextEditingController();
+    addressController = TextEditingController();
+    usernameController = TextEditingController();
+    passwordController = TextEditingController();
+    profilePictureController = TextEditingController();
+
+    fetchUserData(widget.userId);
   }
 
   @override
   void dispose() {
-    // Clean up controllers
     fullNameController.dispose();
     emailController.dispose();
     phoneController.dispose();
     addressController.dispose();
     usernameController.dispose();
     passwordController.dispose();
+    profilePictureController.dispose();
     super.dispose();
+  }
+
+  Future<void> fetchUserData(String id) async {
+    try {
+      final response = await http.get(
+        Uri.parse('https://umkmapi.azurewebsites.net/pembeli/$id'),
+      );
+
+      if (response.statusCode == 200) {
+        final userData = json.decode(response.body);
+        setState(() {
+          fullNameController.text = userData['nama_lengkap'];
+          emailController.text = userData['email'];
+          phoneController.text = userData['nomor_telepon'];
+          addressController.text = userData['alamat'];
+          usernameController.text = userData['username'];
+          passwordController.text = userData['password'];
+          profilePictureUrl = userData['profileImg'];
+          isLoading = false;
+        });
+      } else {
+        throw Exception('Failed to load user data');
+      }
+    } catch (error) {
+      print('Error fetching user data: $error');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> updateProfile(String id, Map<String, dynamic> data) async {
+    final response = await http.put(
+      Uri.parse('https://umkmapi.azurewebsites.net/pembeli/$id'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(data),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update profile: ${response.body}');
+    }
+  }
+
+  void _showChangeProfilePictureDialog() {
+    profilePictureController.text = profilePictureUrl;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Change Profile Picture URL'),
+          content: TextField(
+            controller: profilePictureController,
+            decoration: const InputDecoration(
+              labelText: 'Profile Picture URL',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  profilePictureUrl = profilePictureController.text;
+                });
+                Navigator.of(context).pop();
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<UserProvider>(
-      builder: (context, userProvider, child) {
-        return Scaffold(
-          backgroundColor: const Color(0xFFC4D79D),
-          body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 20),
-                Stack(
-                  children: [
-                    ClipOval(
+    return Scaffold(
+      backgroundColor: const Color(0xFFC4D79D),
+      appBar: AppBar(
+        title: const Text('Edit Profile'),
+      ),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: _showChangeProfilePictureDialog,
+                    child: ClipOval(
                       child: CachedNetworkImage(
-                        imageUrl: userProvider.user.profileImageUrl,
+                        imageUrl: profilePictureUrl,
                         width: 120,
                         height: 120,
                         fit: BoxFit.cover,
@@ -78,128 +167,83 @@ class _EditProfileState extends State<EditProfile> {
                         ),
                       ),
                     ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: GestureDetector(
-                        onTap: () {
-                          // Handle profile image change logic here
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          child: const Icon(
-                            Icons.edit,
-                            color: Colors.white,
-                            size: 16.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Expanded(
-                  child: ListView(
-                    children: [
-                      TextFormField(
-                        controller: fullNameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Nama Lengkap',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: emailController,
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: phoneController,
-                        decoration: const InputDecoration(
-                          labelText: 'Nomor Telepon',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: addressController,
-                        decoration: const InputDecoration(
-                          labelText: 'Alamat',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: usernameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Username',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: passwordController,
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Create updated user model
-                          final updatedUser = UserModel(
-                            id: userProvider.user.id,
-                            fullName: fullNameController.text,
-                            email: emailController.text,
-                            phone: phoneController.text,
-                            address: addressController.text,
-                            username: usernameController.text,
-                            password: passwordController.text,
-                            displayName: userProvider.user.displayName,
-                            profileImageUrl: userProvider.user.profileImageUrl,
-                          );
-
-                          // Update the user data through provider
-                          userProvider.updateUser(updatedUser);
-
-                          // Show success message
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Profile updated successfully'),
-                              backgroundColor: Colors.green,
-                            ),
-                          );
-
-                          Navigator.pop(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: const Text('Simpan'),
-                      ),
-                    ],
                   ),
-                ),
-              ],
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: fullNameController,
+                    decoration: const InputDecoration(labelText: 'Full Name'),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: emailController,
+                    decoration: const InputDecoration(labelText: 'Email'),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: phoneController,
+                    decoration: const InputDecoration(labelText: 'Phone Number'),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: addressController,
+                    decoration: const InputDecoration(labelText: 'Address'),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: usernameController,
+                    decoration: const InputDecoration(labelText: 'Username'),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: passwordController,
+                    decoration: const InputDecoration(labelText: 'Password'),
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    constraints: const BoxConstraints(maxWidth: 375),
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        final updatedData = {
+                          'nama_lengkap': fullNameController.text,
+                          'email': emailController.text,
+                          'nomor_telepon': phoneController.text,
+                          'alamat': addressController.text,
+                          'username': usernameController.text,
+                          'password': passwordController.text,
+                          'profileImg': profilePictureUrl,
+                        };
+                        try {
+                          await updateProfile(widget.userId, updatedData);
+                          widget.onProfileUpdated(); // Call the callback to refresh data
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Profile updated successfully!')),
+                          );
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => const ProfileSettings()),
+                          );
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Error: ${e.toString()}')),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text('Update Profile'),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-      },
     );
   }
 }
