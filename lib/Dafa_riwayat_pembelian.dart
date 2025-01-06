@@ -28,41 +28,6 @@ class RiwayatPembelian extends StatefulWidget {
 class _RiwayatPembelianState extends State<RiwayatPembelian> {
   @override
   Widget build(BuildContext context) {
-    // List<Map<String, dynamic>> dataPesanan = [
-    //   {
-    //     "namaBarang": "Logitech G102",
-    //     "jumlah": "1",
-    //     "totalHarga": "234.000",
-    //     "gambar":
-    //         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBJb4gBPpnMjFV1Jx61iUcmIiI9IdzeHNAZQ&s',
-    //     "alamat": "Jl.Sukabirus, Kontrakan Suka suka No. 07"
-    //   },
-    //   {
-    //     "namaBarang": "Razer DeathAdder Essential",
-    //     "jumlah": "2",
-    //     "totalHarga": "450.000",
-    //     "gambar":
-    //         'https://images.tokopedia.net/img/cache/700/OJWluG/2022/10/4/8f60ad91-7bbd-44da-ac0e-f3f48bf7d220.jpg',
-    //     "alamat": "Jl. Setiabudi, Kompleks Permata Hijau No. 15"
-    //   },
-    //   {
-    //     "namaBarang": "SteelSeries Arctis 1",
-    //     "jumlah": "1",
-    //     "totalHarga": "620.000",
-    //     "gambar":
-    //         'https://images.tokopedia.net/img/cache/500-square/product-1/2020/7/3/84444824/84444824_4fc67311-7c81-42b9-960a-2919f20aa653_700_700',
-    //     "alamat": "Jl. Merdeka, Apartemen Merah Putih No. 10"
-    //   },
-    //   {
-    //     "namaBarang": "ASUS TUF Gaming H3",
-    //     "jumlah": "3",
-    //     "totalHarga": "990.000",
-    //     "gambar":
-    //         'https://down-id.img.susercontent.com/file/sg-11134201-23020-5hne2qdw7wnv3c',
-    //     "alamat": "Jl. Braga, Gedung Harmony Suites No. 3"
-    //   },
-    // ];
-
     Future<List<Map<String, dynamic>>> dataPesanan = fetchriwayatpembelian();
 
     final List<String> events = [
@@ -71,13 +36,6 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
       'Pesanan Dikemas',
       'Pesanan Dikirim',
       'Pesanan Diterima',
-    ];
-    final List<String> waktuOrder = [
-      '13.00',
-      '13.05',
-      '13.25',
-      '13.27',
-      '13.56',
     ];
 
     return Scaffold(
@@ -168,11 +126,6 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                                         builder: TimelineTileBuilder
                                             .connectedFromStyle(
                                           contentsAlign: ContentsAlign.reverse,
-                                          oppositeContentsBuilder:
-                                              (context, index) => Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(waktuOrder[index]),
-                                          ),
                                           contentsBuilder: (context, index) =>
                                               Card(
                                             child: Padding(
