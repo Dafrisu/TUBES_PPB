@@ -230,7 +230,7 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
         backgroundColor: const Color(0xFF658864),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchchatpembeli(),
+        future: fetchMessagesByKurirAndPembeli(13, widget.id_pembeli),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

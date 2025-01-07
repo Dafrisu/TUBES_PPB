@@ -103,12 +103,22 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
                 .map((msg) => {...msg, 'isKurir': true}),
           ];
 
-          inboxMessages.sort((a, b) => b['id_chat'].compareTo(a['id_chat']));
+          final filteredMessages = inboxMessages.where((msg) {
+            if (msg['isKurir']) {
+              return msg['nama_kurir'] != null &&
+                  msg['nama_kurir'] != 'Unknown Kurir';
+            } else {
+              return msg['username'] != null &&
+                  msg['username'] != 'Unknown User';
+            }
+          }).toList();
+
+          filteredMessages.sort((a, b) => b['id_chat'].compareTo(a['id_chat']));
 
           return ListView.builder(
-            itemCount: inboxMessages.length,
+            itemCount: filteredMessages.length,
             itemBuilder: (context, index) {
-              final item = inboxMessages[index];
+              final item = filteredMessages[index];
               return ListTile(
                 leading: const CircleAvatar(
                   backgroundColor: Colors.grey,
@@ -257,7 +267,7 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
         backgroundColor: const Color(0xFF658864),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchchatpembeli(),
+        future: fetchMessagesByPembeliAndUMKM(1, widget.id_umkm),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

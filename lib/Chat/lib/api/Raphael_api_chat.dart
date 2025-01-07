@@ -2,22 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-//API buat riwayat Pembelian
+//API buat chat
 Future<List<Map<String, dynamic>>> fetchchatpembeli() async {
   try {
     final response = await http.get(
         Uri.parse('https://umkmapi.azurewebsites.net/message/msgPembeli/1'));
 
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
+    final List<dynamic> data = jsonDecode(response.body);
+    return data.cast<Map<String, dynamic>>();
+  } catch (error) {
+    print(error);
+    return [];
+  }
+}
 
-      final List<Map<String, dynamic>> listProperties =
-          data.cast<Map<String, dynamic>>();
+Future<List<Map<String, dynamic>>> fetchMessagesByPembeliAndUMKM(
+    int id_pembeli, int idUmkm) async {
+  try {
+    final response = await http.get(
+        Uri.parse('https://umkmapi.azurewebsites.net/getmsgPembeliUMKM/1/1'));
 
-      return listProperties;
-    } else {
-      throw Exception('Gagal load Pesanan');
-    }
+    final List<dynamic> data = jsonDecode(response.body);
+    return data.cast<Map<String, dynamic>>();
+  } catch (error) {
+    print(error);
+    return [];
+  }
+}
+
+Future<List<Map<String, dynamic>>> fetchMessagesByPembeliAndKurir(
+    int id_pembeli, int id_kurir) async {
+  try {
+    final response = await http.get(
+        Uri.parse('https://umkmapi.azurewebsites.net/getmsgPembeliKurir/1/13'));
+
+    final List<dynamic> data = jsonDecode(response.body);
+    return data.cast<Map<String, dynamic>>();
   } catch (error) {
     print(error);
     return [];
@@ -29,16 +49,22 @@ Future<List<Map<String, dynamic>>> fetchchatkurir() async {
     final response = await http.get(
         Uri.parse('https://umkmapi.azurewebsites.net/message/msgKurir/13'));
 
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
+    final List<dynamic> data = jsonDecode(response.body);
+    return data.cast<Map<String, dynamic>>();
+  } catch (error) {
+    print(error);
+    return [];
+  }
+}
 
-      final List<Map<String, dynamic>> listProperties =
-          data.cast<Map<String, dynamic>>();
+Future<List<Map<String, dynamic>>> fetchMessagesByKurirAndPembeli(
+    int id_kurir, int id_pembeli) async {
+  try {
+    final response = await http.get(
+        Uri.parse('https://umkmapi.azurewebsites.net/getmsgKurirPembeli/13/1'));
 
-      return listProperties;
-    } else {
-      throw Exception('Gagal load Pesanan');
-    }
+    final List<dynamic> data = jsonDecode(response.body);
+    return data.cast<Map<String, dynamic>>();
   } catch (error) {
     print(error);
     return [];
@@ -47,7 +73,7 @@ Future<List<Map<String, dynamic>>> fetchchatkurir() async {
 
 // API untuk mengirim pesan dari pembeli ke UMKM
 Future<Map<String, dynamic>> sendMessagePembeliKeUMKM(
-    int idPembeli, String text, int id_umkm, String data) async {
+    int id_pembeli, String text, int id_umkm, String data) async {
   try {
     final response = await http.post(
       Uri.parse('https://umkmapi.azurewebsites.net/sendchat/pembelikeumkm/1/1'),
@@ -80,7 +106,7 @@ Future<Map<String, dynamic>> sendMessagePembeliKeUMKM(
 
 // API untuk mengirim pesan dari pembeli ke UMKM
 Future<Map<String, dynamic>> sendMessagePembeliKeKurir(
-    int idPembeli, String text, int id_kurir, String data) async {
+    int id_pembeli, String text, int id_kurir, String data) async {
   try {
     final response = await http.post(
       Uri.parse(
