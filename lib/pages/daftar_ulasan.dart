@@ -11,7 +11,7 @@ class DaftarUlasan extends StatelessWidget {
     return Scaffold(
       appBar: AppBarUMKMku(titleText: 'Daftar Ulasan'),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchUlasansByProdukId(1),
+        future: fetchAllUlasans(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -47,34 +47,15 @@ class DaftarUlasan extends StatelessWidget {
                     ],
                   ),
                 ),
-                ReviewCard(
-                  username: 'Darryl',
-                  rating: 5,
-                  tanggalUlasan: '12-02-2024',
-                  ulasan: 'Bagus bang',
-                  imgSource: 'lib/assets_images/Produk1.png',
-                ),
-                ReviewCard(
-                  username: 'Dimas',
-                  rating: 1,
-                  tanggalUlasan: '12-02-2024',
-                  ulasan: 'Makanannya bau amis bang',
-                  imgSource: 'lib/assets_images/Makanan1.jpg',
-                ),
-                ReviewCard(
-                  username: 'Dafa',
-                  rating: 5,
-                  tanggalUlasan: '12-02-2024',
-                  ulasan: 'Enak makanannya bang bang',
-                  imgSource: 'lib/assets_images/Makanan3.jpg',
-                ),
-                ReviewCard(
-                  username: 'Doni',
-                  rating: 5,
-                  tanggalUlasan: '12-02-2024',
-                  ulasan: 'Tasnya bagus, sesuai gambar',
-                  imgSource: 'lib/assets_images/Produk2.png',
-                )
+                ...data.map((review) {
+                  return ReviewCard(
+                    username: review['username'],
+                    rating: review['rating'],
+                    tanggalUlasan: review['tanggalUlasan'],
+                    ulasan: review['ulasan'],
+                    imgSource: review['imgSource'],
+                  );
+                }).toList(),
               ],
             ),
           );

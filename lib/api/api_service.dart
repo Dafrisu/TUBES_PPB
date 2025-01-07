@@ -90,11 +90,14 @@ Future<List<Map<String, dynamic>>> fetchAllUlasans() async {
     // Decode the response body as a List
     final List<dynamic> data = jsonDecode(response.body);
 
-    // Cast the List<dynamic> to List<Map<String, dynamic>>
-    final List<Map<String, dynamic>> listProperties =
-        data.cast<Map<String, dynamic>>();
-
-    return listProperties;
+    return data.map((review) {
+      return {
+        'username': review['username'],
+        'ulasan': review['ulasan'],
+        'rating': review['rating'],
+        'tanggalUlasan': review['createdAt'],
+      };
+    }).toList();
   } else {
     throw Exception('Failed to load data');
   }
