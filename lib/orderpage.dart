@@ -9,6 +9,7 @@ class Order extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Order Page',
       theme: ThemeData(
         primarySwatch: Colors.green,
@@ -34,7 +35,7 @@ class _OrderPageState extends State<OrderPage> {
         leading: BackButton(
           color: Colors.black,
         ),
-        title: Text('Pesanan Anda'),
+        title: Text('Pesanan Anda', style: TextStyle(color: Colors.white)),
         backgroundColor: data.colorpalete[0]['green'],
       ),
       body: Column(
@@ -60,6 +61,24 @@ class _OrderPageState extends State<OrderPage> {
                     'Alamat',
                     style: TextStyle(fontSize: 16),
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      OutlinedButton(
+                        onPressed: () {},
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(
+                              color: Color.fromARGB(255, 101, 136, 100)),
+                        ),
+                        child: Text(
+                          'Ganti Alamat',
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 101, 136, 100),
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -71,12 +90,12 @@ class _OrderPageState extends State<OrderPage> {
           ),
           Expanded(
               child: ListView.builder(
-            itemCount: 5,
+            itemCount: data.listcart.length,
             itemBuilder: (context, index) {
-              if (data.listdata.isEmpty) {
+              if (data.listcart.isEmpty) {
                 return Center(child: Text('Data kosong'));
               }
-              final item = data.listdata[index];
+              final item = data.listcart[index];
               return Card(
                 child: GestureDetector(
                     // Tambahkan padding ke dalam Card
@@ -119,7 +138,29 @@ class _OrderPageState extends State<OrderPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text('RP.${item["harga"]}'),
-                                Text('QTY : ')
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.remove),
+                                      onPressed: () {
+                                        setState(() {
+                                          if (item["Quantity"] > 1) {
+                                            item["Quantity"]--;
+                                          }
+                                        });
+                                      },
+                                    ),
+                                    Text('QTY : ${item["Quantity"]}'),
+                                    IconButton(
+                                      icon: Icon(Icons.add),
+                                      onPressed: () {
+                                        setState(() {
+                                          item["Quantity"]++;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           )
@@ -159,7 +200,7 @@ class _OrderPageState extends State<OrderPage> {
                                   style: TextStyle(fontSize: 16),
                                 ),
                                 Text(
-                                  'harga',
+                                  '',
                                   style: TextStyle(fontSize: 16),
                                 )
                               ],
