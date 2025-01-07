@@ -199,6 +199,7 @@ class _PageBarangState extends State<PageBarang> {
                                           builder: (context) => PagePenjual(
                                                 title: '',
                                                 id_umkm: ID_umkm,
+                                                username: umkm['username']
                                               )));
                                 },
                               ),
