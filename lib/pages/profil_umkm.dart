@@ -14,7 +14,7 @@ class ProfilUMKM extends StatelessWidget {
     return Scaffold(
       appBar: AppBarUMKMku(titleText: 'Profil UMKMku'),
       body: FutureBuilder<Map<String, dynamic>>(
-        future: getumkm(1),
+        future: getumkm(idUMKM),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

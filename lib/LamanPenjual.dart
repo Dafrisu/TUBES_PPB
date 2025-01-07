@@ -9,7 +9,8 @@ import 'cart.dart';
 
 class PagePenjual extends StatefulWidget {
   final int id_umkm;
-  const PagePenjual({super.key, required this.title, required this.id_umkm});
+  final String username;
+  const PagePenjual({super.key, required this.title, required this.id_umkm, required this.username});
   final String title;
   @override
   State<PagePenjual> createState() => _PagePenjualState();
@@ -59,17 +60,17 @@ class _PagePenjualState extends State<PagePenjual> {
       body: SafeArea(
           child: Column(
         children: [
-          // InkWell(
-          //   onTap: () {
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(
-          //         builder: (context) => ProfilUMKM(),
-          //       ),
-          //     );
-          //   },
-          //   //child: MiniProfile(username: widget.forpage["seller"], rating: 5),
-          // ),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfilUMKM(idUMKM: widget.id_umkm,),
+                ),
+              );
+            },
+            child: MiniProfile(username: widget.username, rating: 5),
+          ),
           FutureBuilder(
               future: getprodukUMKM(widget.id_umkm),
               builder: (context, snapshot) {
