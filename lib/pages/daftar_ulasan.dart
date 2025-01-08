@@ -4,14 +4,15 @@ import '../component/review_card.dart';
 import '../component/appbar.dart';
 
 class DaftarUlasan extends StatelessWidget {
-  const DaftarUlasan({super.key});
+  final int idUMKM;
+  const DaftarUlasan({super.key, required this.idUMKM});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarUMKMku(titleText: 'Daftar Ulasan'),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchAllUlasans(),
+        future: fetchUlasansUMKM(idUMKM),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -53,6 +54,7 @@ class DaftarUlasan extends StatelessWidget {
                     rating: review['rating'],
                     tanggalUlasan: review['tanggalUlasan'],
                     ulasan: review['ulasan'],
+                    namaProduk: review['namaProduk'],
                     imgSource: 'lib/assets_images/Makanan3.jpg',
                   );
                 }).toList(),
