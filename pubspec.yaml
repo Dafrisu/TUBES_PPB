@@ -46,6 +46,7 @@ dependencies:
   particles_flutter: ^1.0.1
   flutter_local_notifications: ^18.0.1
   http: ^1.2.2
+  local_auth: ^2.3.0
 
 dev_dependencies:
   flutter_test:

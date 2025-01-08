@@ -67,8 +67,8 @@ Future<List<Map<String, dynamic>>> fetchkeranjangbyidbatch() async {
 
 Future<void> sendpesanan(int id_keranjang, double total_belanja) async {
   // URL endpoint API
-  final Uri url =
-      Uri.parse('http://localhost/addpesanan/$id_keranjang/$total_belanja');
+  final Uri url = Uri.parse(
+      'https://umkmapi.azurewebsites.net/addpesanan/$id_keranjang/$total_belanja');
   try {
     // Melakukan POST request
     final response = await http.post(url);
