@@ -119,6 +119,7 @@ Future<List<Map<String, dynamic>>> fetchUlasansUMKM(int id) async {
         'ulasan': review['ulasan'],
         'rating': review['rating'],
         'namaProduk': review['Produk']['nama_barang'],
+        'imgSource': review['Produk']['image_url'],
         'tanggalUlasan': review['createdAt'],
       };
     }).toList();
