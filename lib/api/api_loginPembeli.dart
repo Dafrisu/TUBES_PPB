@@ -12,7 +12,7 @@ Future<Map<String, dynamic>?> profilePembeli = Future.value(null);
 Future<void> fetchLogin(String email, String password) async {
   try {
     final response = await http.post(
-      Uri.parse('http://localhost/loginpembeli'),
+      Uri.parse('https://umkmapi.azurewebsites.net//loginpembeli'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:tubes_ppb/edit_profile.dart';
+import 'package:tubes_ppb/homepage.dart';
 import 'Data.dart' as data;
 import 'api/Dafa_api_getriwayaPembelian.dart';
 import 'api/api_keranjang.dart';
@@ -109,14 +110,13 @@ class _OrderPageState extends State<OrderPage> {
         sendallpesanan();
         lastbatch = lastbatch + 1;
         addbatch(1, lastbatch);
-        getlastbatch(1);
       } else {
         throw new Error();
       }
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => Dashboard(),
+          builder: (context) => Homepage(),
         ),
       );
       return Future.value();
@@ -346,6 +346,7 @@ class _OrderPageState extends State<OrderPage> {
       bottomNavigationBar: OutlinedButton(
         onPressed: () {
           authenticate();
+          getlastbatch(1);
         },
         style: OutlinedButton.styleFrom(
             backgroundColor: data.colorpalete[0]['green'],
