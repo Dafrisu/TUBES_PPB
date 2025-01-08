@@ -3,7 +3,8 @@ import 'dart:convert';
 
 int lastbatch = 0;
 
-Future<void> addtoKeranjang(int id_pembeli, int id_produk, int id_batch) async {
+Future<Map<String, dynamic>> addtoKeranjang(
+    int id_pembeli, int id_produk, int id_batch) async {
   try {
     final url = Uri.parse('http://10.0.2.2/keranjang');
 
@@ -19,15 +20,20 @@ Future<void> addtoKeranjang(int id_pembeli, int id_produk, int id_batch) async {
         'kuantitas': 1,
       }),
     );
+
     print('Response Body: ${response.body}');
+
     if (response.statusCode == 200) {
-      print('Berhasil menambahkan ke keranjang');
+      return jsonDecode(
+          response.body); // Mengembalikan response body jika sukses
     } else {
       final error = jsonDecode(response.body);
       throw Exception('Gagal: ${error['message']}');
     }
   } catch (error) {
-    print('error: $error');
+    return {
+      'message': error.toString()
+    }; // Mengembalikan error message jika terjadi error
   }
 }
 
@@ -36,8 +42,12 @@ Future<void> getlastbatch(int id_pembeli) async {
     final response =
         await http.get(Uri.parse('http://10.0.2.2/lastbatch/$id_pembeli'));
     Map<String, dynamic> data = jsonDecode(response.body);
-
-    lastbatch = data['latest_batch'];
+    if (data['latest_batch'] == null) {
+      lastbatch = 1;
+    } else {
+      lastbatch = data['latest_batch'];
+    }
+    print(lastbatch);
   } catch (error) {
     print(error);
   }

@@ -20,6 +20,7 @@ class _PageBarangState extends State<PageBarang> {
 
   @override
   Widget build(BuildContext context) {
+    print(lastbatch);
     return Scaffold(
         backgroundColor: Colors.white,
 
@@ -199,10 +200,9 @@ class _PageBarangState extends State<PageBarang> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => PagePenjual(
-                                                title: '',
-                                                id_umkm: ID_umkm,
-                                                username: umkm['username']
-                                              )));
+                                              title: '',
+                                              id_umkm: ID_umkm,
+                                              username: umkm['username'])));
                                 },
                               ),
                             ),
@@ -275,8 +275,10 @@ class _PageBarangState extends State<PageBarang> {
                       // button untuk +keranjang
                       return ElevatedButton(
                         onPressed: () async {
-                          await addtoKeranjang(1, databarang['id'], lastbatch);
-                          print('1, ${databarang['id']}, $lastbatch');
+                          final response = await addtoKeranjang(
+                              1, databarang['id'], lastbatch);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text('${response['message']}')));
                         },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: colorpalete[0]["green"],
