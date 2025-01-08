@@ -1,35 +1,27 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'masukkanEmail.dart';
-import 'homepage.dart';
 import 'package:tubes_ppb/kurir.dart';
 import 'package:tubes_ppb/landing.dart';
-import 'package:tubes_ppb/Dafa_register.dart';
-import 'api/api_loginPembeli.dart';
+import 'package:tubes_ppb/login.dart';
 import 'api/api_loginKurir.dart';
-import 'package:tubes_ppb/login_kurir.dart';
 
 //packages
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class login extends StatefulWidget {
-  const login({super.key});
+class LoginKurir extends StatefulWidget {
+  const LoginKurir({super.key});
 
   @override
-  _LoginState createState() => _LoginState();
+  State<LoginKurir> createState() => _LoginKurirState();
 }
 
-class _LoginState extends State<login> {
-  final formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  String? selectedRole = 'pembeli';
-
+class _LoginKurirState extends State<LoginKurir> {
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+      String? selectedRole = 'pembeli';
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
@@ -47,7 +39,7 @@ class _LoginState extends State<login> {
         ),
         centerTitle: true,
         title: Text(
-          'Login!',
+          'Login Kurir!',
           style: GoogleFonts.montserrat(
               fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
         ),
@@ -61,12 +53,12 @@ class _LoginState extends State<login> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Center(
-                  child: Text('Selamat Datang Kembali',
+                  child: Text('Selamat Datang Kurir',
                       style: GoogleFonts.montserrat(
                           fontSize: 24, fontWeight: FontWeight.bold)),
                 ),
                 const SizedBox(height: 20),
-                Text('Pilih Role',
+                 Text('Pilih Role',
                     style: GoogleFonts.montserrat(
                         fontSize: 16, fontWeight: FontWeight.w700)),
                 DropdownButtonFormField<String>(
@@ -87,11 +79,11 @@ class _LoginState extends State<login> {
                   onChanged: (value) {
                     setState(() {
                       selectedRole = value;
-                      if (value == 'kurir') {
+                      if (value == 'pembeli') {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => LoginKurir(),
+                            builder: (context) => login(),
                           ),
                         );
                       }
@@ -140,26 +132,6 @@ class _LoginState extends State<login> {
                   },
                 ),
                 const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Masukkanemail()),
-                          );
-                        },
-                        child: Text('Lupa Password?',
-                            style: GoogleFonts.montserrat(
-                                fontSize: 16, fontWeight: FontWeight.w700)),
-                      ),
-                    ],
-                  ),
-                ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
@@ -168,36 +140,27 @@ class _LoginState extends State<login> {
                   ),
                   onPressed: () async {
                     if (formKey.currentState?.validate() == true) {
-                      if (selectedRole == 'pembeli') {
-                        try {
-                          await fetchLogin(
-                              emailController.text, passwordController.text);
-                          if (sessionId != 0) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Homepage(),
-                              ),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Email atau Password salah'),
-                              ),
-                            );
-                          }
-                        } catch (error) {
+                      try {
+                        bool isLoggedIn = await loginKurir(
+                            emailController.text, passwordController.text);
+                        if (isLoggedIn) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MyApp(),
+                            ),
+                          );
+                        } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Terjadi kesalahan, coba lagi nanti'),
+                              content: Text('Email atau Password salah'),
                             ),
                           );
                         }
-                      } else if (selectedRole == 'kurir') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginKurir(),
+                      } catch (error) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Terjadi kesalahan, coba lagi nanti'),
                           ),
                         );
                       }
@@ -208,28 +171,6 @@ class _LoginState extends State<login> {
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w700)),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Tidak Memiliki akun?",
-                        style: GoogleFonts.montserrat(
-                            fontSize: 16, fontWeight: FontWeight.w400)),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Register(),
-                          ),
-                        );
-                      },
-                      child: Text('Register',
-                          style: GoogleFonts.montserrat(
-                              fontSize: 16, fontWeight: FontWeight.w400)),
-                    ),
-                  ],
                 ),
               ],
             ),
