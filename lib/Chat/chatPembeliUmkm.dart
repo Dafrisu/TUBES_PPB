@@ -1,7 +1,9 @@
 // chatPembeliUmkm
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tubes_ppb/homepage.dart';
 import 'dart:convert';
+import '../dashboard/dashboard.dart';
 import 'lib/api/Raphael_api_chat.dart';
 import 'package:http/http.dart' as http;
 import 'chatPembeliKurir.dart';
@@ -48,7 +50,10 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Homepage()),
+            );
           },
         ),
         actions: [

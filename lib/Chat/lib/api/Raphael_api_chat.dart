@@ -57,6 +57,19 @@ Future<List<Map<String, dynamic>>> fetchchatkurir() async {
   }
 }
 
+Future<String> fetchKurirData() async {
+  final response = await http.get(Uri.parse(
+      'https://umkmapi.azurewebsites.net/kurir/13')); // Ganti dengan URL yang sesuai
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    return data['nama_kurir'] ?? 'Kurir';
+  } else {
+    print('Failed to load kurir data');
+    return 'Kurir';
+  }
+}
+
 Future<List<Map<String, dynamic>>> fetchMessagesByKurirAndPembeli(
     int id_kurir, int id_pembeli) async {
   try {

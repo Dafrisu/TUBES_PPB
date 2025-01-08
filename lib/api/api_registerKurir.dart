@@ -1,9 +1,10 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future<bool> registerKurir(String email, String nama, String password, String idUmkm) async {
-  final checkUrl = 'http://localhost/checkkurir';
-  final registerUrl = 'http://localhost/kurir';
+Future<bool> registerKurir(
+    String email, String nama, String password, String idUmkm) async {
+  final checkUrl = 'https://umkmapi.azurewebsites.net/checkkurir';
+  final registerUrl = 'https://umkmapi.azurewebsites.net/kurir';
 
   try {
     // Check if Kurir already exists
@@ -57,8 +58,7 @@ Future<bool> registerKurir(String email, String nama, String password, String id
   }
 }
 
-
- Future<List<dynamic>> fetchUMKM() async {
+Future<List<dynamic>> fetchUMKM() async {
   final response = await http.get(Uri.parse('http://localhost/umkm'));
   if (response.statusCode == 200) {
     return jsonDecode(response.body);
