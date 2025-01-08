@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tubes_ppb/kurir.dart';
 import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/login.dart';
+import 'package:tubes_ppb/register_kurir.dart';
 import 'api/api_loginKurir.dart';
 
 //packages
@@ -20,7 +21,7 @@ class _LoginKurirState extends State<LoginKurir> {
     final formKey = GlobalKey<FormState>();
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
-      String? selectedRole = 'pembeli';
+      String? selectedRole = 'kurir';
 
     return Scaffold(
       appBar: AppBar(
@@ -171,6 +172,28 @@ class _LoginKurirState extends State<LoginKurir> {
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w700)),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Tidak Memiliki akun?",
+                        style: GoogleFonts.montserrat(
+                            fontSize: 16, fontWeight: FontWeight.w400)),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RegisterKurir(),
+                          ),
+                        );
+                      },
+                      child: Text('Register',
+                          style: GoogleFonts.montserrat(
+                              fontSize: 16, fontWeight: FontWeight.w400)),
+                    ),
+                  ],
                 ),
               ],
             ),
