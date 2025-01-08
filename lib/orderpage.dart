@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:tubes_ppb/edit_profile.dart';
+import 'package:tubes_ppb/homepage.dart';
 import 'Data.dart' as data;
 import 'api/Dafa_api_getriwayaPembelian.dart';
 import 'api/api_keranjang.dart';
@@ -115,7 +116,7 @@ class _OrderPageState extends State<OrderPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => Dashboard(),
+          builder: (context) => Homepage(),
         ),
       );
       return Future.value();
