@@ -4,199 +4,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'lib/api/Raphael_api_chat.dart';
 import 'package:http/http.dart' as http;
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Chat',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: const InboxPagePembeliKurir(),
-    );
-  }
-}
-
-class InboxPagePembeliKurir extends StatefulWidget {
-  const InboxPagePembeliKurir({super.key});
-
-  @override
-  _InboxPagePembeliKurirState createState() => _InboxPagePembeliKurirState();
-}
-
-class _InboxPagePembeliKurirState extends State<InboxPagePembeliKurir> {
-  Future<List<Map<String, dynamic>>> getchatkurir = fetchchatkurir();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          'Kotak Masuk',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: const Color.fromARGB(255, 101, 136, 100),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.white),
-            onPressed: () {
-              showSearch(
-                context: context,
-                delegate: MessageSearchDelegate(
-                  getchatkurir: getchatkurir,
-                  onSelected: (selectedMessage) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PembeliKurirChatPage(
-                          sender: selectedMessage['nama_kurir'],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: getchatkurir,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Terjadi kesalahan: ${snapshot.error}'),
-            );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('Tidak ada pesan.'));
-          }
-
-          final inboxMessages = snapshot.data!;
-          return ListView.builder(
-            itemCount: inboxMessages.length,
-            itemBuilder: (context, index) {
-              final item = inboxMessages[index];
-              return ListTile(
-                leading: const CircleAvatar(
-                  backgroundColor: Colors.grey,
-                  child: Icon(Icons.person),
-                ),
-                title: Text(item['nama_kurir']),
-                subtitle: Text(item['message']),
-                trailing: Text(item['sent_at']),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          PembeliKurirChatPage(sender: item['nama_kurir']),
-                    ),
-                  );
-                },
-              );
-            },
-          );
-        },
-      ),
-    );
-  }
-}
-
-class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
-  final Future<List<Map<String, dynamic>>> getchatkurir;
-  final ValueChanged<Map<String, dynamic>> onSelected;
-
-  MessageSearchDelegate({
-    required this.getchatkurir,
-    required this.onSelected,
-  });
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-        },
-      ),
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, null);
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    return FutureBuilder<List<Map<String, dynamic>>>(
-      future: getchatkurir,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text('Terjadi kesalahan: ${snapshot.error}'),
-          );
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('Tidak ada pesan.'));
-        }
-
-        final results = snapshot.data!.where((message) {
-          return message['nama_kurir']
-              .toLowerCase()
-              .contains(query.toLowerCase());
-        }).toList();
-
-        return ListView.builder(
-          itemCount: results.length,
-          itemBuilder: (context, index) {
-            final result = results[index];
-            return ListTile(
-              title: Text(result['nama_kurir']),
-              subtitle: Text(result['message']),
-              onTap: () {
-                onSelected(result);
-                close(context, result);
-              },
-            );
-          },
-        );
-      },
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return buildResults(context);
-  }
-}
+import 'chatPembeliUmkm.dart';
 
 class PembeliKurirChatPage extends StatefulWidget {
   final String sender;
+  final int id_kurir;
 
-  const PembeliKurirChatPage({super.key, required this.sender});
+  const PembeliKurirChatPage(
+      {super.key, required this.sender, required this.id_kurir});
 
   @override
   _PembeliKurirChatPageState createState() => _PembeliKurirChatPageState();
@@ -204,46 +19,6 @@ class PembeliKurirChatPage extends StatefulWidget {
 
 class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
   final TextEditingController _messageController = TextEditingController();
-
-  Future<List<Map<String, dynamic>>> fetchMessages() async {
-    try {
-      final response = await http.get(
-          Uri.parse('https://umkmapi.azurewebsites.net/message/msgKurir/1'));
-
-      if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
-        return data.cast<Map<String, dynamic>>();
-      } else {
-        throw Exception('Failed to load messages');
-      }
-    } catch (error) {
-      print('Error fetching messages: $error');
-      return [];
-    }
-  }
-
-  Future<void> sendMessage(String text) async {
-    try {
-      final response = await http.post(
-        Uri.parse(
-            'https://umkmapi.azurewebsites.net/sendchat/pembelikekurir/1/1'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'id_pembeli': 1,
-          'id_kurir': 1, // Adjust as needed
-          'message': text,
-          'sent_at': DateTime.now().toIso8601String(),
-          'is_read': false,
-        }),
-      );
-
-      if (response.statusCode != 200) {
-        throw Exception('Failed to send message');
-      }
-    } catch (error) {
-      print('Error sending message: $error');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -259,7 +34,7 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
         backgroundColor: const Color(0xFF658864),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchMessages(),
+        future: fetchMessagesByPembeliAndKurir(1, widget.id_kurir),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -279,25 +54,26 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     final message = messages[index];
-                    final isReceiverUMKM = message['receiver_type'] == "Kurir";
+                    final isReceiverKurir = message['receiver_type'] == "Kurir";
+
                     return Row(
-                      mainAxisAlignment: isReceiverUMKM
+                      mainAxisAlignment: isReceiverKurir
                           ? MainAxisAlignment.end
                           : MainAxisAlignment.start,
                       children: [
-                        if (!isReceiverUMKM)
+                        if (!isReceiverKurir)
                           const CircleAvatar(
                             radius: 15,
                             backgroundImage:
                                 AssetImage('lib/assets_images/Profilepic.png'),
                           ),
-                        if (!isReceiverUMKM) const SizedBox(width: 8),
-                        chatBubblePembeliUmkm(
+                        if (!isReceiverKurir) const SizedBox(width: 8),
+                        chatBubblePembeliKurir(
                           text: message['message'],
-                          isReceiverUMKM: isReceiverUMKM,
+                          isReceiverKurir: isReceiverKurir,
                         ),
-                        if (isReceiverUMKM) const SizedBox(width: 8),
-                        if (isReceiverUMKM)
+                        if (isReceiverKurir) const SizedBox(width: 8),
+                        if (isReceiverKurir)
                           const CircleAvatar(
                             radius: 15,
                             backgroundImage:
@@ -327,7 +103,8 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                         ),
                         onSubmitted: (value) async {
                           if (value.trim().isNotEmpty) {
-                            await sendMessage(value.trim());
+                            await sendMessagePembeliKeKurir(
+                                1, value.trim(), widget.id_kurir, 'Kurir');
                             setState(() {});
                             _messageController.clear();
                           }
@@ -338,7 +115,11 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                       icon: const Icon(Icons.send),
                       onPressed: () async {
                         if (_messageController.text.trim().isNotEmpty) {
-                          await sendMessage(_messageController.text.trim());
+                          await sendMessagePembeliKeKurir(
+                              1,
+                              _messageController.text.trim(),
+                              widget.id_kurir,
+                              'Kurir');
                           setState(() {});
                           _messageController.clear();
                         }
@@ -355,12 +136,12 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
   }
 }
 
-class chatBubblePembeliUmkm extends StatelessWidget {
+class chatBubblePembeliKurir extends StatelessWidget {
   final String text;
-  final bool isReceiverUMKM;
+  final bool isReceiverKurir;
 
-  const chatBubblePembeliUmkm(
-      {super.key, required this.text, required this.isReceiverUMKM});
+  const chatBubblePembeliKurir(
+      {super.key, required this.text, required this.isReceiverKurir});
 
   @override
   Widget build(BuildContext context) {
@@ -371,7 +152,7 @@ class chatBubblePembeliUmkm extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 4),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: !isReceiverUMKM ? Colors.grey[300] : Colors.green[200],
+        color: !isReceiverKurir ? Colors.grey[300] : Colors.green[200],
         borderRadius: BorderRadius.circular(10),
       ),
       child: Text(text),
