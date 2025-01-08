@@ -39,8 +39,8 @@ Future<Map<String, dynamic>> addtoKeranjang(
 
 Future<void> getlastbatch(int id_pembeli) async {
   try {
-    final response = await http.get(
-        Uri.parse('https://umkmapi.azurewebsites.net/lastbatch/$id_pembeli'));
+    final response =
+        await http.get(Uri.parse('http://10.0.2.2/lastbatch/$id_pembeli'));
     Map<String, dynamic> data = jsonDecode(response.body);
     if (data['latest_batch'] == null) {
       lastbatch = 1;
@@ -49,7 +49,7 @@ Future<void> getlastbatch(int id_pembeli) async {
     }
     print(lastbatch);
   } catch (error) {
-    print(error);
+    print("error: ${error}");
   }
 }
 
