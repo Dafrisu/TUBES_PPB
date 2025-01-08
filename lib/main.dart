@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tubes_ppb/api/api_keranjang.dart';
 import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/login.dart';
 import 'userdata/user_provider.dart';
@@ -9,7 +10,7 @@ import 'package:tubes_ppb/dashboard/dashboard_test.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  getlastbatch(1);
   runApp(
     ChangeNotifierProvider(
       create: (context) => UserProvider(),
