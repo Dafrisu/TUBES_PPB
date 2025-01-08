@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/login.dart';
 import 'Chat/chatKurirPembeli.dart';
 import 'Chat/lib/api/Raphael_api_chat.dart';
+import 'package:http/http.dart' as http;
+import 'login.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -19,16 +22,36 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class DeliveryPage extends StatelessWidget {
+class DeliveryPage extends StatefulWidget {
   const DeliveryPage({super.key});
+
+  @override
+  _DeliveryPageState createState() => _DeliveryPageState();
+}
+
+class _DeliveryPageState extends State<DeliveryPage> {
+  String namaKurir = 'Kurir';
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchKurirData();
+  }
+
+  Future<void> _fetchKurirData() async {
+    String fetchedNamaKurir = await fetchKurirData();
+    setState(() {
+      namaKurir = fetchedNamaKurir;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Halo, Kurir.',
-          style: TextStyle(
+        title: Text(
+          'Halo, $namaKurir.',
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),

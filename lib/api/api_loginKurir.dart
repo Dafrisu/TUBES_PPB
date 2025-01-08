@@ -3,7 +3,7 @@ import 'dart:convert';
 
 Future<bool> loginKurir(String email, String password) async {
   final response = await http.post(
-    Uri.parse('http://localhost/loginKurir'),
+    Uri.parse('https://umkmapi.azurewebsites.net/loginKurir'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
