@@ -275,7 +275,6 @@ class _PageBarangState extends State<PageBarang> {
                       // button untuk +keranjang
                       return ElevatedButton(
                         onPressed: () async {
-                          int total = databarang['harga'] * 1;
                           final response = await addtoKeranjang(
                               1, databarang['id'], lastbatch);
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(

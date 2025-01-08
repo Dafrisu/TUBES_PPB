@@ -108,6 +108,8 @@ class _OrderPageState extends State<OrderPage> {
       if (authenticated) {
         sendallpesanan();
         lastbatch = lastbatch + 1;
+        addbatch(1, lastbatch);
+        getlastbatch(1);
       } else {
         throw new Error();
       }
