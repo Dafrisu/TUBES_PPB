@@ -11,7 +11,7 @@ List<Map<String, dynamic>> listcart = [
     "id_penjual": "pjl01",
     "nama":
         "Fantech ATOM PRO SERIES Wireless Keyboard Mechanical Gaming Hotswap ",
-    "harga": "490.000",
+    "harga": 490000,
     "img":
         'https://images.tokopedia.net/img/cache/900/VqbcmM/2024/3/28/79bd45c3-03ef-4e06-85cf-d8c2987010f6.jpg',
     "seller": "Asep Montir Gamink",
@@ -25,7 +25,7 @@ List<Map<String, dynamic>> listcart = [
   {
     "id_penjual": "pjl01",
     "nama": "Logitech G502 HERO High Performance Gaming Mouse",
-    "harga": "500.000",
+    "harga": 500000,
     "img":
         'https://images.tokopedia.net/img/cache/900/VqbcmM/2024/4/27/3ad8ad82-927c-46c4-ad21-1b90c8f50240.jpg',
     "seller": "Asep Montir Gamink",

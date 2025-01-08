@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/edit_profile.dart';
 import 'Data.dart' as data;
 
 void main() {
@@ -27,6 +28,28 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
+  int totalbelanja = 0;
+  int totalsemuanya = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    calculateTotal();
+  }
+
+  void calculateTotal() {
+    int total = 0;
+    for (var item in data.listcart) {
+      int price = int.parse(item['harga'].toString().replaceAll('.', ''));
+      int quantity = item['Quantity'];
+      total += price * quantity;
+    }
+    setState(() {
+      totalbelanja = total;
+      totalsemuanya = total + 15000 + 2000;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,10 +75,6 @@ class _OrderPageState extends State<OrderPage> {
                   Text(
                     'Alamat Pengantaran',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    'Nama Alamat',
-                    style: TextStyle(fontSize: 16),
                   ),
                   Text(
                     'Alamat',
@@ -95,7 +114,9 @@ class _OrderPageState extends State<OrderPage> {
               if (data.listcart.isEmpty) {
                 return Center(child: Text('Data kosong'));
               }
+
               final item = data.listcart[index];
+              print(totalbelanja);
               return Card(
                 child: GestureDetector(
                     // Tambahkan padding ke dalam Card
@@ -125,12 +146,6 @@ class _OrderPageState extends State<OrderPage> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           SizedBox(height: 5),
-                          Text(
-                            'Varian: ini mungkin Varian produk',
-                            style: TextStyle(fontSize: 14),
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                          ),
                           SizedBox(height: 5),
                           Container(
                             margin: EdgeInsets.only(right: 50),
@@ -200,7 +215,7 @@ class _OrderPageState extends State<OrderPage> {
                                   style: TextStyle(fontSize: 16),
                                 ),
                                 Text(
-                                  '',
+                                  'Rp. $totalbelanja',
                                   style: TextStyle(fontSize: 16),
                                 )
                               ],
@@ -244,13 +259,15 @@ class _OrderPageState extends State<OrderPage> {
             margin: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Text('TOTAL'), Text('harga')],
+              children: [Text('TOTAL'), Text('Rp. $totalsemuanya')],
             ),
           )
         ],
       ),
       bottomNavigationBar: OutlinedButton(
-        onPressed: () {},
+        onPressed: () {
+          // Navigator.push(context, EditProfile(userId: userId, onProfileUpdated: onProfileUpdated))
+        },
         style: OutlinedButton.styleFrom(
             backgroundColor: data.colorpalete[0]['green'],
             shape:
