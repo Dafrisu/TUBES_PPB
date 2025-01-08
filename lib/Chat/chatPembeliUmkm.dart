@@ -200,31 +200,55 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
           return const Center(child: Text('Tidak ada pesan.'));
         }
 
-        final results = [
+        final lowerCaseQuery = (query ?? '').toLowerCase();
+
+        // Gabungkan data pembeli dan kurir
+        final inboxMessages = [
           ...List<Map<String, dynamic>>.from(snapshot.data![0])
               .map((msg) => {...msg, 'isKurir': false}),
           ...List<Map<String, dynamic>>.from(snapshot.data![1])
               .map((msg) => {...msg, 'isKurir': true}),
-        ].where((message) {
-          return (message['isKurir']
-                  ? message['nama_kurir']
-                  : message['username'])
-              .toLowerCase()
-              .contains(query.toLowerCase());
+        ];
+
+        // Filter pesan dengan nama valid
+        final filteredMessages = inboxMessages.where((msg) {
+          if (msg['isKurir']) {
+            return msg['nama_kurir'] != null &&
+                msg['nama_kurir'] != 'Unknown Kurir';
+          } else {
+            return msg['username'] != null && msg['username'] != 'Unknown User';
+          }
         }).toList();
 
+        // Filter pesan berdasarkan query pencarian
+        final searchResults = filteredMessages.where((message) {
+          final searchField = message['isKurir']
+              ? message['nama_kurir'] ?? ''
+              : message['username'] ?? '';
+          return searchField.toLowerCase().contains(lowerCaseQuery);
+        }).toList();
+
+        // Urutkan hasil pencarian
+        searchResults.sort((a, b) => b['id_chat'].compareTo(a['id_chat']));
+
+        // Tampilkan hasil pencarian
         return ListView.builder(
-          itemCount: results.length,
+          itemCount: searchResults.length,
           itemBuilder: (context, index) {
-            final result = results[index];
+            final item = searchResults[index];
             return ListTile(
-              title: Text(result['isKurir']
-                  ? result['nama_kurir']
-                  : result['username']),
-              subtitle: Text(result['message']),
+              leading: const CircleAvatar(
+                backgroundColor: Colors.grey,
+                child: Icon(Icons.person),
+              ),
+              title: Text(item['isKurir']
+                  ? item['nama_kurir'] ?? 'Unknown Kurir'
+                  : item['username'] ?? 'Unknown User'),
+              subtitle: Text(item['message'] ?? ''),
+              trailing: Text(item['sent_at'] ?? ''),
               onTap: () {
-                onSelected(result);
-                close(context, result);
+                onSelected(item);
+                close(context, item);
               },
             );
           },
