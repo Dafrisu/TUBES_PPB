@@ -5,6 +5,7 @@ import 'package:tubes_ppb/Data.dart' as dataprovider;
 import 'package:tubes_ppb/api/api_getprodukbyID.dart';
 import 'package:tubes_ppb/api/api_getprofileumkm.dart';
 import 'package:tubes_ppb/LamanPenjual.dart';
+import 'package:tubes_ppb/api/api_keranjang.dart';
 import 'cart.dart';
 
 class PageBarang extends StatefulWidget {
@@ -16,8 +17,10 @@ class PageBarang extends StatefulWidget {
 
 class _PageBarangState extends State<PageBarang> {
   // This widget is the root of your application./
+
   @override
   Widget build(BuildContext context) {
+    print(lastbatch);
     return Scaffold(
         backgroundColor: Colors.white,
 
@@ -197,10 +200,9 @@ class _PageBarangState extends State<PageBarang> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => PagePenjual(
-                                                title: '',
-                                                id_umkm: ID_umkm,
-                                                username: umkm['username']
-                                              )));
+                                              title: '',
+                                              id_umkm: ID_umkm,
+                                              username: umkm['username'])));
                                 },
                               ),
                             ),
@@ -257,54 +259,39 @@ class _PageBarangState extends State<PageBarang> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // button untuk beli sekarang
-                OutlinedButton(
-                  iconAlignment: IconAlignment.start,
-                  style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: colorpalete[0]["green"]),
-                      minimumSize: Size(170, 120),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5))),
-                  onPressed: () {},
-                  child: Text(
-                    'Beli Sekarang',
-                    style: TextStyle(color: colorpalete[0]["green"]),
-                  ),
-                ),
-                const SizedBox(width: 20),
-
-                // button untuk +keranjang
-                ElevatedButton(
-                  onPressed: () {
-                    // logic for add to keranjang
-                    bool itemFound = false;
-
-                    // jika barang sudah ada di keranjang
-                    for (var item in dataprovider.listcart) {
-                      if (item["nama"] == widget.product["nama"]) {
-                        item["qty"] += 1;
-                        itemFound = true;
+                FutureBuilder(
+                    future: getproduk(widget.product['id']),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator(); // Menunggu data
+                      } else if (snapshot.hasError) {
+                        return Text(
+                            'Error: ${snapshot.error}'); // Menampilkan pesan error
+                      } else if (!snapshot.hasData || snapshot.data == null) {
+                        return const Text(
+                            'No data available'); // Tidak ada data
                       }
-                    }
-
-                    // jika barang belum ada di keranjang
-                    if (!itemFound) {
-                      var newItem = Map<String, dynamic>.from(widget.product);
-                      newItem["qty"] = 1;
-                      dataprovider.listcart.add(newItem);
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: colorpalete[0]["green"],
-                      minimumSize: Size(170, 120),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      )),
-                  child: const Text(
-                    "+Keranjang",
-                    style: TextStyle(color: Colors.white, fontSize: 15),
-                  ),
-                )
+                      final databarang = snapshot.data!;
+                      // button untuk +keranjang
+                      return ElevatedButton(
+                        onPressed: () async {
+                          final response = await addtoKeranjang(
+                              1, databarang['id'], lastbatch);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text('${response['message']}')));
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: colorpalete[0]["green"],
+                            minimumSize: Size(170, 120),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            )),
+                        child: Text(
+                          "+keranjang",
+                          style: TextStyle(color: Colors.white, fontSize: 15),
+                        ),
+                      );
+                    }),
               ],
             ),
           ),
