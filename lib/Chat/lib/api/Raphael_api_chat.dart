@@ -17,10 +17,10 @@ Future<List<Map<String, dynamic>>> fetchchatpembeli() async {
 }
 
 Future<List<Map<String, dynamic>>> fetchMessagesByPembeliAndUMKM(
-    int id_pembeli, int idUmkm) async {
+    int id_pembeli, int id_umkm) async {
   try {
-    final response = await http.get(
-        Uri.parse('https://umkmapi.azurewebsites.net/getmsgPembeliUMKM/1/1'));
+    final response = await http.get(Uri.parse(
+        'https://umkmapi.azurewebsites.net/getmsgPembeliUMKM/1/$id_umkm'));
 
     final List<dynamic> data = jsonDecode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -76,13 +76,14 @@ Future<Map<String, dynamic>> sendMessagePembeliKeUMKM(
     int id_pembeli, String text, int id_umkm, String data) async {
   try {
     final response = await http.post(
-      Uri.parse('https://umkmapi.azurewebsites.net/sendchat/pembelikeumkm/1/1'),
+      Uri.parse(
+          'https://umkmapi.azurewebsites.net/sendchat/pembelikeumkm/1/$id_umkm'),
       headers: {
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
         'id_pembeli': 1,
-        'id_umkm': 1,
+        'id_umkm': id_umkm,
         'message': text,
         'sent_at': DateTime.now().toIso8601String(),
         'is_read': false,
