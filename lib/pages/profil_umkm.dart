@@ -61,7 +61,7 @@ class ProfilUMKM extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => DaftarUlasan()),
+                                    builder: (context) => DaftarUlasan(idUMKM: idUMKM,)),
                               );
                             })),
                   ),
