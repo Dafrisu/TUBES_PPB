@@ -46,7 +46,7 @@ Future<bool> registerPembeli(String nama, String nomorTelepon, String username,
       }),
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 201 || response.statusCode == 200) {
       print('Registration successful');
       return true;
     } else {
