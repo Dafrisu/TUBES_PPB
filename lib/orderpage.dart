@@ -1,28 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:tubes_ppb/edit_profile.dart';
 import 'Data.dart' as data;
 import 'api/Dafa_api_getriwayaPembelian.dart';
+import 'api/api_keranjang.dart';
+import 'dashboard/dashboard.dart'; // import dashboard page darryl
 
-void main() {
-  runApp(Order());
-}
+// void main() {
+//   runApp(Order());
+// }
 
-class Order extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Order Page',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: OrderPage(),
-    );
-  }
-}
+// class Order extends StatelessWidget {
+//   final Future<List<Map<String, dynamic>>> keranjang =
+//       fetchkeranjangbyidbatch();
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       title: 'Order Page',
+//       theme: ThemeData(
+//         primarySwatch: Colors.green,
+//       ),
+//       home: OrderPage(
+//         isikeranjang: keranjang,
+//       ),
+//     );
+//   }
+// }
 
 class OrderPage extends StatefulWidget {
-  const OrderPage({super.key});
+  final Future<List<Map<String, dynamic>>> isikeranjang;
+  const OrderPage({super.key, required this.isikeranjang});
 
   @override
   State<OrderPage> createState() => _OrderPageState();
@@ -31,21 +39,28 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> {
   int totalbelanja = 0;
   int totalsemuanya = 0;
-
-  Future<List<Map<String, dynamic>>> datakeranjang = fetchkeranjangbyidbatch();
+  late final LocalAuthentication auth;
+  bool _supportState = false;
 
   @override
   void initState() {
     super.initState();
     calculateTotal();
     printdata();
+    auth = LocalAuthentication();
+    auth.isDeviceSupported().then((bool isSupported) {
+      setState(() {
+        _supportState = isSupported;
+      });
+    });
   }
 
   void calculateTotal() async {
     int total = 0;
-    List<Map<String, dynamic>> keranjang = await datakeranjang;
+    List<Map<String, dynamic>> keranjang = await widget.isikeranjang;
     for (var item in keranjang) {
-      int price = int.parse(item['Harga'].toString().replaceAll('.', ''));
+      int price =
+          int.parse(item["Produk"]["harga"].toString().replaceAll('.', ''));
       int quantity = item['kuantitas'];
       total += price * quantity;
     }
@@ -56,9 +71,58 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   void printdata() async {
-    List<Map<String, dynamic>> keranjang = await datakeranjang;
+    List<Map<String, dynamic>> keranjang = await widget.isikeranjang;
     for (var item in keranjang) {
       print(item);
+    }
+  }
+
+  void sendallpesanan() async {
+    List<Map<String, dynamic>> keranjang = await widget.isikeranjang;
+    for (var item in keranjang) {
+      //nanti diganti session
+      sendpesanan(item['id_keranjang'], totalsemuanya.toDouble(), 1);
+    }
+  }
+
+  void getallbiometrics() async {
+    List<BiometricType> availableBiometrics =
+        await auth.getAvailableBiometrics();
+
+    print('List Of available Metrics: $availableBiometrics');
+
+    if (!mounted) {
+      return;
+    }
+  }
+
+  Future<void> authenticate() async {
+    try {
+      bool authenticated = await auth.authenticate(
+        localizedReason: 'Scan Fingerprintmu untuk Pesan ya',
+        options: const AuthenticationOptions(
+          useErrorDialogs: true,
+          stickyAuth: false,
+        ),
+      );
+      if (authenticated) {
+        sendallpesanan();
+        lastbatch = lastbatch + 1;
+        addbatch(1, lastbatch);
+        getlastbatch(1);
+      } else {
+        throw new Error();
+      }
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Dashboard(),
+        ),
+      );
+      return Future.value();
+    } catch (e) {
+      print(e);
+      return Future.error(e);
     }
   }
 
@@ -121,7 +185,7 @@ class _OrderPageState extends State<OrderPage> {
           ),
           Expanded(
               child: FutureBuilder<List<Map<String, dynamic>>>(
-                  future: datakeranjang,
+                  future: widget.isikeranjang,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
@@ -156,7 +220,7 @@ class _OrderPageState extends State<OrderPage> {
                                 width: 100,
                                 height: 100,
                                 child: Image.network(
-                                  item["image_url"],
+                                  item["Produk"]["image_url"],
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -168,7 +232,7 @@ class _OrderPageState extends State<OrderPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${item["nama_produk"]}\n',
+                                      '${item["Produk"]["nama_barang"]}\n',
                                       style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold),
@@ -183,29 +247,11 @@ class _OrderPageState extends State<OrderPage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text('RP.${item["Harga"]}'),
+                                          Text('RP.${item["Produk"]["harga"]}'),
                                           Row(
                                             children: [
-                                              IconButton(
-                                                icon: Icon(Icons.remove),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    if (item["kuantitas"] > 1) {
-                                                      item["kuantitas"]--;
-                                                    }
-                                                  });
-                                                },
-                                              ),
                                               Text(
                                                   'QTY : ${item["kuantitas"]}'),
-                                              IconButton(
-                                                icon: Icon(Icons.add),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    item["kuantitas"]++;
-                                                  });
-                                                },
-                                              ),
                                             ],
                                           ),
                                         ],
@@ -294,12 +340,12 @@ class _OrderPageState extends State<OrderPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [Text('TOTAL'), Text('Rp. $totalsemuanya')],
             ),
-          )
+          ),
         ],
       ),
       bottomNavigationBar: OutlinedButton(
         onPressed: () {
-          // Navigator.push(context, EditProfile(userId: userId, onProfileUpdated: onProfileUpdated))
+          authenticate();
         },
         style: OutlinedButton.styleFrom(
             backgroundColor: data.colorpalete[0]['green'],
