@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'lib/api/Raphael_api_chat.dart';
 import 'package:http/http.dart' as http;
+import 'chatPembeliKurir.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -15,20 +16,21 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: const InboxPagePembeliUmkm(),
+      home: const CombinedInboxPage(),
     );
   }
 }
 
-class InboxPagePembeliUmkm extends StatefulWidget {
-  const InboxPagePembeliUmkm({super.key});
+class CombinedInboxPage extends StatefulWidget {
+  const CombinedInboxPage({super.key});
 
   @override
-  _InboxPagePembeliUmkmState createState() => _InboxPagePembeliUmkmState();
+  _CombinedInboxPageState createState() => _CombinedInboxPageState();
 }
 
-class _InboxPagePembeliUmkmState extends State<InboxPagePembeliUmkm> {
+class _CombinedInboxPageState extends State<CombinedInboxPage> {
   Future<List<Map<String, dynamic>>> getchatpembeli = fetchchatpembeli();
+  Future<List<Map<String, dynamic>>> getchatkurir = fetchchatkurir();
 
   @override
   Widget build(BuildContext context) {
@@ -57,14 +59,21 @@ class _InboxPagePembeliUmkmState extends State<InboxPagePembeliUmkm> {
                 context: context,
                 delegate: MessageSearchDelegate(
                   getchatpembeli: getchatpembeli,
+                  getchatkurir: getchatkurir,
                   onSelected: (selectedMessage) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PembeliUmkmChatPage(
-                          sender: selectedMessage['username'],
-                          id_umkm: selectedMessage['id_umkm'],
-                        ),
+                        builder: (context) => selectedMessage['isKurir']
+                            ? PembeliKurirChatPage(
+                                sender: selectedMessage['nama_kurir'] ??
+                                    'Unknown Kurir',
+                                id_kurir: selectedMessage['id_kurir'] ?? 0)
+                            : PembeliUmkmChatPage(
+                                sender: selectedMessage['username'] ??
+                                    'Unknown User',
+                                id_umkm: selectedMessage['id_umkm'] ?? 0,
+                              ),
                       ),
                     );
                   },
@@ -74,8 +83,8 @@ class _InboxPagePembeliUmkmState extends State<InboxPagePembeliUmkm> {
           ),
         ],
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: getchatpembeli,
+      body: FutureBuilder<List<List<Map<String, dynamic>>>>(
+        future: Future.wait([getchatpembeli, getchatkurir]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -87,27 +96,50 @@ class _InboxPagePembeliUmkmState extends State<InboxPagePembeliUmkm> {
             return const Center(child: Text('Tidak ada pesan.'));
           }
 
-          final inboxMessages = snapshot.data!;
-          inboxMessages.sort((a, b) => b['id_chat'].compareTo(a['id_chat']));
+          final inboxMessages = [
+            ...List<Map<String, dynamic>>.from(snapshot.data![0])
+                .map((msg) => {...msg, 'isKurir': false}),
+            ...List<Map<String, dynamic>>.from(snapshot.data![1])
+                .map((msg) => {...msg, 'isKurir': true}),
+          ];
+
+          final filteredMessages = inboxMessages.where((msg) {
+            if (msg['isKurir']) {
+              return msg['nama_kurir'] != null &&
+                  msg['nama_kurir'] != 'Unknown Kurir';
+            } else {
+              return msg['username'] != null &&
+                  msg['username'] != 'Unknown User';
+            }
+          }).toList();
+
+          filteredMessages.sort((a, b) => b['id_chat'].compareTo(a['id_chat']));
 
           return ListView.builder(
-            itemCount: inboxMessages.length,
+            itemCount: filteredMessages.length,
             itemBuilder: (context, index) {
-              final item = inboxMessages[index];
+              final item = filteredMessages[index];
               return ListTile(
                 leading: const CircleAvatar(
                   backgroundColor: Colors.grey,
                   child: Icon(Icons.person),
                 ),
-                title: Text(item['username']),
-                subtitle: Text(item['message']),
-                trailing: Text(item['sent_at']),
+                title: Text(item['isKurir']
+                    ? item['nama_kurir'] ?? 'Unknown Kurir'
+                    : item['username'] ?? 'Unknown User'),
+                subtitle: Text(item['message'] ?? ''),
+                trailing: Text(item['sent_at'] ?? ''),
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PembeliUmkmChatPage(
-                          sender: item['username'], id_umkm: item['id_umkm']),
+                      builder: (context) => item['isKurir']
+                          ? PembeliKurirChatPage(
+                              sender: item['nama_kurir'] ?? 'Unknown Kurir',
+                              id_kurir: item['id_kurir'] ?? 0)
+                          : PembeliUmkmChatPage(
+                              sender: item['username'] ?? 'Unknown User',
+                              id_umkm: item['id_umkm'] ?? 0),
                     ),
                   );
                 },
@@ -122,10 +154,12 @@ class _InboxPagePembeliUmkmState extends State<InboxPagePembeliUmkm> {
 
 class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
   final Future<List<Map<String, dynamic>>> getchatpembeli;
+  final Future<List<Map<String, dynamic>>> getchatkurir;
   final ValueChanged<Map<String, dynamic>> onSelected;
 
   MessageSearchDelegate({
     required this.getchatpembeli,
+    required this.getchatkurir,
     required this.onSelected,
   });
 
@@ -153,8 +187,8 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return FutureBuilder<List<Map<String, dynamic>>>(
-      future: getchatpembeli,
+    return FutureBuilder<List<List<Map<String, dynamic>>>>(
+      future: Future.wait([getchatpembeli, getchatkurir]),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -166,22 +200,27 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
           return const Center(child: Text('Tidak ada pesan.'));
         }
 
-        final results = snapshot.data!.where((message) {
-          final usernameMatches =
-              message['username'].toLowerCase().contains(query.toLowerCase());
-          final messageMatches =
-              message['message'].toLowerCase().contains(query.toLowerCase());
-          return usernameMatches || messageMatches;
+        final results = [
+          ...List<Map<String, dynamic>>.from(snapshot.data![0])
+              .map((msg) => {...msg, 'isKurir': false}),
+          ...List<Map<String, dynamic>>.from(snapshot.data![1])
+              .map((msg) => {...msg, 'isKurir': true}),
+        ].where((message) {
+          return (message['isKurir']
+                  ? message['nama_kurir']
+                  : message['username'])
+              .toLowerCase()
+              .contains(query.toLowerCase());
         }).toList();
-
-        results.sort((a, b) => b['id_chat'].compareTo(a['id_chat']));
 
         return ListView.builder(
           itemCount: results.length,
           itemBuilder: (context, index) {
             final result = results[index];
             return ListTile(
-              title: Text(result['username']),
+              title: Text(result['isKurir']
+                  ? result['nama_kurir']
+                  : result['username']),
               subtitle: Text(result['message']),
               onTap: () {
                 onSelected(result);
@@ -228,7 +267,7 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
         backgroundColor: const Color(0xFF658864),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchchatpembeli(),
+        future: fetchMessagesByPembeliAndUMKM(1, widget.id_umkm),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

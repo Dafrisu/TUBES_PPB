@@ -18,7 +18,7 @@ class Screens extends State<Homepage> {
     Dashboard(),
     cart(),
     RiwayatPembelian(), // Ganti jadi page riwayat dafa
-    InboxPagePembeliUmkm(),
+    CombinedInboxPage(),
     ProfileSettings(),
   ];
 

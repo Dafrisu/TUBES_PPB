@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/edit_profile.dart';
 import 'Data.dart' as data;
+import 'api/Dafa_api_getriwayaPembelian.dart';
 
 void main() {
   runApp(Order());
@@ -27,6 +29,39 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
+  int totalbelanja = 0;
+  int totalsemuanya = 0;
+
+  Future<List<Map<String, dynamic>>> datakeranjang = fetchkeranjangbyidbatch();
+
+  @override
+  void initState() {
+    super.initState();
+    calculateTotal();
+    printdata();
+  }
+
+  void calculateTotal() async {
+    int total = 0;
+    List<Map<String, dynamic>> keranjang = await datakeranjang;
+    for (var item in keranjang) {
+      int price = int.parse(item['Harga'].toString().replaceAll('.', ''));
+      int quantity = item['kuantitas'];
+      total += price * quantity;
+    }
+    setState(() {
+      totalbelanja = total;
+      totalsemuanya = total + 15000 + 2000;
+    });
+  }
+
+  void printdata() async {
+    List<Map<String, dynamic>> keranjang = await datakeranjang;
+    for (var item in keranjang) {
+      print(item);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,10 +87,6 @@ class _OrderPageState extends State<OrderPage> {
                   Text(
                     'Alamat Pengantaran',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    'Nama Alamat',
-                    style: TextStyle(fontSize: 16),
                   ),
                   Text(
                     'Alamat',
@@ -89,89 +120,106 @@ class _OrderPageState extends State<OrderPage> {
             height: 5,
           ),
           Expanded(
-              child: ListView.builder(
-            itemCount: data.listcart.length,
-            itemBuilder: (context, index) {
-              if (data.listcart.isEmpty) {
-                return Center(child: Text('Data kosong'));
-              }
-              final item = data.listcart[index];
-              return Card(
-                child: GestureDetector(
-                    // Tambahkan padding ke dalam Card
-                    child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: Image.network(
-                        item["img"],
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${item["nama"]}\n',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(height: 5),
-                          Text(
-                            'Varian: ini mungkin Varian produk',
-                            style: TextStyle(fontSize: 14),
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(height: 5),
-                          Container(
-                            margin: EdgeInsets.only(right: 50),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('RP.${item["harga"]}'),
-                                Row(
+              child: FutureBuilder<List<Map<String, dynamic>>>(
+                  future: datakeranjang,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(
+                        child: Text('No data available'),
+                      );
+                    }
+                    final data = snapshot.data!;
+                    return ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        if (data.isEmpty) {
+                          return Center(child: Text('Data kosong'));
+                        }
+
+                        final item = data[index];
+                        print(totalbelanja);
+                        return Card(
+                          child: GestureDetector(
+                              // Tambahkan padding ke dalam Card
+                              child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 100,
+                                height: 100,
+                                child: Image.network(
+                                  item["image_url"],
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    IconButton(
-                                      icon: Icon(Icons.remove),
-                                      onPressed: () {
-                                        setState(() {
-                                          if (item["Quantity"] > 1) {
-                                            item["Quantity"]--;
-                                          }
-                                        });
-                                      },
+                                    Text(
+                                      '${item["nama_produk"]}\n',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    Text('QTY : ${item["Quantity"]}'),
-                                    IconButton(
-                                      icon: Icon(Icons.add),
-                                      onPressed: () {
-                                        setState(() {
-                                          item["Quantity"]++;
-                                        });
-                                      },
-                                    ),
+                                    SizedBox(height: 5),
+                                    SizedBox(height: 5),
+                                    Container(
+                                      margin: EdgeInsets.only(right: 50),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text('RP.${item["Harga"]}'),
+                                          Row(
+                                            children: [
+                                              IconButton(
+                                                icon: Icon(Icons.remove),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    if (item["kuantitas"] > 1) {
+                                                      item["kuantitas"]--;
+                                                    }
+                                                  });
+                                                },
+                                              ),
+                                              Text(
+                                                  'QTY : ${item["kuantitas"]}'),
+                                              IconButton(
+                                                icon: Icon(Icons.add),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    item["kuantitas"]++;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    )
                                   ],
                                 ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                )),
-              );
-            },
-          )),
+                              )
+                            ],
+                          )),
+                        );
+                      },
+                    );
+                  })),
           Card(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.zero)),
@@ -200,7 +248,7 @@ class _OrderPageState extends State<OrderPage> {
                                   style: TextStyle(fontSize: 16),
                                 ),
                                 Text(
-                                  '',
+                                  'Rp. $totalbelanja',
                                   style: TextStyle(fontSize: 16),
                                 )
                               ],
@@ -244,13 +292,15 @@ class _OrderPageState extends State<OrderPage> {
             margin: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Text('TOTAL'), Text('harga')],
+              children: [Text('TOTAL'), Text('Rp. $totalsemuanya')],
             ),
           )
         ],
       ),
       bottomNavigationBar: OutlinedButton(
-        onPressed: () {},
+        onPressed: () {
+          // Navigator.push(context, EditProfile(userId: userId, onProfileUpdated: onProfileUpdated))
+        },
         style: OutlinedButton.styleFrom(
             backgroundColor: data.colorpalete[0]['green'],
             shape:
