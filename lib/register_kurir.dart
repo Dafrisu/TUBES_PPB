@@ -1,35 +1,52 @@
 import 'package:flutter/material.dart';
-//route
+import 'package:tubes_ppb/Dafa_register.dart';
+import 'package:tubes_ppb/api/api_registerPembeli.dart';
 import 'package:tubes_ppb/landing.dart';
-import 'package:tubes_ppb/login.dart';
-import 'package:tubes_ppb/register_kurir.dart';
-import 'api/api_registerPembeli.dart';
+import 'api/api_registerKurir.dart';
 
 //packages
 import 'package:google_fonts/google_fonts.dart';
 
-class Register extends StatefulWidget {
-  const Register({super.key});
+class RegisterKurir extends StatefulWidget {
+  const RegisterKurir({super.key});
 
   @override
-  _RegisterState createState() => _RegisterState();
+  _RegisterKurirState createState() => _RegisterKurirState();
 }
 
-class _RegisterState extends State<Register> {
+class _RegisterKurirState extends State<RegisterKurir> {
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final namaController = TextEditingController();
-  final telephoneController = TextEditingController();
-  final usernameController = TextEditingController();
-  final alamatController = TextEditingController();
+  // final usernameController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  String? selectedRole = 'kurir';
+  String? selectedUMKM;
+  List<dynamic> umkmList = [];
   
   final emailRegex =
       RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
   final passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
-  final telephoneRegex = RegExp(r'^\+?[\d\s]{10,15}$');
-  String? selectedRole = 'pembeli';
+
+  @override
+  void initState() {
+    super.initState();
+    loadUMKM();
+  }
+
+   Future<void> loadUMKM() async {
+    try {
+      final umkmData = await fetchUMKM();
+      setState(() {
+        umkmList = umkmData;
+      });
+    } catch (error) {
+      print('Failed to load UMKM data: $error');
+    }
+  }
+
+  
 
    String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
@@ -58,23 +75,12 @@ class _RegisterState extends State<Register> {
     return null;
   }
 
-String? validateTelephone(String? value) {
-  if (value == null || value.isEmpty) {
-    return 'Tolong masukkan nomor telepon anda';
-  } else if (!telephoneRegex.hasMatch(value)) {
-    return 'Nomor telepon tidak valid';
-  }
-  return null;
-}
-
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
     namaController.dispose();
-    telephoneController.dispose();
-    usernameController.dispose();
-    alamatController.dispose();
+    // usernameController.dispose();
     super.dispose();
   }
 
@@ -110,13 +116,10 @@ String? validateTelephone(String? value) {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Text('Register',
+                Text('Register Kurir',
                     style: GoogleFonts.montserrat(
                         fontSize: 32, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 20),
-                Text('Pilih User ',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(
                     labelText: 'Pilih Role Anda',
@@ -136,11 +139,11 @@ String? validateTelephone(String? value) {
                     setState(() {
                       selectedRole = value;
                     });
-                    if (value == 'kurir') {
+                    if (value == 'pembeli') {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => RegisterKurir(),
+                          builder: (context) => Register(),
                         ),
                       );
                     }
@@ -178,21 +181,21 @@ String? validateTelephone(String? value) {
                   validator: validateEmail,
                 ),
                 const SizedBox(height: 10),
-                Text('Username',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
-                TextFormField(
-                  controller: usernameController,
-                  decoration: const InputDecoration(
-                      labelText: 'Masukkan Username Anda'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Tolong masukkan username anda';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
+                // Text('Username',
+                //     style: GoogleFonts.montserrat(
+                //         fontSize: 16, fontWeight: FontWeight.w700)),
+                // TextFormField(
+                //   controller: usernameController,
+                //   decoration: const InputDecoration(
+                //       labelText: 'Masukkan Username Anda'),
+                //   validator: (value) {
+                //     if (value == null || value.isEmpty) {
+                //       return 'Tolong masukkan username anda';
+                //     }
+                //     return null;
+                //   },
+                // ),
+                // const SizedBox(height: 10),
                 Text('Password',
                     style: GoogleFonts.montserrat(
                         fontSize: 16, fontWeight: FontWeight.w700)),
@@ -215,26 +218,28 @@ String? validateTelephone(String? value) {
                   validator: validateConfirmPassword,
                 ),
                 const SizedBox(height: 10),
-                Text('Nomor Telepon',
+                Text('UMKM',
                     style: GoogleFonts.montserrat(
                         fontSize: 16, fontWeight: FontWeight.w700)),
-                TextFormField(
-                  controller: telephoneController,
+                DropdownButtonFormField<String>(
                   decoration: const InputDecoration(
-                      labelText: 'Masukkan Nomor Telepon Anda'),
-                  validator: validateTelephone,
-                ),
-                const SizedBox(height: 10),
-                Text('Alamat',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
-                TextFormField(
-                  controller: alamatController,
-                  decoration: const InputDecoration(
-                      labelText: 'Masukkan Alamat Anda'),
+                    labelText: 'Pilih UMKM Anda',
+                  ),
+                  value: selectedUMKM,
+                  items: umkmList.map((umkm) {
+                    return DropdownMenuItem<String>(
+                      value: umkm['id_umkm'].toString(),
+                      child: Text(umkm['nama_usaha']),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedUMKM = value;
+                    });
+                  },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Tolong masukkan alamat anda';
+                      return 'Tolong pilih UMKM';
                     }
                     return null;
                   },
@@ -248,27 +253,12 @@ String? validateTelephone(String? value) {
                   ),
                   onPressed: () async {
                     if (formKey.currentState?.validate() == true) {
-                      bool isRegistered = false;
-                      if (selectedRole == 'kurir') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RegisterKurir(),
-                          ),
-                        );
-                      } else {
-                        isRegistered = await registerPembeli(
-                          namaController.text.trim(),
-                          telephoneController.text.trim(),
-                          usernameController.text.trim(),
-                          emailController.text.trim(),
-                          passwordController.text.trim(),
-                          alamatController.text.trim(),
-                        );
-                      }
-
-                       print('isRegistered: $isRegistered'); 
-
+                      bool isRegistered = await registerKurir(
+                        emailController.text.trim(),
+                        namaController.text.trim(),
+                        passwordController.text.trim(),
+                        selectedUMKM!,
+                      );
                       if (!mounted) return;
 
                       if (isRegistered) {
@@ -287,7 +277,7 @@ String? validateTelephone(String? value) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content:
-                                  Text('Email atau Username sudah digunakan')),
+                                  Text('Email sudah digunakan')),
                         );
                       }
                     }

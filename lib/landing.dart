@@ -1,5 +1,6 @@
 import 'dart:math';
 
+//route
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/login.dart';
 import 'package:tubes_ppb/Dafa_register.dart';
@@ -145,7 +146,7 @@ class landingPageState extends State<landingPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const register(),
+                        builder: (context) => const Register(),
                       ),
                     );
                   },
