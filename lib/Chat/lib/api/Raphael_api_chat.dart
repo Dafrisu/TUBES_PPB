@@ -59,7 +59,7 @@ Future<List<Map<String, dynamic>>> fetchchatkurir() async {
 
 Future<String> fetchKurirData() async {
   final response = await http.get(Uri.parse(
-      'https://umkmapi.azurewebsites.net/kurir/13')); // Ganti dengan URL yang sesuai
+      'https://umkmapi.azurewebsites.net/kurir/16')); // Ganti dengan URL yang sesuai
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
