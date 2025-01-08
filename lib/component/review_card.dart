@@ -13,6 +13,7 @@ class ReviewCard extends StatelessWidget {
   }
 
   final String username;
+  final String namaProduk;
   final int rating;
   final String tanggalUlasan;
   final String ulasan;
@@ -22,6 +23,7 @@ class ReviewCard extends StatelessWidget {
       {super.key,
       required this.username,
       required this.rating,
+      required this.namaProduk,
       required this.tanggalUlasan,
       required this.ulasan,
       required this.imgSource
@@ -29,7 +31,7 @@ class ReviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String namaProduk = getTitle(imgSource);
+    // final String namaProduk = getTitle(imgSource);
     return Card(
       margin: const EdgeInsets.all(8.0),
       shape: RoundedRectangleBorder(
@@ -68,7 +70,7 @@ class ReviewCard extends StatelessWidget {
               child: Row(
                 children: [
                   Image.asset(
-                    imgSource, // Replace with your product image path
+                    imgSource,
                     width: 50,
                     height: 50,
                     fit: BoxFit.cover,
