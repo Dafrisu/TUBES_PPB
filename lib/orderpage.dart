@@ -3,6 +3,8 @@ import 'package:local_auth/local_auth.dart';
 import 'package:tubes_ppb/edit_profile.dart';
 import 'Data.dart' as data;
 import 'api/Dafa_api_getriwayaPembelian.dart';
+import 'api/api_keranjang.dart';
+import 'dashboard/dashboard.dart'; // import dashboard page darryl
 
 // void main() {
 //   runApp(Order());
@@ -57,7 +59,8 @@ class _OrderPageState extends State<OrderPage> {
     int total = 0;
     List<Map<String, dynamic>> keranjang = await widget.isikeranjang;
     for (var item in keranjang) {
-      int price = int.parse(item['Harga'].toString().replaceAll('.', ''));
+      int price =
+          int.parse(item["Produk"]["harga"].toString().replaceAll('.', ''));
       int quantity = item['kuantitas'];
       total += price * quantity;
     }
@@ -77,7 +80,8 @@ class _OrderPageState extends State<OrderPage> {
   void sendallpesanan() async {
     List<Map<String, dynamic>> keranjang = await widget.isikeranjang;
     for (var item in keranjang) {
-      sendpesanan(item['id_keranjang'], totalsemuanya.toDouble());
+      //nanti diganti session
+      sendpesanan(item['id_keranjang'], totalsemuanya.toDouble(), 1);
     }
   }
 
@@ -94,14 +98,25 @@ class _OrderPageState extends State<OrderPage> {
 
   Future<void> authenticate() async {
     try {
-      await auth.authenticate(
+      bool authenticated = await auth.authenticate(
         localizedReason: 'Scan Fingerprintmu untuk Pesan ya',
         options: const AuthenticationOptions(
           useErrorDialogs: true,
           stickyAuth: false,
         ),
       );
-      sendallpesanan();
+      if (authenticated) {
+        sendallpesanan();
+        lastbatch = lastbatch + 1;
+      } else {
+        throw new Error();
+      }
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Dashboard(),
+        ),
+      );
       return Future.value();
     } catch (e) {
       print(e);
@@ -203,7 +218,7 @@ class _OrderPageState extends State<OrderPage> {
                                 width: 100,
                                 height: 100,
                                 child: Image.network(
-                                  item["image_url"],
+                                  item["Produk"]["image_url"],
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -215,7 +230,7 @@ class _OrderPageState extends State<OrderPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${item["nama_barang"]}\n',
+                                      '${item["Produk"]["nama_barang"]}\n',
                                       style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold),
@@ -230,29 +245,11 @@ class _OrderPageState extends State<OrderPage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text('RP.${item["Harga"]}'),
+                                          Text('RP.${item["Produk"]["harga"]}'),
                                           Row(
                                             children: [
-                                              IconButton(
-                                                icon: Icon(Icons.remove),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    if (item["kuantitas"] > 1) {
-                                                      item["kuantitas"]--;
-                                                    }
-                                                  });
-                                                },
-                                              ),
                                               Text(
                                                   'QTY : ${item["kuantitas"]}'),
-                                              IconButton(
-                                                icon: Icon(Icons.add),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    item["kuantitas"]++;
-                                                  });
-                                                },
-                                              ),
                                             ],
                                           ),
                                         ],
@@ -347,7 +344,6 @@ class _OrderPageState extends State<OrderPage> {
       bottomNavigationBar: OutlinedButton(
         onPressed: () {
           authenticate();
-
         },
         style: OutlinedButton.styleFrom(
             backgroundColor: data.colorpalete[0]['green'],

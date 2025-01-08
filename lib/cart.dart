@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/component/appbar.dart';
 import 'package:tubes_ppb/api/api_keranjang.dart';
+import 'package:tubes_ppb/orderpage.dart';
 import 'Data.dart' as data;
 
 final List<Map<String, dynamic>> colorpalete = [
@@ -35,12 +36,13 @@ class Cartpage extends StatefulWidget {
 }
 
 class _cartpagestate extends State<Cartpage> {
+  Future<List<Map<String, dynamic>>> keranjangstandby = keranjangpembeli(1);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarUMKMku(titleText: 'Keranjang'),
       body: FutureBuilder(
-        future: keranjangpembeli(1),
+        future: keranjangstandby,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -139,6 +141,16 @@ class _cartpagestate extends State<Cartpage> {
           );
         },
       ),
+      bottomNavigationBar: TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => OrderPage(isikeranjang: keranjangstandby),
+              ),
+            );
+          },
+          child: Text('Beli Sekarang')),
     );
   }
 }
