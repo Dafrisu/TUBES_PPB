@@ -69,7 +69,7 @@ class ReviewCard extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  Image.asset(
+                  Image.network(
                     imgSource,
                     width: 50,
                     height: 50,
