@@ -3,7 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/Data.dart' as dataprovider;
 import 'package:tubes_ppb/api/api_getprodukbyID.dart';
+import 'package:tubes_ppb/api/api_getprofileumkm.dart';
 import 'package:tubes_ppb/LamanPenjual.dart';
+import 'package:tubes_ppb/api/api_keranjang.dart';
 import 'cart.dart';
 
 class PageBarang extends StatefulWidget {
@@ -15,8 +17,10 @@ class PageBarang extends StatefulWidget {
 
 class _PageBarangState extends State<PageBarang> {
   // This widget is the root of your application./
+
   @override
   Widget build(BuildContext context) {
+    print(lastbatch);
     return Scaffold(
         backgroundColor: Colors.white,
 
@@ -61,6 +65,7 @@ class _PageBarangState extends State<PageBarang> {
               }
 
               final data = snapshot.data!;
+              final ID_umkm = data['id_umkm'];
               return SingleChildScrollView(
                 child: Column(
                   children: [
@@ -152,40 +157,57 @@ class _PageBarangState extends State<PageBarang> {
                     ),
 
                     // Seller Information
-                    Card(
-                      color: Colors.white,
-                      child: Center(
-                        child: ListTile(
-                          contentPadding: EdgeInsets.symmetric(vertical: 16),
-                          title: Text(
-                              'testSeller'), // this NYI Text('${widget.product["seller"]}'),
-                          leading: const CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWW0xcyFQPL6DIne-s-4nHzmBuIMCN12FioA&s"),
-                            radius: 30,
-                          ),
-                          trailing: OutlinedButton(
-                            onPressed: () {},
-                            style: OutlinedButton.styleFrom(
-                                minimumSize: Size(30, 40)),
-                            child: const Text(
-                              "Hubungi Penjual",
-                              style: TextStyle(fontSize: 12),
+                    FutureBuilder(
+                        future: getumkm(ID_umkm),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Center(
+                                child: Text('Error: ${snapshot.error}'));
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
+                            return const Center(
+                                child: Text('No data available'));
+                          }
+                          final umkm = snapshot.data!;
+                          return Card(
+                            color: Colors.white,
+                            child: Center(
+                              child: ListTile(
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 16),
+                                title: Text(
+                                    '${umkm['username']}'), // this NYI Text('${widget.product["seller"]}'),
+                                leading: const CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWW0xcyFQPL6DIne-s-4nHzmBuIMCN12FioA&s"),
+                                  radius: 30,
+                                ),
+                                trailing: OutlinedButton(
+                                  onPressed: () {},
+                                  style: OutlinedButton.styleFrom(
+                                      minimumSize: Size(30, 40)),
+                                  child: const Text(
+                                    "Hubungi Penjual",
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => PagePenjual(
+                                              title: '',
+                                              id_umkm: ID_umkm,
+                                              username: umkm['username'])));
+                                },
+                              ),
                             ),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => PagePenjual(
-                                          title: '',
-                                          forpage: widget.product,
-                                        )));
-                          },
-                        ),
-                      ),
-                    ),
-
+                          );
+                        }),
                     // card untuk ulasan (might change the listtile cuz why not?)
                     Align(
                       alignment: Alignment.centerLeft,
@@ -237,54 +259,39 @@ class _PageBarangState extends State<PageBarang> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // button untuk beli sekarang
-                OutlinedButton(
-                  iconAlignment: IconAlignment.start,
-                  style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: colorpalete[0]["green"]),
-                      minimumSize: Size(170, 120),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5))),
-                  onPressed: () {},
-                  child: Text(
-                    'Beli Sekarang',
-                    style: TextStyle(color: colorpalete[0]["green"]),
-                  ),
-                ),
-                const SizedBox(width: 20),
-
-                // button untuk +keranjang
-                ElevatedButton(
-                  onPressed: () {
-                    // logic for add to keranjang
-                    bool itemFound = false;
-
-                    // jika barang sudah ada di keranjang
-                    for (var item in dataprovider.listcart) {
-                      if (item["nama"] == widget.product["nama"]) {
-                        item["qty"] += 1;
-                        itemFound = true;
+                FutureBuilder(
+                    future: getproduk(widget.product['id']),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator(); // Menunggu data
+                      } else if (snapshot.hasError) {
+                        return Text(
+                            'Error: ${snapshot.error}'); // Menampilkan pesan error
+                      } else if (!snapshot.hasData || snapshot.data == null) {
+                        return const Text(
+                            'No data available'); // Tidak ada data
                       }
-                    }
-
-                    // jika barang belum ada di keranjang
-                    if (!itemFound) {
-                      var newItem = Map<String, dynamic>.from(widget.product);
-                      newItem["qty"] = 1;
-                      dataprovider.listcart.add(newItem);
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: colorpalete[0]["green"],
-                      minimumSize: Size(170, 120),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      )),
-                  child: const Text(
-                    "+Keranjang",
-                    style: TextStyle(color: Colors.white, fontSize: 15),
-                  ),
-                )
+                      final databarang = snapshot.data!;
+                      // button untuk +keranjang
+                      return ElevatedButton(
+                        onPressed: () async {
+                          final response = await addtoKeranjang(
+                              1, databarang['id'], lastbatch);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text('${response['message']}')));
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: colorpalete[0]["green"],
+                            minimumSize: Size(170, 120),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            )),
+                        child: Text(
+                          "+keranjang",
+                          style: TextStyle(color: Colors.white, fontSize: 15),
+                        ),
+                      );
+                    }),
               ],
             ),
           ),

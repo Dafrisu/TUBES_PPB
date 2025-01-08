@@ -4,9 +4,37 @@ final List<Map<String, dynamic>> colorpalete = [
   {"green": const Color.fromARGB(255, 101, 136, 100)}
 ];
 
-List<Map<String, dynamic>> barangpagepenjual =[];
+List<Map<String, dynamic>> barangpagepenjual = [];
 
-List<Map<String, dynamic>> listcart = [];
+List<Map<String, dynamic>> listcart = [
+  {
+    "id_penjual": "pjl01",
+    "nama":
+        "Fantech ATOM PRO SERIES Wireless Keyboard Mechanical Gaming Hotswap ",
+    "harga": 490000,
+    "img":
+        'https://images.tokopedia.net/img/cache/900/VqbcmM/2024/3/28/79bd45c3-03ef-4e06-85cf-d8c2987010f6.jpg',
+    "seller": "Asep Montir Gamink",
+    "deskripsi": "3 Form Factor to Choose Stellar Edition\n merupakan seri keyboard gaming mechanical ATOM PRO "
+        "yang terdiri dari tiga produk dengan layout yang berbeda-beda. ATOM PRO63 MK912 dengan layout 60% "
+        "ATOM PRO83 MK913 dengan layout 75% ATOM PRO96 MK914 dengan layout 95%. (Coming Soon)\n\n"
+        "Tri-Mode Connection ATOM PRO\n telah dilengkapi dengan fitur 3 mode konektivitas. Mulai dari koneksi wired menggunakan kabel, wireless 2.4GHz yang stabil, hingga Bluetooth yang bisa disambungkan ke 3 device sekaligus.\n\n"
+        "Hot Swappable Switch & Per-Key RGB Lighting\n Telah dibekali dengan switch yang hot swappable dan kompatibel dengan mechanical switch 5 pin yang memudahkan kamu untuk memasang dan mengganti switch. Selain itu juga terdapat fitur per-key RGB lighting yang siap meningkatkan tampilan keyboard jadi semakin memukau.",
+    "Quantity": 10
+  },
+  {
+    "id_penjual": "pjl01",
+    "nama": "Logitech G502 HERO High Performance Gaming Mouse",
+    "harga": 500000,
+    "img":
+        'https://images.tokopedia.net/img/cache/900/VqbcmM/2024/4/27/3ad8ad82-927c-46c4-ad21-1b90c8f50240.jpg',
+    "seller": "Asep Montir Gamink",
+    "deskripsi":
+        "Logitech G502 HERO adalah gaming mouse berperforma tinggi dengan sensor HERO 25K yang canggih untuk keakuratan piksel sempurna."
+            "\n\nMouse ini juga dilengkapi dengan sistem pemberat yang dapat disesuaikan, 11 tombol yang dapat diprogram, dan RGB lighting yang dapat dikustomisasi.",
+    "Quantity": 12
+  },
+];
 
 List<Map<String, dynamic>> sortedcart = [];
 
@@ -14,7 +42,7 @@ List<Map<String, dynamic>> listdata = [
   {
     "id_penjual": "pjl01",
     "nama":
-        "Fantech ATOM PRO SERIES Wireless Keyboard Mechanical Gaming Hotswap",
+        "Fantech ATOM PRO SERIES Wireless Keyboard Mechanical Gaming Hotswap ",
     "harga": "490.000",
     "img":
         'https://images.tokopedia.net/img/cache/900/VqbcmM/2024/3/28/79bd45c3-03ef-4e06-85cf-d8c2987010f6.jpg',
