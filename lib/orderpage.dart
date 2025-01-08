@@ -22,7 +22,8 @@ class Order extends StatelessWidget {
 }
 
 class OrderPage extends StatefulWidget {
-  const OrderPage({super.key});
+  final List<Map<String,dynamic>> isikeranjang;
+  const OrderPage({super.key, required this.isikeranjang});
 
   @override
   State<OrderPage> createState() => _OrderPageState();
@@ -59,6 +60,13 @@ class _OrderPageState extends State<OrderPage> {
     List<Map<String, dynamic>> keranjang = await datakeranjang;
     for (var item in keranjang) {
       print(item);
+    }
+  }
+
+  void sendallpesanan() async {
+    List<Map<String, dynamic>> keranjang = await datakeranjang;
+    for (var item in keranjang) {
+      sendpesanan(item['id_keranjang'], totalsemuanya.toDouble());
     }
   }
 
@@ -168,7 +176,7 @@ class _OrderPageState extends State<OrderPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${item["nama_produk"]}\n',
+                                      '${item["nama_barang"]}\n',
                                       style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold),
@@ -299,7 +307,7 @@ class _OrderPageState extends State<OrderPage> {
       ),
       bottomNavigationBar: OutlinedButton(
         onPressed: () {
-          // Navigator.push(context, EditProfile(userId: userId, onProfileUpdated: onProfileUpdated))
+          sendallpesanan();
         },
         style: OutlinedButton.styleFrom(
             backgroundColor: data.colorpalete[0]['green'],

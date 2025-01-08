@@ -64,3 +64,26 @@ Future<List<Map<String, dynamic>>> fetchkeranjangbyidbatch() async {
     return [];
   }
 }
+
+Future<void> sendpesanan(int id_keranjang, double total_belanja) async {
+  // URL endpoint API
+  final Uri url =
+      Uri.parse('http://localhost/addpesanan/$id_keranjang/$total_belanja');
+  try {
+    // Melakukan POST request
+    final response = await http.post(url);
+
+    // Memeriksa status code response
+    if (response.statusCode == 200) {
+      // Response berhasil
+      final responseBody = jsonDecode(response.body);
+      print('Response: $responseBody');
+    } else {
+      // Response gagal
+      print('Error: ${response.statusCode} - ${response.body}');
+    }
+  } catch (error) {
+    // Menangkap error jaringan atau lainnya
+    print('Error: $error');
+  }
+}
