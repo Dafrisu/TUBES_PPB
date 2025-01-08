@@ -109,7 +109,6 @@ class _OrderPageState extends State<OrderPage> {
         sendallpesanan();
         lastbatch = lastbatch + 1;
         addbatch(1, lastbatch);
-        getlastbatch(1);
       } else {
         throw new Error();
       }
@@ -346,6 +345,7 @@ class _OrderPageState extends State<OrderPage> {
       bottomNavigationBar: OutlinedButton(
         onPressed: () {
           authenticate();
+          getlastbatch(1);
         },
         style: OutlinedButton.styleFrom(
             backgroundColor: data.colorpalete[0]['green'],
