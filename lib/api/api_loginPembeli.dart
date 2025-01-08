@@ -11,10 +11,8 @@ Future<Map<String, dynamic>?> profilePembeli = Future.value(null);
 
 Future<void> fetchLogin(String email, String password) async {
   try {
-
-
     final response = await http.post(
-      Uri.parse('http://localhost/loginpembeli'), 
+      Uri.parse('http://localhost/loginpembeli'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -24,14 +22,16 @@ Future<void> fetchLogin(String email, String password) async {
       }),
     );
 
-    print('Request body: ${jsonEncode(<String, String>{'email': email, 'password': password})}');
+    print('Request body: ${jsonEncode(<String, String>{
+          'email': email,
+          'password': password
+        })}');
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
 
-
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      sessionId = data['id_pembeli']; 
+      sessionId = data['id_pembeli'];
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setInt('sessionId', sessionId);
     } else {
@@ -42,10 +42,10 @@ Future<void> fetchLogin(String email, String password) async {
   }
 }
 
-Future <Map<String, dynamic>> fetchUserData(int userId) async {
-try {
-    final response = await http.get(
-        Uri.parse('https://umkmapi.azurewebsites.net/pembeli/$sessionId'));
+Future<Map<String, dynamic>> fetchUserData(int userId) async {
+  try {
+    final response = await http
+        .get(Uri.parse('https://umkmapi.azurewebsites.net/pembeli/$sessionId'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
@@ -57,16 +57,16 @@ try {
     print(error);
     return {};
   }
-  }
+}
 
-  void nullifyProfilePembeli() {
+void nullifyProfilePembeli() {
   profilePembeli = Future.value(null);
 }
 
-
- void printdata() async {
-   Map<String, dynamic> keranjang = await profilePembeli ?? {}; // Provide a default empty map if null
+void printdata() async {
+  Map<String, dynamic> keranjang =
+      await profilePembeli ?? {}; // Provide a default empty map if null
   keranjang.forEach((key, value) {
     print('$key: $value');
   });
-  }
+}
