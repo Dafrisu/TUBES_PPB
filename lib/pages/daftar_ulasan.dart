@@ -55,7 +55,7 @@ class DaftarUlasan extends StatelessWidget {
                     tanggalUlasan: review['tanggalUlasan'],
                     ulasan: review['ulasan'],
                     namaProduk: review['namaProduk'],
-                    imgSource: 'lib/assets_images/Makanan3.jpg',
+                    imgSource: review['imgSource'],
                   );
                 }).toList(),
               ],

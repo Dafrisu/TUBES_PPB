@@ -6,7 +6,7 @@ int lastbatch = 0;
 Future<Map<String, dynamic>> addtoKeranjang(
     int id_pembeli, int id_produk, int id_batch) async {
   try {
-    final url = Uri.parse('http://10.0.2.2/keranjang');
+    final url = Uri.parse('https://umkmapi.azurewebsites.net/keranjang');
 
     final response = await http.post(
       url,
@@ -39,8 +39,8 @@ Future<Map<String, dynamic>> addtoKeranjang(
 
 Future<void> getlastbatch(int id_pembeli) async {
   try {
-    final response =
-        await http.get(Uri.parse('http://10.0.2.2/lastbatch/$id_pembeli'));
+    final response = await http.get(
+        Uri.parse('https://umkmapi.azurewebsites.net/lastbatch/$id_pembeli'));
     Map<String, dynamic> data = jsonDecode(response.body);
     if (data['latest_batch'] == null) {
       lastbatch = 1;
@@ -53,11 +53,28 @@ Future<void> getlastbatch(int id_pembeli) async {
   }
 }
 
+Future<void> addbatch(int id_pembeli, int id_batch) async {
+  try {
+    final url = Uri.parse(
+        'https://umkmapi.azurewebsites.net/addbatch/$id_pembeli/$id_batch');
+    final response = await http.post(url);
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+    if (response.statusCode == 201) {
+      print('berhasil menambah batch');
+    } else {
+      throw Exception('Gagal menambah batch');
+    }
+  } catch (error) {
+    print(error);
+  }
+}
+
 Future<Map<String, dynamic>> searchOnKeranjang(
     int id_pembeli, int id_produk, int id_batch) async {
   try {
     final response = await http.get(Uri.parse(
-        'http://10.0.2.2/searchkeranjang/$id_pembeli/$id_produk/$id_batch'));
+        'https://umkmapi.azurewebsites.net/searchkeranjang/$id_pembeli/$id_produk/$id_batch'));
     Map<String, dynamic> data = jsonDecode(response.body);
 
     return data;
@@ -69,7 +86,8 @@ Future<Map<String, dynamic>> searchOnKeranjang(
 
 Future<List<Map<String, dynamic>>> keranjangpembeli(int id_pembeli) async {
   try {
-    final url = Uri.parse('http://10.0.2.2/keranjangstandby/$id_pembeli');
+    final url = Uri.parse(
+        'https://umkmapi.azurewebsites.net/keranjangstandby/$id_pembeli');
 
     final response = await http.get(url);
 
