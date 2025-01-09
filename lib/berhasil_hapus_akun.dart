@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/login.dart';
 
-class DeleteAkun extends StatelessWidget {
-  const DeleteAkun({super.key});
+class DeleteAccount extends StatelessWidget {
+  const DeleteAccount({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF8FBC94), // Green background color
+      backgroundColor: const Color(0xFF8FBC94),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -24,11 +24,11 @@ class DeleteAkun extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Navigate to login screen and remove all previous routes
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => login()),
-                  );
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const login()),
+                  (Route<dynamic> route) => false,
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,

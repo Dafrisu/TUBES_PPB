@@ -16,7 +16,7 @@ class ProfileSettings extends StatefulWidget {
 
 class _ProfileSettingsState extends State<ProfileSettings> {
   late Future<Map<String, dynamic>> userDataFuture;
-  late String userId; 
+  late String userId;
 
   @override
   void initState() {
@@ -26,7 +26,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
 
   Future<Map<String, dynamic>> fetchUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    userId = (prefs.getInt('sessionId') ?? 0).toString(); // Convert int to String
+    userId = (prefs.getInt('sessionId') ?? 0).toString();
 
     final response = await http.get(
       Uri.parse('https://umkmapi.azurewebsites.net/pembeli/$userId'),
@@ -35,7 +35,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
-      throw Exception('Failed to load user data');
+      throw Exception('Gagal memuat data pengguna');
     }
   }
 
@@ -44,25 +44,25 @@ class _ProfileSettingsState extends State<ProfileSettings> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Sign Out'),
-          content: const Text('Are you sure you want to sign out?'),
+          title: const Text('Keluar'),
+          content: const Text('Apakah Anda yakin ingin keluar?'),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text('Batal'),
             ),
             TextButton(
               onPressed: () async {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
-                await prefs.remove('sessionId'); // Remove the session ID
+                await prefs.remove('sessionId');
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const login()), // Navigate to login screen
+                  MaterialPageRoute(builder: (context) => const login()),
                 );
               },
-              child: const Text('Sign Out'),
+              child: const Text('Keluar'),
             ),
           ],
         );
@@ -75,18 +75,15 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     return Scaffold(
       backgroundColor: const Color(0xFFC4D79D),
       appBar: AppBar(
-        title: Container(
-          alignment: Alignment.center, // Center the title
-          child: const Text(
-            'Profil',
-            style: TextStyle(
-              fontWeight: FontWeight.bold, // Make the text bold
-              fontSize: 20, // Optional: Set the font size
-            ),
+        title: const Text(
+          'Profil',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
         ),
-        backgroundColor: const Color(0xFFC4D79D), // Set the same color as in EditProfile
-        automaticallyImplyLeading: false, // Disable the back button
+        backgroundColor: const Color(0xFFC4D79D),
+        automaticallyImplyLeading: false,
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: userDataFuture,
@@ -94,7 +91,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(child: Text('Kesalahan: ${snapshot.error}'));
           } else if (snapshot.hasData) {
             final userData = snapshot.data!;
             return Center(
@@ -111,7 +108,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                         width: 120,
                         height: 120,
                         fit: BoxFit.cover,
-                        placeholder: (context, url) => const CircularProgressIndicator(),
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
                         errorWidget: (context, url, error) => Container(
                           width: 120,
                           height: 120,
@@ -133,7 +131,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                         color: Colors.black,
                       ),
                     ),
- const SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     Text(
                       userData['email'],
                       style: const TextStyle(fontSize: 16, color: Colors.black),
@@ -147,25 +145,27 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => EditProfile(userId: userId, onProfileUpdated: () {
-                                // Refresh the data when returning from EditProfile
-                                setState(() {
-                                  userDataFuture = fetchUserData(); // Refresh the data
-                                });
-                              }),
+                              builder: (context) => EditProfile(
+                                  userId: userId,
+                                  onProfileUpdated: () {
+                                    setState(() {
+                                      userDataFuture = fetchUserData();
+                                    });
+                                  }),
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         icon: const Icon(Icons.person),
-                        label: const Text('Pengaturan akun'),
+                        label: const Text('Pengaturan Akun'),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -176,13 +176,16 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => AccountDeletion(userId: userId)),
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    AccountDeletion(userId: userId)),
                           );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -196,17 +199,18 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                       constraints: const BoxConstraints(maxWidth: 375),
                       width: double.infinity,
                       child: ElevatedButton.icon(
-                        onPressed: _showSignOutConfirmationDialog, // Show sign-out confirmation dialog
+                        onPressed: _showSignOutConfirmationDialog,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orange,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         icon: const Icon(Icons.exit_to_app),
-                        label: const Text('Sign Out'),
+                        label: const Text('Keluar'),
                       ),
                     ),
                   ],
@@ -214,7 +218,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
               ),
             );
           }
-          return const Center(child: Text('No data available'));
+          return const Center(child: Text('Tidak ada data yang tersedia'));
         },
       ),
     );
