@@ -19,6 +19,8 @@ class ProfileSettings extends StatefulWidget {
 class _ProfileSettingsState extends State<ProfileSettings> {
   late Future<Map<String, dynamic>> userDataFuture;
   late String userId;
+  late String defaultImg =
+      "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg";
 
   @override
   void initState() {
@@ -51,17 +53,18 @@ class _ProfileSettingsState extends State<ProfileSettings> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Close the dialog
               },
               child: const Text('Batal'),
             ),
             TextButton(
               onPressed: () async {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
-                await prefs.remove('sessionId');
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const login()),
+                await prefs.remove('sessionId'); // Remove session ID
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                      builder: (context) => const login()), // Navigate to login
+                  (Route<dynamic> route) => false, // Remove all previous routes
                 );
               },
               child: const Text('Keluar'),
@@ -105,46 +108,55 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                   children: [
                     const SizedBox(height: 20),
                     ClipOval(
-                      child: userData['profileImg'] != null &&
-                              userData['profileImg'].isNotEmpty
-                          ? userData['profileImg'].startsWith(
-                                  '/') // Check if it's a local file path
-                              ? Image.file(
-                                  File(userData['profileImg']),
-                                  width: 120,
-                                  height: 120,
-                                  fit: BoxFit.cover,
+                      child: (userData['profileImg'] == null ||
+                              userData['profileImg'].isEmpty)
+                          ? Image.network(
+                              defaultImg, // Default image URL
+                              width: 120,
+                              height: 120,
+                              fit: BoxFit.cover,
+                            )
+                          : userData['profileImg'].startsWith('/')
+                              ? FutureBuilder<bool>(
+                                  future: File(userData['profileImg']).exists(),
+                                  builder: (context, fileSnapshot) {
+                                    if (fileSnapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const CircularProgressIndicator();
+                                    } else if (fileSnapshot.hasError ||
+                                        !fileSnapshot.data!) {
+                                      // File does not exist, show default image
+                                      return Image.network(
+                                        defaultImg, // Default image URL width: 120,
+                                        height: 120,
+                                        fit: BoxFit.cover,
+                                      );
+                                    } else {
+                                      // File exists, show the image
+                                      return Image.file(
+                                        File(userData['profileImg']),
+                                        width: 120,
+                                        height: 120,
+                                        fit: BoxFit.cover,
+                                      );
+                                    }
+                                  },
                                 )
                               : CachedNetworkImage(
-                                  imageUrl:
-                                      userData['profileImg'], // Treat as a URL
+                                  imageUrl: userData['profileImg'],
                                   width: 120,
                                   height: 120,
                                   fit: BoxFit.cover,
                                   placeholder: (context, url) =>
                                       const CircularProgressIndicator(),
                                   errorWidget: (context, url, error) =>
-                                      Container(
+                                      Image.network(
+                                    defaultImg, // Default image URL
                                     width: 120,
                                     height: 120,
-                                    color: Colors.grey[300],
-                                    child: const Icon(
-                                      Icons.person,
-                                      size: 60,
-                                      color: Colors.grey,
-                                    ),
+                                    fit: BoxFit.cover,
                                   ),
-                                )
-                          : Container(
-                              width: 120,
-                              height: 120,
-                              color: Colors.grey[300],
-                              child: const Icon(
-                                Icons.person,
-                                size: 60,
-                                color: Colors.grey,
-                              ),
-                            ),
+                                ),
                     ),
                     const SizedBox(height: 10),
                     Text(
