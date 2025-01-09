@@ -50,7 +50,7 @@ class ProfilUMKM extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: TextFormField(
-                    initialValue: '',
+                    initialValue: 'Lihat ulasan pembeli lainnya',
                     readOnly: true,
                     decoration: InputDecoration(
                         border: const UnderlineInputBorder(),
