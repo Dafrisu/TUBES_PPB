@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/BarangPenjual.dart';
 import 'package:tubes_ppb/api/api_service.dart';
 import 'dashboard_full_produk.dart';
 import 'dashboard_full_makanan.dart';
@@ -79,7 +80,16 @@ class Dashboard extends StatelessWidget {
                   items: limitedData.map((item) {
                     return Builder(
                       builder: (BuildContext context) {
-                        return Container(
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PageBarang(product: item),
+                              ),
+                            );
+                          },
+                          child: Container(
                             width: MediaQuery.of(context).size.width,
                             margin: EdgeInsets.symmetric(horizontal: 5.0),
                             decoration: BoxDecoration(color: Colors.amber),
@@ -91,7 +101,9 @@ class Dashboard extends StatelessWidget {
                                   child: Text('Image not available'),
                                 );
                               },
-                            ));
+                            ),
+                          ),
+                        );
                       },
                     );
                   }).toList(),
@@ -153,9 +165,19 @@ class Dashboard extends StatelessWidget {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     final item = data[index];
-                    return ProductCardURL(
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    PageBarang(product: item)));
+                      },
+                      child: ProductCardURL(
                         title: item['nama_barang'],
-                        imageUrl: item['image_url']);
+                        imageUrl: item['image_url'],
+                      ),
+                    );
                   },
                 );
               },
@@ -215,9 +237,19 @@ class Dashboard extends StatelessWidget {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     final item = data[index];
-                    return ProductCardURL(
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    PageBarang(product: item)));
+                      },
+                      child: ProductCardURL(
                         title: item['nama_barang'],
-                        imageUrl: item['image_url']);
+                        imageUrl: item['image_url'],
+                      ),
+                    );
                   },
                 );
               },
@@ -277,9 +309,19 @@ class Dashboard extends StatelessWidget {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     final item = data[index];
-                    return ProductCardURL(
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    PageBarang(product: item)));
+                      },
+                      child: ProductCardURL(
                         title: item['nama_barang'],
-                        imageUrl: item['image_url']);
+                        imageUrl: item['image_url'],
+                      ),
+                    );
                   },
                 );
               },
@@ -339,9 +381,19 @@ class Dashboard extends StatelessWidget {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     final item = data[index];
-                    return ProductCardURL(
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    PageBarang(product: item)));
+                      },
+                      child: ProductCardURL(
                         title: item['nama_barang'],
-                        imageUrl: item['image_url']);
+                        imageUrl: item['image_url'],
+                      ),
+                    );
                   },
                 );
               },
