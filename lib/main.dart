@@ -9,6 +9,47 @@ import 'animation.dart';
 import 'api/api_service.dart';
 import 'package:tubes_ppb/dashboard/dashboard_test.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
+
+class SharedPrefService{
+    Future writeCache({
+      required String key,
+      required int value}) async {
+      final SharedPreferences pref = await SharedPreferences.getInstance();
+     bool isSaved = await pref.setInt(key, value);
+     debugPrint(isSaved.toString());
+    }
+
+    Future readCache({required String key}) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    int? value = pref.getInt(key);
+    if (value != null) {
+       value;
+    }
+    return 0;
+    
+  }
+
+    Future removeCache({required String key}) async {
+      final SharedPreferences pref = await SharedPreferences.getInstance();
+      bool isRemoved = await pref.clear();
+      debugPrint(isRemoved.toString());
+    }
+
+    //  Future readCache({
+    //   required String key,
+    //   required String value}) async {
+    //   final SharedPreferences pref = await SharedPreferences.getInstance();
+
+    //  String? value = await pref.getString(key);
+    //  debugPrint(value.toString());
+    //  if(value != null){
+    //    debugPrint(value.toString());
+    //  }
+    // }
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   notifservices().initnotif();
