@@ -107,7 +107,10 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                               backgroundImage: NetworkImage(imageUrl[0]),
                               radius: 30,
                             ),
-                            title: Text(data[index]['nama_barang']),
+                            title: Text(
+                              data[index]['nama_barang'],
+                              overflow: TextOverflow.ellipsis,
+                            ),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -123,6 +126,16 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                                 color: Color.fromARGB(255, 101, 136, 100),
                               ),
                               onPressed: () {
+                                if (data[index]['status_pesanan'] ==
+                                    'Pesanan Masuk') {
+                                  counter = 1;
+                                } else if (data[index]['status_pesanan'] ==
+                                    "Pesanan Diterima") {
+                                  counter = 3;
+                                } else if (data[index]['status_pesanan'] ==
+                                    'Pesanan Selesai') {
+                                  counter = 4;
+                                }
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
@@ -177,10 +190,6 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                                             ),
                                           ),
                                           Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.8,
                                             padding: EdgeInsets.all(15),
                                             child: Column(
                                               crossAxisAlignment:
@@ -188,31 +197,23 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
                                               children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 15),
-                                                  child: Center(
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        border: Border(
-                                                          bottom: BorderSide(
-                                                              color:
-                                                                  Colors.black),
-                                                        ),
+                                                Center(
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      border: Border(
+                                                        bottom: BorderSide(
+                                                            color:
+                                                                Colors.black),
                                                       ),
-                                                      child: Text(
-                                                        "Informasi Produk",
-                                                        style: TextStyle(
-                                                          color: Color.fromARGB(
-                                                              255,
-                                                              101,
-                                                              136,
-                                                              100),
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
+                                                    ),
+                                                    child: Text(
+                                                      "Informasi Produk",
+                                                      style: TextStyle(
+                                                        color: Color.fromARGB(
+                                                            255, 101, 136, 100),
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
                                                       ),
                                                     ),
                                                   ),
@@ -243,53 +244,60 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                                                               ),
                                                             ),
                                                           ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                                    bottom: 10,
-                                                                    left: 10,
-                                                                    right: 10),
-                                                            child: Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Text(
-                                                                  "Detail Produk :",
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            101,
-                                                                            136,
-                                                                            100),
+                                                          Expanded(
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      bottom:
+                                                                          10,
+                                                                      left: 10,
+                                                                      right:
+                                                                          10),
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    "Detail Produk :",
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color: Color.fromARGB(
+                                                                          255,
+                                                                          101,
+                                                                          136,
+                                                                          100),
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                                Text(
-                                                                  namaBarang[i],
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    fontSize:
-                                                                        14,
+                                                                  Text(
+                                                                    namaBarang[
+                                                                        i],
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          14,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                    ),
+                                                                    softWrap:
+                                                                        true,
+                                                                    maxLines: 1,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
                                                                   ),
-                                                                  softWrap:
-                                                                      true,
-                                                                  maxLines: 2,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                ),
-                                                                Text(
-                                                                    'Kuantitas : ${kuantitas_barang[i]}'),
-                                                              ],
+                                                                  Text(
+                                                                      'Kuantitas : ${kuantitas_barang[i]}'),
+                                                                ],
+                                                              ),
                                                             ),
                                                           )
                                                         ],
@@ -336,11 +344,17 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        Text(
-                                                          'Alamat Pengiriman : ${data[index]['alamat_pembeli']}',
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
+                                                        Expanded(
+                                                          child: Text(
+                                                            'Alamat Pengiriman : ${data[index]['alamat_pembeli']}',
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
                                                           ),
                                                         ),
                                                       ],
@@ -427,7 +441,6 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                     List<String> kuantitas_barang =
                         data[index]['kuantitas_barang'].toString().split(',');
                     int hitungbarang = namaBarang.length;
-                    print(imageUrl);
                     return Card(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
@@ -441,7 +454,10 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                               backgroundImage: NetworkImage(imageUrl[0]),
                               radius: 30,
                             ),
-                            title: Text(data[index]['nama_barang']),
+                            title: Text(
+                              data[index]['nama_barang'],
+                              overflow: TextOverflow.ellipsis,
+                            ),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -521,10 +537,6 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                                             ),
                                           ),
                                           Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.8,
                                             padding: EdgeInsets.all(15),
                                             child: Column(
                                               crossAxisAlignment:
@@ -532,31 +544,23 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
                                               children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 15),
-                                                  child: Center(
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        border: Border(
-                                                          bottom: BorderSide(
-                                                              color:
-                                                                  Colors.black),
-                                                        ),
+                                                Center(
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      border: Border(
+                                                        bottom: BorderSide(
+                                                            color:
+                                                                Colors.black),
                                                       ),
-                                                      child: Text(
-                                                        "Informasi Produk",
-                                                        style: TextStyle(
-                                                          color: Color.fromARGB(
-                                                              255,
-                                                              101,
-                                                              136,
-                                                              100),
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
+                                                    ),
+                                                    child: Text(
+                                                      "Informasi Produk",
+                                                      style: TextStyle(
+                                                        color: Color.fromARGB(
+                                                            255, 101, 136, 100),
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
                                                       ),
                                                     ),
                                                   ),
@@ -587,53 +591,60 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                                                               ),
                                                             ),
                                                           ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                                    bottom: 10,
-                                                                    left: 10,
-                                                                    right: 10),
-                                                            child: Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Text(
-                                                                  "Detail Produk :",
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            101,
-                                                                            136,
-                                                                            100),
+                                                          Expanded(
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      bottom:
+                                                                          10,
+                                                                      left: 10,
+                                                                      right:
+                                                                          10),
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    "Detail Produk :",
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color: Color.fromARGB(
+                                                                          255,
+                                                                          101,
+                                                                          136,
+                                                                          100),
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                                Text(
-                                                                  namaBarang[i],
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    fontSize:
-                                                                        14,
+                                                                  Text(
+                                                                    namaBarang[
+                                                                        i],
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          14,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                    ),
+                                                                    softWrap:
+                                                                        true,
+                                                                    maxLines: 1,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
                                                                   ),
-                                                                  softWrap:
-                                                                      true,
-                                                                  maxLines: 2,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                ),
-                                                                Text(
-                                                                    'Kuantitas : ${kuantitas_barang[i]}'),
-                                                              ],
+                                                                  Text(
+                                                                      'Kuantitas : ${kuantitas_barang[i]}'),
+                                                                ],
+                                                              ),
                                                             ),
                                                           )
                                                         ],
@@ -680,11 +691,17 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        Text(
-                                                          'Alamat Pengiriman : ${data[index]['alamat_pembeli']}',
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
+                                                        Expanded(
+                                                          child: Text(
+                                                            'Alamat Pengiriman : ${data[index]['alamat_pembeli']}',
+                                                            style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
                                                           ),
                                                         ),
                                                       ],

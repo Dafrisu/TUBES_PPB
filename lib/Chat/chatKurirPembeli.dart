@@ -234,7 +234,7 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
         backgroundColor: const Color(0xFF658864),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchMessagesByKurirAndPembeli(13, widget.id_pembeli),
+        future: fetchMessagesByKurirAndPembeli(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -313,7 +313,7 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                         onSubmitted: (value) async {
                           if (value.trim().isNotEmpty) {
                             await sendMessageKurirkePembeli(
-                                13, value.trim(), widget.id_pembeli, 'Pembeli');
+                                value.trim(), 'Pembeli');
                             setState(() {});
                             _messageController.clear();
                           }
@@ -325,10 +325,7 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                       onPressed: () async {
                         if (_messageController.text.trim().isNotEmpty) {
                           await sendMessageKurirkePembeli(
-                              13,
-                              _messageController.text.trim(),
-                              widget.id_pembeli,
-                              'Pembeli');
+                              _messageController.text.trim(), 'Pembeli');
                           setState(() {});
                           _messageController.clear();
                         }
