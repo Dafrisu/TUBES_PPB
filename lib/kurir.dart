@@ -31,6 +31,7 @@ class DeliveryPage extends StatefulWidget {
 
 class _DeliveryPageState extends State<DeliveryPage> {
   String namaKurir = 'Kurir';
+  int idUmkm = 0;
 
   @override
   void initState() {
@@ -38,10 +39,12 @@ class _DeliveryPageState extends State<DeliveryPage> {
     _fetchKurirData();
   }
 
+  // Memperbarui fungsi fetch untuk mendapatkan id_umkm dan nama_kurir
   Future<void> _fetchKurirData() async {
-    String fetchedNamaKurir = await fetchKurirData();
+    Map<String, dynamic> kurirData = await fetchKurirData();
     setState(() {
-      namaKurir = fetchedNamaKurir;
+      namaKurir = kurirData['nama_kurir'];
+      idUmkm = kurirData['id_umkm'];
     });
   }
 
@@ -124,8 +127,8 @@ class _DeliveryPageState extends State<DeliveryPage> {
             const SizedBox(height: 20),
             Expanded(
               child: FutureBuilder<List<Map<String, dynamic>>>(
-                future: fetchPesanAndIterima(
-                    1), // Pass the ID you want to fetch data for
+                // Panggil getPesananDiterima dengan id_umkm yang diperoleh
+                future: getPesananDiterima(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -136,15 +139,14 @@ class _DeliveryPageState extends State<DeliveryPage> {
                   }
 
                   final orders = snapshot.data!.map((order) {
-                    return OrderItemData.fromJson(order); // Map data to model
+                    return OrderItemData.fromJson(order);
                   }).toList();
 
                   return ListView.builder(
-                    // Display the orders as a ListView
                     itemCount: orders.length,
                     itemBuilder: (context, index) {
                       final order = orders[index];
-                      return OrderCard(order: order); // Display each order
+                      return OrderCard(order: order);
                     },
                   );
                 },
@@ -176,10 +178,10 @@ class OrderItemData {
 
   factory OrderItemData.fromJson(Map<String, dynamic> json) {
     return OrderItemData(
-      idPesanan: json['id_pesanan'],
+      idPesanan: json['id_batch'],
       statusPesanan: json['status_pesanan'],
       namaBarang: json['nama_barang'],
-      kuantitasBarang: json['kuantitas_barang'],
+      kuantitasBarang: json['kuantitas'],
       totalBelanja: json['total_belanja'],
       alamatPembeli: json['alamat_pembeli'],
     );
