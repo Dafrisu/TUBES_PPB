@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'berhasil_hapus_akun.dart';
+import 'dart:io';
 
 class AccountDeletion extends StatefulWidget {
   final String userId;
@@ -115,22 +116,35 @@ class _AccountDeletionState extends State<AccountDeletion> {
             children: [
               const SizedBox(height: 16.0),
               ClipOval(
-                child: CachedNetworkImage(
-                  imageUrl: profileImageUrl.isNotEmpty
-                      ? profileImageUrl
-                      : 'https://example.com/default_image.png',
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Container(
-                    width: 100,
-                    height: 100,
-                    color: Colors.grey[300],
-                    child: const Icon(Icons.person, size: 50),
-                  ),
-                ),
+                child: profileImageUrl.isNotEmpty
+                    ? profileImageUrl
+                            .startsWith('/') // Check if it's a local file path
+                        ? Image.file(
+                            File(profileImageUrl),
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          )
+                        : CachedNetworkImage(
+                            imageUrl: profileImageUrl, // Treat as a URL
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) =>
+                                const CircularProgressIndicator(),
+                            errorWidget: (context, url, error) => Container(
+                              width: 100,
+                              height: 100,
+                              color: Colors.grey[300],
+                              child: const Icon(Icons.person, size: 50),
+                            ),
+                          )
+                    : Container(
+                        width: 100,
+                        height: 100,
+                        color: Colors.grey[300],
+                        child: const Icon(Icons.person, size: 50),
+                      ),
               ),
               const SizedBox(height: 16.0),
               const Text(
