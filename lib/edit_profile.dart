@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:tubes_ppb/homepage.dart';
+import 'dart:io';
 
 class EditProfile extends StatefulWidget {
   final String userId;
@@ -27,6 +29,7 @@ class _EditProfileState extends State<EditProfile> {
   bool isLoading = true;
   String profilePictureUrl = '';
   bool isPasswordVisible = false;
+  bool isNetworkImage = true;
 
   @override
   void initState() {
@@ -97,30 +100,87 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   void _showChangeProfilePictureDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Ubah Foto Profil'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera),
+                title: const Text('Ambil Foto'),
+                onTap: () async {
+                  final pickedFile =
+                      await ImagePicker().pickImage(source: ImageSource.camera);
+                  if (pickedFile != null) {
+                    final localPath =
+                        await _saveImageLocally(File(pickedFile.path));
+                    setState(() {
+                      profilePictureUrl = localPath;
+                      isNetworkImage = false;
+                    });
+                    Navigator.of(context).pop();
+                  }
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo),
+                title: const Text('Pilih dari Galeri'),
+                onTap: () async {
+                  final pickedFile = await ImagePicker()
+                      .pickImage(source: ImageSource.gallery);
+                  if (pickedFile != null) {
+                    final localPath =
+                        await _saveImageLocally(File(pickedFile.path));
+                    setState(() {
+                      profilePictureUrl = localPath;
+                      isNetworkImage = false;
+                    });
+                    Navigator.of(context).pop();
+                  }
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.link),
+                title: const Text('Masukkan URL'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _showUrlInputDialog();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showUrlInputDialog() {
     profilePictureController.text = profilePictureUrl;
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Ubah URL Foto Profil'),
+          title: const Text('Masukkan URL Foto'),
           content: TextField(
             controller: profilePictureController,
             decoration: const InputDecoration(
-              labelText: 'URL Foto Profil',
+              labelText: 'URL Foto',
               border: OutlineInputBorder(),
             ),
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => Navigator.of(context).pop(),
               child: const Text('Batal'),
             ),
             TextButton(
               onPressed: () {
                 setState(() {
                   profilePictureUrl = profilePictureController.text;
+                  isNetworkImage = true;
                 });
                 Navigator.of(context).pop();
               },
@@ -132,18 +192,35 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
+  Future<String> createCustomDirectory() async {
+    final directory = await getApplicationDocumentsDirectory();
+    final String customDirPath = '${directory.path}/ImagesTest';
+    final Directory customDir = Directory(customDirPath);
+    if (!await customDir.exists()) {
+      await customDir.create(recursive: true);
+    }
+    return customDir.path;
+  }
+
+  Future<String> _saveImageLocally(File imageFile) async {
+    final String customDirPath = await createCustomDirectory();
+    final String fileName =
+        DateTime.now().millisecondsSinceEpoch.toString() + '.png';
+    final String localPath = '$customDirPath/$fileName';
+    final File localImage = await imageFile.copy(localPath);
+    return localImage.path;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFC4D79D),
       appBar: AppBar(
-        title: Container(
-          child: const Text(
-            'Edit Profil',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
+        title: const Text(
+          'Edit Profil',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
         ),
         backgroundColor: const Color(0xFFC4D79D),
@@ -152,134 +229,147 @@ class _EditProfileState extends State<EditProfile> {
           ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: _showChangeProfilePictureDialog,
-                    child: Stack(
-                      alignment: Alignment.bottomRight,
-                      children: [
-                        ClipOval(
-                          child: CachedNetworkImage(
-                            imageUrl: profilePictureUrl,
-                            width: 120,
-                            height: 120,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) =>
-                                const CircularProgressIndicator(),
-                            errorWidget: (context, url, error) => Container(
-                              width: 120,
-                              height: 120,
-                              color: Colors.grey[300],
-                              child: const Icon(
-                                Icons.person,
-                                size: 60,
-                                color: Colors.grey,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: _showChangeProfilePictureDialog,
+                      child: Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          ClipOval(
+                            child: profilePictureUrl.isNotEmpty
+                                ? profilePictureUrl.startsWith(
+                                        '/') // Check if it's a local file path
+                                    ? Image.file(
+                                        File(profilePictureUrl),
+                                        width: 120,
+                                        height: 120,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : CachedNetworkImage(
+                                        imageUrl:
+                                            profilePictureUrl, // Treat as a URL
+                                        width: 120,
+                                        height: 120,
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) =>
+                                            const CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) =>
+                                            Container(
+                                          width: 120,
+                                          height: 120,
+                                          color: Colors.grey[300],
+                                          child: const Icon(Icons.person,
+                                              size: 60, color: Colors.grey),
+                                        ),
+                                      )
+                                : Container(
+                                    width: 120,
+                                    height: 120,
+                                    color: Colors.grey[300],
+                                    child: const Icon(Icons.person,
+                                        size: 60, color: Colors.grey),
+                                  ),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: Colors.blue,
+                                shape: BoxShape.circle,
+                              ),
+                              child: IconButton(
+                                onPressed: _showChangeProfilePictureDialog,
+                                icon: const Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              shape: BoxShape.circle,
-                            ),
-                            child: IconButton(
-                              onPressed: _showChangeProfilePictureDialog,
-                              icon: const Icon(
-                                Icons.edit,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildTextField(fullNameController, 'Nama Lengkap'),
-                  const SizedBox(height: 16),
-                  _buildTextField(emailController, 'Email'),
-                  const SizedBox(height: 16),
-                  _buildTextField(phoneController, 'Nomor Telepon'),
-                  const SizedBox(height: 16),
-                  _buildTextField(addressController, 'Alamat'),
-                  const SizedBox(height: 16),
-                  _buildTextField(usernameController, 'Nama Pengguna'),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: passwordController,
-                    decoration: InputDecoration(
-                      labelText: 'Kata Sandi',
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+                    const SizedBox(height: 16),
+                    _buildTextField(fullNameController, 'Nama Lengkap'),
+                    const SizedBox(height: 16),
+                    _buildTextField(emailController, 'Email'),
+                    const SizedBox(height: 16),
+                    _buildTextField(phoneController, 'Nomor Telepon'),
+                    const SizedBox(height: 16),
+                    _buildTextField(addressController, 'Alamat'),
+                    const SizedBox(height: 16),
+                    _buildTextField(usernameController, 'Nama Pengguna'),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: passwordController,
+                      decoration: InputDecoration(
+                        labelText: 'Kata Sandi',
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              isPasswordVisible = !isPasswordVisible;
+                            });
+                          },
                         ),
-                        onPressed: () {
-                          setState(() {
-                            isPasswordVisible = !isPasswordVisible;
-                          });
+                        border: const OutlineInputBorder(),
+                      ),
+                      obscureText: !isPasswordVisible,
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      constraints: const BoxConstraints(maxWidth: 375),
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          final updatedData = {
+                            'nama_lengkap': fullNameController.text,
+                            'email': emailController.text,
+                            'nomor_telepon': phoneController.text,
+                            'alamat': addressController.text,
+                            'username': usernameController.text,
+                            'password': passwordController.text,
+                            'profileImg': profilePictureUrl,
+                          };
+                          try {
+                            await updateProfile(widget.userId, updatedData);
+                            widget.onProfileUpdated();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Profil berhasil diperbarui!')),
+                            );
+                            Navigator.of(context).pop();
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text('Kesalahan: ${e.toString()}')),
+                            );
+                          }
                         },
-                      ),
-                      border: OutlineInputBorder(),
-                    ),
-                    obscureText: !isPasswordVisible,
-                  ),
-                  const SizedBox(height: 16),
-                  Container(
-                    constraints: const BoxConstraints(maxWidth: 375),
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        final updatedData = {
-                          'nama_lengkap': fullNameController.text,
-                          'email': emailController.text,
-                          'nomor_telepon': phoneController.text,
-                          'alamat': addressController.text,
-                          'username': usernameController.text,
-                          'password': passwordController.text,
-                          'profileImg': profilePictureUrl,
-                        };
-                        try {
-                          await updateProfile(widget.userId, updatedData);
-                          widget.onProfileUpdated();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Profil berhasil diperbarui!')),
-                          );
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Homepage()),
-                          );
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text('Kesalahan: ${e.toString()}')),
-                          );
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
+                        child: const Text('Perbarui Profil'),
                       ),
-                      child: const Text('Perbarui Profil'),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
     );
