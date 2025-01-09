@@ -10,7 +10,6 @@ import 'package:tubes_ppb/dashboard/dashboard_test.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  getlastbatch(1);
   runApp(
     ChangeNotifierProvider(
       create: (context) => UserProvider(),
