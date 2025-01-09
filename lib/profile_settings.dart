@@ -133,6 +133,11 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                     ),
                     const SizedBox(height: 5),
                     Text(
+                      userData['username'],
+                      style: const TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
                       userData['email'],
                       style: const TextStyle(fontSize: 16, color: Colors.black),
                     ),
