@@ -60,8 +60,8 @@ class _cartpagestate extends State<Cartpage> with WidgetsBindingObserver {
     if (state == AppLifecycleState.paused) {
       // App goes to background
       keranjangstandby.then((data) {
-        print(data);
         if (data.isNotEmpty) {
+          print(data[0]);
           notifservices().shownotif(
               title: 'Keranjangmu menunggu nih~~',
               body:
