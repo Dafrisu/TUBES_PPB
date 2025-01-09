@@ -26,7 +26,7 @@ Future<List<Map<String, dynamic>>> fetchriwayatpembelian() async {
 Future<List<Map<String, dynamic>>> fetchpesananaktifpembeli() async {
   try {
     final response = await http.get(Uri.parse(
-        'https://umkmapi.azurewebsites.net/getpesananaktifpembeli/1'));
+        'https://umkmapi.azurewebsites.net/getallpesananaktifpembeli/1'));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
