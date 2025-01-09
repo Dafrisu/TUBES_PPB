@@ -74,7 +74,8 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
                             ? PembeliKurirChatPage(
                                 sender: selectedMessage['nama_kurir'] ??
                                     'Unknown Kurir',
-                                id_kurir: selectedMessage['id_kurir'] ?? 0)
+                                kurirSessionId:
+                                    selectedMessage['id_kurir'] ?? 0)
                             : PembeliUmkmChatPage(
                                 sender: selectedMessage['username'] ??
                                     'Unknown User',
@@ -145,7 +146,7 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
                       builder: (context) => item['isKurir']
                           ? PembeliKurirChatPage(
                               sender: item['nama_kurir'] ?? 'Unknown Kurir',
-                              id_kurir: item['id_kurir'] ?? 0)
+                              kurirSessionId: item['id_kurir'] ?? 0)
                           : PembeliUmkmChatPage(
                               sender: item['username'] ?? 'Unknown User',
                               id_umkm: item['id_umkm'] ?? 0),
@@ -385,6 +386,8 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
                             int id_pembeli = prefs.getInt('sessionId') ?? 0;
+                            int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
+
                             await sendMessagePembeliKeUMKM(
                                 value.trim(), widget.id_umkm, 'UMKM');
                             setState(() {});
@@ -400,6 +403,7 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                           SharedPreferences prefs =
                               await SharedPreferences.getInstance();
                           int id_pembeli = prefs.getInt('sessionId') ?? 0;
+                          int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
                           await sendMessagePembeliKeUMKM(
                               _messageController.text.trim(),
                               widget.id_umkm,
