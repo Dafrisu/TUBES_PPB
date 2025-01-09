@@ -12,7 +12,7 @@ class ProfilUMKM extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarUMKMku(titleText: 'Profil UMKMku'),
+      appBar: AppBarUMKMku(titleText: 'Profil UMKM'),
       body: FutureBuilder<Map<String, dynamic>>(
         future: getumkm(idUMKM),
         builder: (context, snapshot) {
@@ -50,7 +50,7 @@ class ProfilUMKM extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: TextFormField(
-                    initialValue: '4 dari 5',
+                    initialValue: '',
                     readOnly: true,
                     decoration: InputDecoration(
                         border: const UnderlineInputBorder(),
