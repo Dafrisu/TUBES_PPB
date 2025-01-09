@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class animation extends StatelessWidget {
   const animation({super.key});
+  
 
   @override
   Widget build(BuildContext context) {

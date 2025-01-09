@@ -27,15 +27,16 @@ class Screens extends State<Homepage> {
    @override
   void initState() {
     super.initState();
-    _loadSessionId();
+      _loadSessionId();
   }
 
   Future<void> _loadSessionId() async {
-      sessionId = await sharedPrefService.readCache(key: "sessionId");
-    setState(() {});
+    int value = await sharedPrefService.readCache(key: 'sessionId');
+    setState(() {
+      sessionId = value;
+    });
   }
-
-
+  
   // Fungsi untuk memuat ulang data keranjang
   void refreshKeranjang() {
     setState(() {

@@ -21,11 +21,13 @@ class SharedPrefService{
      debugPrint(isSaved.toString());
     }
 
-    Future<int> readCache({required String key}) async {
+    Future readCache({required String key}) async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
     int? value = pref.getInt(key);
-    debugPrint(value.toString());
-    return value ?? 0;
+    if (value != null) {
+       value;
+    }
+    return 0;
     
   }
 
