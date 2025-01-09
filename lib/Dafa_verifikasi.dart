@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tubes_ppb/Dafa_formGantiPassword.dart';
-import 'package:tubes_ppb/login.dart';
+import 'package:tubes_ppb/api/api_gantiPassword.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class verifikasi extends StatelessWidget {
   final String previousPage;
-  const verifikasi({super.key, required this.previousPage});
+  final String email;
+  final String otpHash;
+  const verifikasi({super.key, required this.previousPage, required this.email, required this.otpHash});
 
   @override
   Widget build(BuildContext context) {
@@ -29,138 +31,22 @@ class verifikasi extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Text(
-                  'Untuk melindungi keamanan akun Anda, kami memerlukan kode verifikasi yang dikirimkan ke nomor Anda.',
+                  'Untuk melindungi keamanan akun Anda, kami memerlukan kode verifikasi yang dikirimkan ke email Anda.',
                   style: GoogleFonts.montserrat(
                       textStyle: TextStyle(fontSize: 18))),
               Padding(padding: EdgeInsets.only(bottom: 30)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                      height: 68,
-                      width: 64,
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16.0),
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(255, 101, 136, 100),
-                                width: 3.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16.0),
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(255, 101, 136, 100),
-                                width: 3.0),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          if (value.length == 1) {
-                            FocusScope.of(context).nextFocus();
-                          }
-                        },
-                        style: Theme.of(context).textTheme.headlineMedium,
-                        keyboardType: TextInputType.number,
-                        textAlign: TextAlign.center,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(1),
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                      )),
-                  SizedBox(
-                      height: 68,
-                      width: 64,
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16.0),
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(255, 101, 136, 100),
-                                width: 3.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16.0),
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(255, 101, 136, 100),
-                                width: 3.0),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          if (value.length == 1) {
-                            FocusScope.of(context).nextFocus();
-                          }
-                        },
-                        style: Theme.of(context).textTheme.headlineMedium,
-                        keyboardType: TextInputType.number,
-                        textAlign: TextAlign.center,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(1),
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                      )),
-                  SizedBox(
-                      height: 68,
-                      width: 64,
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16.0),
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(255, 101, 136, 100),
-                                width: 3.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16.0),
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(255, 101, 136, 100),
-                                width: 3.0),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          if (value.length == 1) {
-                            FocusScope.of(context).nextFocus();
-                          }
-                        },
-                        style: Theme.of(context).textTheme.headlineMedium,
-                        keyboardType: TextInputType.number,
-                        textAlign: TextAlign.center,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(1),
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                      )),
-                  SizedBox(
-                      height: 68,
-                      width: 64,
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16.0),
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(255, 101, 136, 100),
-                                width: 3.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16.0),
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(255, 101, 136, 100),
-                                width: 3.0),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          if (value.length == 1) {
-                            FocusScope.of(context).nextFocus();
-                          }
-                        },
-                        style: Theme.of(context).textTheme.headlineMedium,
-                        keyboardType: TextInputType.number,
-                        textAlign: TextAlign.center,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(1),
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                      )),
-                ],
+              TextFormField(
+                controller: codeController,
+                decoration: InputDecoration(
+                  labelText: 'Kode Verifikasi',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Masukkan kode verifikasi';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -169,19 +55,26 @@ class verifikasi extends StatelessWidget {
                     minimumSize: Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(1))),
-                onPressed: () {
-                  // Logika navigasi berdasarkan nilai previousPage
-                  if (previousPage == 'masukkanEmail') {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Formgantipassword()),
-                    );
-                  } else if (previousPage == 'register') {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => login()),
-                    );
+                onPressed: () async {
+                  if (formKey.currentState?.validate() == true) {
+                    try {
+                      bool isVerified = await verifyOTP(email, otpHash, codeController.text);
+                      if (isVerified) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Formgantipassword(email: email)),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Kode verifikasi salah')),
+                        );
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Error: ${e.toString()}')),
+                      );
+                    }
                   }
                 },
                 child: const Text(

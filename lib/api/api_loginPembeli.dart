@@ -51,7 +51,7 @@ Future<Map<String, dynamic>> fetchUserData(int userId) async {
       final Map<String, dynamic> data = jsonDecode(response.body);
       return data;
     } else {
-      throw Exception('Gagal load Riwayat Pesanan');
+      throw Exception('Gagal load User Pembeli');
     }
   } catch (error) {
     print(error);
@@ -65,7 +65,7 @@ void nullifyProfilePembeli() {
 
 void printdata() async {
   Map<String, dynamic> keranjang =
-      await profilePembeli ?? {}; // Provide a default empty map if null
+      await profilePembeli ?? {}; 
   keranjang.forEach((key, value) {
     print('$key: $value');
   });
