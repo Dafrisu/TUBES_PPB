@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tubes_ppb/api/api_loginPembeli.dart';
 import 'package:tubes_ppb/component/appbar.dart';
 import 'package:tubes_ppb/api/api_keranjang.dart';
+import 'package:tubes_ppb/notif.dart';
 import 'package:tubes_ppb/orderpage.dart';
 import 'Data.dart' as data;
 
@@ -36,9 +37,8 @@ class Cartpage extends StatefulWidget {
   State<Cartpage> createState() => _cartpagestate();
 }
 
-class _cartpagestate extends State<Cartpage> {
-  Future<List<Map<String, dynamic>>> keranjangstandby =
-      keranjangpembeli(sessionId);
+class _cartpagestate extends State<Cartpage> with WidgetsBindingObserver {
+  late Future<List<Map<String, dynamic>>> keranjangstandby;
 
 // Method untuk memanggil ulang data
   void reloadKeranjang() {
@@ -52,6 +52,23 @@ class _cartpagestate extends State<Cartpage> {
     // TODO: implement initState
 
     keranjangstandby = keranjangpembeli(sessionId);
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      // App goes to background
+      keranjangstandby.then((data) {
+        if (data.isNotEmpty) {
+          notifservices()
+              .shownotif(title: 'holy shit jalan', body: 'madep lurd');
+        }
+      });
+    } else if (state == AppLifecycleState.resumed) {
+      // App comes to foreground
+      print('App is in the foreground.');
+    }
   }
 
   @override

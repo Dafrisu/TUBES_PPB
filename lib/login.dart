@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/notif.dart';
 import 'masukkanEmail.dart';
 import 'homepage.dart';
 import 'package:tubes_ppb/kurir.dart';
@@ -167,6 +168,8 @@ class _LoginState extends State<login> {
                         RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                   ),
                   onPressed: () async {
+                    notifservices().shownotif(
+                        title: 'holy shit jalan', body: 'madep lurd');
                     if (formKey.currentState?.validate() == true) {
                       if (selectedRole == 'pembeli') {
                         try {
@@ -189,7 +192,8 @@ class _LoginState extends State<login> {
                         } catch (error) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Terjadi kesalahan, coba lagi nanti'),
+                              content:
+                                  Text('Terjadi kesalahan, coba lagi nanti'),
                             ),
                           );
                         }
