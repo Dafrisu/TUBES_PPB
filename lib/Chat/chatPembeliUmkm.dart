@@ -296,7 +296,7 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
         backgroundColor: const Color(0xFF658864),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchMessagesByPembeliAndUMKM(1, widget.id_umkm),
+        future: fetchMessagesByPembeliAndUMKM(widget.id_umkm),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -365,8 +365,11 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                         ),
                         onSubmitted: (value) async {
                           if (value.trim().isNotEmpty) {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            int id_pembeli = prefs.getInt('sessionId') ?? 0;
                             await sendMessagePembeliKeUMKM(
-                                1, value.trim(), widget.id_umkm, 'UMKM');
+                                value.trim(), widget.id_umkm, 'UMKM');
                             setState(() {});
                             _messageController.clear();
                           }
@@ -377,8 +380,10 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                       icon: const Icon(Icons.send),
                       onPressed: () async {
                         if (_messageController.text.trim().isNotEmpty) {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          int id_pembeli = prefs.getInt('sessionId') ?? 0;
                           await sendMessagePembeliKeUMKM(
-                              1,
                               _messageController.text.trim(),
                               widget.id_umkm,
                               'UMKM');
