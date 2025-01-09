@@ -197,23 +197,57 @@ Future<Map<String, dynamic>> sendMessageKurirkePembeli(
   }
 }
 
-Future<List<Map<String, dynamic>>> fetchpesananditerima() async {
+Future<bool> updateStatusPesananMasuk(int id_umkm, int idBatch) async {
+  try {
+    final response = await http.put(
+      Uri.parse(
+          'https://umkmapi.azurewebsites.net/updatestatuspesananmasuk/$id_umkm/$idBatch'),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Gagal update status pesanan');
+    }
+  } catch (error) {
+    print('Error update status pesanan diterima: $error');
+    return false;
+  }
+}
+
+Future<List<Map<String, dynamic>>> fetchPesanAndIterima(int id) async {
   try {
     final response = await http.get(
-        Uri.parse('https://umkmapi.azurewebsites.net/getpesananditerima/1'));
+      Uri.parse(
+          'https://your-api-url.com/getpesananditerima/$id'), // Replace with your actual URL
+    );
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
-
-      final List<Map<String, dynamic>> listProperties =
-          data.cast<Map<String, dynamic>>();
-
-      return listProperties;
+      return data.cast<Map<String, dynamic>>();
     } else {
-      throw Exception('Gagal load Pesanan');
+      throw Exception('Failed to load orders');
     }
   } catch (error) {
     print(error);
     return [];
+  }
+}
+
+Future<bool> updateStatusPesananSelesai(int id_umkm, int idBatch) async {
+  try {
+    final response = await http.put(
+      Uri.parse(
+          'https://umkmapi.azurewebsites.net/updatestatuspesananselesai/$id_umkm/$idBatch'),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Gagal update status pesanan');
+    }
+  } catch (error) {
+    print('Error update status pesanan selesai: $error');
+    return false;
   }
 }
