@@ -110,7 +110,7 @@ class _OrderPageState extends State<OrderPage> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Pesan dibatalkan'),
+            content: Text('UMKM kecewa 😭'),
             duration: Duration(seconds: 3),
           ),
         );
