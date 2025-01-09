@@ -405,7 +405,7 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                 return ListView.builder(
                   itemCount: data.length,
                   itemBuilder: (context, index) {
-                    String imageUrl = data[index]['image_url'] ?? '';
+                    String imageUrl = data[index]['image_url'].split(',');
                     print(imageUrl);
                     return Card(
                       shape: RoundedRectangleBorder(
@@ -418,7 +418,7 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                           ListTile(
                             leading: CircleAvatar(
                               backgroundImage:
-                                  NetworkImage(data[index]['image_url']),
+                                  NetworkImage(imageUrl[index]),
                               radius: 30,
                             ),
                             title: Text(data[index]['nama_barang']),
