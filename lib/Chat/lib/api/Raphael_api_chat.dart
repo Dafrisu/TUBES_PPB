@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 //API buat chat
 Future<List<Map<String, dynamic>>> fetchchatpembeli() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  int id_pembeli = prefs.getInt('sessionId') ?? 0;
   try {
-    final response = await http.get(
-        Uri.parse('https://umkmapi.azurewebsites.net/message/msgPembeli/1'));
+    final response = await http.get(Uri.parse(
+        'https://umkmapi.azurewebsites.net/message/msgPembeli/$id_pembeli'));
 
     final List<dynamic> data = jsonDecode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -17,10 +20,12 @@ Future<List<Map<String, dynamic>>> fetchchatpembeli() async {
 }
 
 Future<List<Map<String, dynamic>>> fetchMessagesByPembeliAndUMKM(
-    int id_pembeli, int id_umkm) async {
+    int id_umkm) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  int id_pembeli = prefs.getInt('sessionId') ?? 0;
   try {
     final response = await http.get(Uri.parse(
-        'https://umkmapi.azurewebsites.net/getmsgPembeliUMKM/1/$id_umkm'));
+        'https://umkmapi.azurewebsites.net/getmsgPembeliUMKM/$id_pembeli/$id_umkm'));
 
     final List<dynamic> data = jsonDecode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -31,10 +36,13 @@ Future<List<Map<String, dynamic>>> fetchMessagesByPembeliAndUMKM(
 }
 
 Future<List<Map<String, dynamic>>> fetchMessagesByPembeliAndKurir(
-    int id_pembeli, int id_kurir) async {
+    int id_kurir) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  int id_pembeli = prefs.getInt('sessionId') ?? 0;
+
   try {
-    final response = await http.get(
-        Uri.parse('https://umkmapi.azurewebsites.net/getmsgPembeliKurir/1/13'));
+    final response = await http.get(Uri.parse(
+        'https://umkmapi.azurewebsites.net/getmsgPembeliKurir/$id_pembeli/13'));
 
     final List<dynamic> data = jsonDecode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -73,8 +81,8 @@ Future<String> fetchKurirData() async {
 Future<List<Map<String, dynamic>>> fetchMessagesByKurirAndPembeli(
     int id_kurir, int id_pembeli) async {
   try {
-    final response = await http.get(
-        Uri.parse('https://umkmapi.azurewebsites.net/getmsgKurirPembeli/13/1'));
+    final response = await http.get(Uri.parse(
+        'https://umkmapi.azurewebsites.net/getmsgKurirPembeli/13/$id_pembeli'));
 
     final List<dynamic> data = jsonDecode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -86,16 +94,18 @@ Future<List<Map<String, dynamic>>> fetchMessagesByKurirAndPembeli(
 
 // API untuk mengirim pesan dari pembeli ke UMKM
 Future<Map<String, dynamic>> sendMessagePembeliKeUMKM(
-    int id_pembeli, String text, int id_umkm, String data) async {
+    String text, int id_umkm, String data) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  int id_pembeli = prefs.getInt('sessionId') ?? 0;
   try {
     final response = await http.post(
       Uri.parse(
-          'https://umkmapi.azurewebsites.net/sendchat/pembelikeumkm/1/$id_umkm'),
+          'https://umkmapi.azurewebsites.net/sendchat/pembelikeumkm/$id_pembeli/$id_umkm'),
       headers: {
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
-        'id_pembeli': 1,
+        'id_pembeli': id_pembeli,
         'id_umkm': id_umkm,
         'message': text,
         'sent_at': DateTime.now().toIso8601String(),
@@ -120,16 +130,18 @@ Future<Map<String, dynamic>> sendMessagePembeliKeUMKM(
 
 // API untuk mengirim pesan dari pembeli ke UMKM
 Future<Map<String, dynamic>> sendMessagePembeliKeKurir(
-    int id_pembeli, String text, int id_kurir, String data) async {
+    String text, int id_kurir, String data) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  int id_pembeli = prefs.getInt('sessionId') ?? 0;
   try {
     final response = await http.post(
       Uri.parse(
-          'https://umkmapi.azurewebsites.net/sendchat/pembelikekurir/1/13'),
+          'https://umkmapi.azurewebsites.net/sendchat/pembelikekurir/$id_pembeli/13'),
       headers: {
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
-        'id_pembeli': 1,
+        'id_pembeli': id_pembeli,
         'id_kurir': 13,
         'message': text,
         'sent_at': DateTime.now().toIso8601String(),
@@ -157,7 +169,7 @@ Future<Map<String, dynamic>> sendMessageKurirkePembeli(
   try {
     final response = await http.post(
       Uri.parse(
-          'https://umkmapi.azurewebsites.net/sendchat/kurirkepembeli/13/1'),
+          'https://umkmapi.azurewebsites.net/sendchat/kurirkepembeli/13/$id_pembeli'),
       headers: {
         'Content-Type': 'application/json',
       },
