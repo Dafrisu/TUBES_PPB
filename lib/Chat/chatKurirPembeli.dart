@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'lib/api/Raphael_api_chat.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -101,7 +102,10 @@ class _InboxPageKurirPembeliState extends State<InboxPageKurirPembeli> {
                 ),
                 title: Text(item['nama_lengkap']),
                 subtitle: Text(item['message']),
-                trailing: Text(item['sent_at']),
+                trailing: Text(item['sent_at'] != null
+                    ? DateFormat('HH:mm')
+                        .format(DateTime.parse(item['sent_at']))
+                    : 'Unknown time'),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -252,6 +256,10 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                     final message = messages[index];
                     final isReceiverPembeli =
                         message['receiver_type'] == "Pembeli";
+                    final sentAt = message['sent_at'] != null
+                        ? DateFormat('HH:mm')
+                            .format(DateTime.parse(message['sent_at']))
+                        : 'Unknown time';
 
                     return Row(
                       mainAxisAlignment: isReceiverPembeli
@@ -268,6 +276,10 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                         chatBubbleKurirPembeli(
                           text: message['message'],
                           isReceiverPembeli: isReceiverPembeli,
+                          sentAt: message['sent_at'] != null
+                              ? DateFormat('HH:mm')
+                                  .format(DateTime.parse(message['sent_at']))
+                              : 'Unknown time',
                         ),
                         if (isReceiverPembeli) const SizedBox(width: 8),
                         if (isReceiverPembeli)
@@ -335,24 +347,41 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
 
 class chatBubbleKurirPembeli extends StatelessWidget {
   final String text;
+  final String sentAt;
   final bool isReceiverPembeli;
 
   const chatBubbleKurirPembeli(
-      {super.key, required this.text, required this.isReceiverPembeli});
+      {super.key,
+      required this.text,
+      required this.isReceiverPembeli,
+      required this.sentAt});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width * 0.7,
-      ),
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: !isReceiverPembeli ? Colors.grey[300] : Colors.green[200],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Text(text),
+    return Column(
+      crossAxisAlignment:
+          isReceiverPembeli ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      children: [
+        Container(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.7,
+          ),
+          margin: const EdgeInsets.symmetric(vertical: 4),
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: !isReceiverPembeli ? Colors.grey[300] : Colors.green[200],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text(text),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 2),
+          child: Text(
+            sentAt,
+            style: const TextStyle(fontSize: 10, color: Colors.grey),
+          ),
+        ),
+      ],
     );
   }
 }

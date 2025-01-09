@@ -18,18 +18,17 @@ class _AccountDeletionState extends State<AccountDeletion> {
   late TextEditingController emailController;
   late TextEditingController passwordController;
   bool isLoading = false;
-  bool isPasswordVisible = false; // State for password visibility
+  bool isPasswordVisible = false;
 
-  // Variables to hold fetched user data
   String fetchedEmail = '';
   String fetchedPassword = '';
-  String profileImageUrl = ''; // To hold the profile image URL
+  String profileImageUrl = '';
 
   @override
   void initState() {
     super.initState();
-    emailController = TextEditingController(); // Initialize here
-    passwordController = TextEditingController(); // Initialize here
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
     fetchUserData(widget.userId);
   }
 
@@ -41,10 +40,9 @@ class _AccountDeletionState extends State<AccountDeletion> {
     if (response.statusCode == 200) {
       final userData = json.decode(response.body);
       setState(() {
-        fetchedEmail = userData['email']; // Store fetched email
-        fetchedPassword = userData['password']; // Store fetched password
-        profileImageUrl = userData['profileImg'] ?? ''; // Set profile image URL
-        // Do not set emailController.text here to keep it empty for user input
+        fetchedEmail = userData['email'];
+        fetchedPassword = userData['password'];
+        profileImageUrl = userData['profileImg'] ?? '';
       });
     } else {
       throw Exception('Failed to load user data');
@@ -64,12 +62,11 @@ class _AccountDeletionState extends State<AccountDeletion> {
     setState(() => isLoading = true);
 
     try {
-      // Verify credentials match
-      if (emailController.text != fetchedEmail || passwordController.text != fetchedPassword) {
+      if (emailController.text != fetchedEmail ||
+          passwordController.text != fetchedPassword) {
         throw Exception('Invalid credentials');
       }
 
-      // Simulate API call for account deletion
       final response = await http.delete(
         Uri.parse('https://umkmapi.azurewebsites.net/pembeli/${widget.userId}'),
       );
@@ -78,10 +75,9 @@ class _AccountDeletionState extends State<AccountDeletion> {
         throw Exception('Failed to delete account');
       }
 
-      // Navigate to success page
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const DeleteAkun()),
+        MaterialPageRoute(builder: (context) => const DeleteAccount()),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -104,6 +100,7 @@ class _AccountDeletionState extends State<AccountDeletion> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        automaticallyImplyLeading: false,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
@@ -119,11 +116,14 @@ class _AccountDeletionState extends State<AccountDeletion> {
               const SizedBox(height: 16.0),
               ClipOval(
                 child: CachedNetworkImage(
-                  imageUrl: profileImageUrl.isNotEmpty ? profileImageUrl : 'https://example.com/default_image.png', // Fallback image
+                  imageUrl: profileImageUrl.isNotEmpty
+                      ? profileImageUrl
+                      : 'https://example.com/default_image.png',
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,
-                  placeholder: (context, url) => const CircularProgressIndicator (),
+                  placeholder: (context, url) =>
+                      const CircularProgressIndicator(),
                   errorWidget: (context, url, error) => Container(
                     width: 100,
                     height: 100,
@@ -176,13 +176,17 @@ class _AccountDeletionState extends State<AccountDeletion> {
                   if (value == null || value.isEmpty) {
                     return 'Email tidak boleh kosong';
                   }
+                  final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+                  if (!emailRegex.hasMatch(value)) {
+                    return 'Format email tidak valid';
+                  }
                   return null;
                 },
               ),
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: passwordController,
-                obscureText: !isPasswordVisible, // Toggle password visibility
+                obscureText: !isPasswordVisible,
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   labelText: 'Password',
@@ -196,12 +200,14 @@ class _AccountDeletionState extends State<AccountDeletion> {
                   ),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                       color: Colors.white,
                     ),
                     onPressed: () {
                       setState(() {
-                        isPasswordVisible = !isPasswordVisible; // Toggle the visibility
+                        isPasswordVisible = !isPasswordVisible;
                       });
                     },
                   ),
@@ -236,22 +242,6 @@ class _AccountDeletionState extends State<AccountDeletion> {
                           ),
                         )
                       : const Text('Hapus Akun'),
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: isLoading ? null : () => Navigator.pop(context),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    backgroundColor: Colors.grey,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Text('Batal'),
                 ),
               ),
             ],
