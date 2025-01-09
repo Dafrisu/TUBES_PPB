@@ -169,7 +169,7 @@ Future<Map<String, dynamic>> sendMessageKurirkePembeli(
   try {
     final response = await http.post(
       Uri.parse(
-          'https://umkmapi.azurewebsites.net/sendchat/kurirkepembeli/13/$id_pembeli'),
+          'https://umkmapi.azurewebsites.net/sendchat/kurirkepembeli/13/1'),
       headers: {
         'Content-Type': 'application/json',
       },

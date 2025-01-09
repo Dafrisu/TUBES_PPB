@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'lib/api/Raphael_api_chat.dart';
 import 'package:http/http.dart' as http;
 import 'chatPembeliUmkm.dart';
+import 'package:intl/intl.dart';
 
 class PembeliKurirChatPage extends StatefulWidget {
   final String sender;
@@ -55,6 +56,10 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                   itemBuilder: (context, index) {
                     final message = messages[index];
                     final isReceiverKurir = message['receiver_type'] == "Kurir";
+                    final sentAt = message['sent_at'] != null
+                        ? DateFormat('HH:mm')
+                            .format(DateTime.parse(message['sent_at']))
+                        : 'Unknown time';
 
                     return Row(
                       mainAxisAlignment: isReceiverKurir
@@ -71,6 +76,10 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                         chatBubblePembeliKurir(
                           text: message['message'],
                           isReceiverKurir: isReceiverKurir,
+                          sentAt: message['sent_at'] != null
+                              ? DateFormat('HH:mm')
+                                  .format(DateTime.parse(message['sent_at']))
+                              : 'Unknown time',
                         ),
                         if (isReceiverKurir) const SizedBox(width: 8),
                         if (isReceiverKurir)
@@ -137,24 +146,41 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
 
 class chatBubblePembeliKurir extends StatelessWidget {
   final String text;
+  final String sentAt;
   final bool isReceiverKurir;
 
   const chatBubblePembeliKurir(
-      {super.key, required this.text, required this.isReceiverKurir});
+      {super.key,
+      required this.text,
+      required this.isReceiverKurir,
+      required this.sentAt});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width * 0.7,
-      ),
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: !isReceiverKurir ? Colors.grey[300] : Colors.green[200],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Text(text),
+    return Column(
+      crossAxisAlignment:
+          isReceiverKurir ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      children: [
+        Container(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.7,
+          ),
+          margin: const EdgeInsets.symmetric(vertical: 4),
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: !isReceiverKurir ? Colors.grey[300] : Colors.green[200],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text(text),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 2),
+          child: Text(
+            sentAt,
+            style: const TextStyle(fontSize: 10, color: Colors.grey),
+          ),
+        ),
+      ],
     );
   }
 }
