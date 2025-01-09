@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_ppb/BarangPenjual.dart';
-import 'package:tubes_ppb/Data.dart' as data;
+import 'package:tubes_ppb/api/api_service.dart';
 import 'dashboard_full_produk.dart';
 import 'dashboard_full_makanan.dart';
 import 'dashboard_full_minuman.dart';
@@ -46,39 +45,60 @@ class Dashboard extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Membuat carousel produk
-            FlutterCarousel(
-              // Settingan untuk carouselnya (ukuran, otomatis ganti, produk awal, dkk)
-              options: FlutterCarouselOptions(
-                height: 250.0,
-                showIndicator: true,
-                initialPage:
-                    0, // Set untuk show item paling pertama ketika page dibuka
-                autoPlay: true, // Set carousel otomatis berganti-ganti
-                autoPlayInterval: const Duration(
-                    seconds:
-                        3), // Set interval berapa detik sebelum otomatis berganti item selanjutnya
-                slideIndicator: CircularSlideIndicator(),
-              ),
-              // Isi carousel
-              items: [
-                'lib/assets_images/Minuman1.png',
-                'lib/assets_images/Minuman2.jpg',
-                'lib/assets_images/Makanan1.jpg',
-                'lib/assets_images/Misc1.png',
-                'lib/assets_images/Produk1.png',
-              ].map((img) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.symmetric(horizontal: 5.0),
-                        decoration: BoxDecoration(color: Colors.amber),
-                        child: Image.asset(img, fit: BoxFit.cover));
-                  },
+            FutureBuilder<List<Map<String, dynamic>>>(
+              future: fetchData(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No data available'));
+                }
+
+                // Limit the data to 4 items (or however many you want to show)
+                final data = snapshot.data!;
+                final limitedData =
+                    data.take(6).toList(); // Display only the first 4 items
+
+                return // Membuat carousel produk
+                    FlutterCarousel(
+                  // Settingan untuk carouselnya (ukuran, otomatis ganti, produk awal, dkk)
+                  options: FlutterCarouselOptions(
+                    height: 250.0,
+                    showIndicator: true,
+                    initialPage:
+                        0, // Set untuk show item paling pertama ketika page dibuka
+                    autoPlay: true, // Set carousel otomatis berganti-ganti
+                    autoPlayInterval: const Duration(
+                        seconds:
+                            3), // Set interval berapa detik sebelum otomatis berganti item selanjutnya
+                    slideIndicator: CircularSlideIndicator(),
+                  ),
+                  // Isi carousel
+                  items: limitedData.map((item) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: EdgeInsets.symmetric(horizontal: 5.0),
+                            decoration: BoxDecoration(color: Colors.amber),
+                            child: Image.network(
+                              item['image_url'],
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Center(
+                                  child: Text('Image not available'),
+                                );
+                              },
+                            ));
+                      },
+                    );
+                  }).toList(),
                 );
-              }).toList(),
+              },
             ),
+
             // Menampilkan List Preview Produk yang dijual UMKM
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -107,39 +127,40 @@ class Dashboard extends StatelessWidget {
               ),
             ),
             // Gambaran semua Produk yang dijual UMKM
-            GridView.count(
-              crossAxisCount: 2, // Number of columns to display
-              shrinkWrap:
-                  true, // Allow GridView to take only the space it needs
-              physics: NeverScrollableScrollPhysics(), // Disable scrolling
-              children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            PageBarang(product: data.listdata[0]),
-                      ),
-                    );
-                  },
-                  child: ProductCard(
-                    title: 'Produk 1',
-                    imageUrl: 'lib/assets_images/Makanan1.jpg',
+            FutureBuilder<List<Map<String, dynamic>>>(
+              future: fetchData(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No data available'));
+                }
+
+                // Limit the data to 4 items (or however many you want to show)
+                final data = snapshot.data!;
+                final limitedData =
+                    data.take(4).toList(); // Display only the first 4 items
+
+                return GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // kolom
+                    childAspectRatio: 0.75,
                   ),
-                ),
-                InkWell(
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) =>PageBarang(product: data.listdata[4])),
-                    );
+                  itemCount: limitedData.length,
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    final item = data[index];
+                    return ProductCardURL(
+                        title: item['nama_barang'],
+                        imageUrl: item['image_url']);
                   },
-                  child: ProductCard(
-                      title: 'Produk 2',
-                      imageUrl: 'lib/assets_images/Minuman1.png'),
-                ),
-                // Add more previews as needed
-              ],
+                );
+              },
             ),
+
             // Menampilkan List Preview Makanan yang dijual UMKM
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -168,20 +189,38 @@ class Dashboard extends StatelessWidget {
               ),
             ),
             // Gambaran semua Makanan yang dijual UMKM
-            GridView.count(
-              crossAxisCount: 2, // Jumlah kolom yang ditampilkan
-              shrinkWrap:
-                  true, // Allow GridView to take only the space it needs
-              physics: NeverScrollableScrollPhysics(),
-              children: const <Widget>[
-                ProductCard(
-                    title: 'Makanan 1',
-                    imageUrl: 'lib/assets_images/Makanan1.jpg'),
-                ProductCard(
-                    title: 'Makanan 2',
-                    imageUrl: 'lib/assets_images/Makanan2.jpg'),
-                // Add more previews as needed
-              ],
+            FutureBuilder<List<Map<String, dynamic>>>(
+              future: fetchDataByType('Makanan'),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No data available'));
+                }
+
+                // Limit the data to 4 items (or however many you want to show)
+                final data = snapshot.data!;
+                final limitedData =
+                    data.take(4).toList(); // Display only the first 4 items
+
+                return GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // kolom
+                    childAspectRatio: 0.75,
+                  ),
+                  itemCount: limitedData.length,
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    final item = data[index];
+                    return ProductCardURL(
+                        title: item['nama_barang'],
+                        imageUrl: item['image_url']);
+                  },
+                );
+              },
             ),
 
             // Menampilkan List Preview Minuman yang dijual UMKM
@@ -212,20 +251,38 @@ class Dashboard extends StatelessWidget {
               ),
             ),
             // Gambaran semua Minuman yang dijual UMKM
-            GridView.count(
-              crossAxisCount: 2, // Jumlah kolom yang ditampilkan
-              shrinkWrap:
-                  true, // Allow GridView to take only the space it needs
-              physics: NeverScrollableScrollPhysics(),
-              children: const <Widget>[
-                ProductCard(
-                    title: 'Minuman 1',
-                    imageUrl: 'lib/assets_images/Minuman1.png'),
-                ProductCard(
-                    title: 'Minuman 2',
-                    imageUrl: 'lib/assets_images/Minuman2.jpg'),
-                // Add more previews as needed
-              ],
+            FutureBuilder<List<Map<String, dynamic>>>(
+              future: fetchDataByType('Minuman'),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No data available'));
+                }
+
+                // Limit the data to 4 items (or however many you want to show)
+                final data = snapshot.data!;
+                final limitedData =
+                    data.take(4).toList(); // Display only the first 4 items
+
+                return GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // kolom
+                    childAspectRatio: 0.75,
+                  ),
+                  itemCount: limitedData.length,
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    final item = data[index];
+                    return ProductCardURL(
+                        title: item['nama_barang'],
+                        imageUrl: item['image_url']);
+                  },
+                );
+              },
             ),
 
             // Menampilkan List Preview Misc yang dijual UMKM
@@ -256,18 +313,38 @@ class Dashboard extends StatelessWidget {
               ),
             ),
             // Gambaran semua Misc yang dijual UMKM
-            GridView.count(
-              crossAxisCount: 2, // Jumlah kolom yang ditampilkan
-              shrinkWrap:
-                  true, // Allow GridView to take only the space it needs
-              physics: NeverScrollableScrollPhysics(), // Disable Scroll
-              children: const <Widget>[
-                ProductCard(
-                    title: 'Misc 1', imageUrl: 'lib/assets_images/Misc1.png'),
-                ProductCard(
-                    title: 'Misc 2', imageUrl: 'lib/assets_images/Misc2.png'),
-                // Add more previews as needed
-              ],
+            FutureBuilder<List<Map<String, dynamic>>>(
+              future: fetchDataByType('Misc'),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No data available'));
+                }
+
+                // Limit the data to 4 items (or however many you want to show)
+                final data = snapshot.data!;
+                final limitedData =
+                    data.take(4).toList(); // Display only the first 4 items
+
+                return GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // kolom
+                    childAspectRatio: 0.75,
+                  ),
+                  itemCount: limitedData.length,
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    final item = data[index];
+                    return ProductCardURL(
+                        title: item['nama_barang'],
+                        imageUrl: item['image_url']);
+                  },
+                );
+              },
             ),
           ],
         ),
