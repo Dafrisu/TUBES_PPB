@@ -55,9 +55,12 @@ dev_dependencies:
   flutter_launcher_icons: "^0.14.2"
 
 flutter_launcher_icons:
-  android: "launcher_icon"
+  android: "ic_launcher"
   ios: true
+  remove_alpha_ios: true
   image_path: "assets/logoU.png"
+  adaptive_icon_foreground: "assets/logoU.png"
+  adaptive_icon_background: "#ffffff"
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
