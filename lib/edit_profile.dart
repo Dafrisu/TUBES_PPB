@@ -1,10 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'dart:io';
 
 class EditProfile extends StatefulWidget {
   final String userId;
@@ -25,11 +25,12 @@ class _EditProfileState extends State<EditProfile> {
   late TextEditingController usernameController;
   late TextEditingController passwordController;
   late TextEditingController profilePictureController;
+  late String defaultImg =
+      "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg";
 
   bool isLoading = true;
   String profilePictureUrl = '';
   bool isPasswordVisible = false;
-  bool isNetworkImage = true;
 
   @override
   void initState() {
@@ -72,7 +73,7 @@ class _EditProfileState extends State<EditProfile> {
           addressController.text = userData['alamat'];
           usernameController.text = userData['username'];
           passwordController.text = userData['password'];
-          profilePictureUrl = userData['profileImg'];
+          profilePictureUrl = userData['profileImg'] ?? ''; // Handle null case
           isLoading = false;
         });
       } else {
@@ -119,7 +120,6 @@ class _EditProfileState extends State<EditProfile> {
                         await _saveImageLocally(File(pickedFile.path));
                     setState(() {
                       profilePictureUrl = localPath;
-                      isNetworkImage = false;
                     });
                     Navigator.of(context).pop();
                   }
@@ -136,7 +136,6 @@ class _EditProfileState extends State<EditProfile> {
                         await _saveImageLocally(File(pickedFile.path));
                     setState(() {
                       profilePictureUrl = localPath;
-                      isNetworkImage = false;
                     });
                     Navigator.of(context).pop();
                   }
@@ -149,7 +148,7 @@ class _EditProfileState extends State<EditProfile> {
                   Navigator.of(context).pop();
                   _showUrlInputDialog();
                 },
-              ),
+              )
             ],
           ),
         );
@@ -180,7 +179,6 @@ class _EditProfileState extends State<EditProfile> {
               onPressed: () {
                 setState(() {
                   profilePictureUrl = profilePictureController.text;
-                  isNetworkImage = true;
                 });
                 Navigator.of(context).pop();
               },
@@ -240,39 +238,56 @@ class _EditProfileState extends State<EditProfile> {
                         alignment: Alignment.bottomRight,
                         children: [
                           ClipOval(
-                            child: profilePictureUrl.isNotEmpty
-                                ? profilePictureUrl.startsWith(
-                                        '/') // Check if it's a local file path
-                                    ? Image.file(
-                                        File(profilePictureUrl),
-                                        width: 120,
-                                        height: 120,
-                                        fit: BoxFit.cover,
+                            child: (profilePictureUrl.isEmpty)
+                                ? Image.network(
+                                    defaultImg, // Default image URL
+                                    width: 120,
+                                    height: 120,
+                                    fit: BoxFit.cover,
+                                  )
+                                : profilePictureUrl.startsWith('/')
+                                    ? FutureBuilder<bool>(
+                                        future:
+                                            File(profilePictureUrl).exists(),
+                                        builder: (context, fileSnapshot) {
+                                          if (fileSnapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return const CircularProgressIndicator();
+                                          } else if (fileSnapshot.hasError ||
+                                              !fileSnapshot.data!) {
+                                            // File does not exist, show default image
+                                            return Image.network(
+                                              defaultImg, // Default image URL
+                                              width: 120,
+                                              height: 120,
+                                              fit: BoxFit.cover,
+                                            );
+                                          } else {
+                                            // File exists, show the image
+                                            return Image.file(
+                                              File(profilePictureUrl),
+                                              width: 120,
+                                              height: 120,
+                                              fit: BoxFit.cover,
+                                            );
+                                          }
+                                        },
                                       )
                                     : CachedNetworkImage(
-                                        imageUrl:
-                                            profilePictureUrl, // Treat as a URL
+                                        imageUrl: profilePictureUrl,
                                         width: 120,
                                         height: 120,
                                         fit: BoxFit.cover,
                                         placeholder: (context, url) =>
                                             const CircularProgressIndicator(),
                                         errorWidget: (context, url, error) =>
-                                            Container(
+                                            Image.network(
+                                          defaultImg, // Default image URL
                                           width: 120,
                                           height: 120,
-                                          color: Colors.grey[300],
-                                          child: const Icon(Icons.person,
-                                              size: 60, color: Colors.grey),
+                                          fit: BoxFit.cover,
                                         ),
-                                      )
-                                : Container(
-                                    width: 120,
-                                    height: 120,
-                                    color: Colors.grey[300],
-                                    child: const Icon(Icons.person,
-                                        size: 60, color: Colors.grey),
-                                  ),
+                                      ),
                           ),
                           Positioned(
                             bottom: 0,
