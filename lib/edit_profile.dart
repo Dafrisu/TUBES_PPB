@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:tubes_ppb/profile_settings.dart';
+import 'package:tubes_ppb/homepage.dart';
 
 class EditProfile extends StatefulWidget {
   final String userId;
@@ -25,6 +25,7 @@ class _EditProfileState extends State<EditProfile> {
 
   bool isLoading = true;
   String profilePictureUrl = '';
+  bool isPasswordVisible = false; // State for password visibility
 
   @override
   void initState() {
@@ -136,7 +137,16 @@ class _EditProfileState extends State<EditProfile> {
     return Scaffold(
       backgroundColor: const Color(0xFFC4D79D),
       appBar: AppBar(
-        title: const Text('Edit Profile'),
+        title: Container(
+          child: const Text(
+            'Edit Profile',
+            style: TextStyle(
+              fontWeight: FontWeight.bold, // Make the text bold
+              fontSize: 20, // Optional: Set the font size
+            ),
+          ),
+        ),
+        backgroundColor: const Color(0xFFC4D79D),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -169,35 +179,33 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  TextField(
-                    controller: fullNameController,
-                    decoration: const InputDecoration(labelText: 'Full Name'),
-                  ),
+                  _buildTextField(fullNameController, 'Full Name'),
                   const SizedBox(height: 16),
-                  TextField(
-                    controller: emailController,
-                    decoration: const InputDecoration(labelText: 'Email'),
-                  ),
+                  _buildTextField(emailController, 'Email'),
                   const SizedBox(height: 16),
-                  TextField(
-                    controller: phoneController,
-                    decoration: const InputDecoration(labelText: 'Phone Number'),
-                  ),
+                  _buildTextField(phoneController, 'Phone Number'),
                   const SizedBox(height: 16),
-                  TextField(
-                    controller: addressController,
-                    decoration: const InputDecoration(labelText: 'Address'),
-                  ),
+                  _buildTextField(addressController, 'Address'),
                   const SizedBox(height: 16),
-                  TextField(
-                    controller: usernameController,
-                    decoration: const InputDecoration(labelText: 'Username'),
-                  ),
+                  _buildTextField(usernameController, 'Username'),
                   const SizedBox(height: 16),
                   TextField(
                     controller: passwordController,
-                    decoration: const InputDecoration(labelText: 'Password'),
-                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            isPasswordVisible = !isPasswordVisible;
+                          });
+                        },
+                      ),
+                      border: OutlineInputBorder(), // Add border styling
+                    ),
+                    obscureText: !isPasswordVisible,
                   ),
                   const SizedBox(height: 16),
                   Container(
@@ -222,7 +230,7 @@ class _EditProfileState extends State<EditProfile> {
                           );
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => const ProfileSettings()),
+                            MaterialPageRoute(builder: (context) => const Homepage()),
                           );
                         } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -244,6 +252,16 @@ class _EditProfileState extends State<EditProfile> {
                 ],
               ),
             ),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String label) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        border: const OutlineInputBorder(), // Add border styling
+      ),
     );
   }
 }

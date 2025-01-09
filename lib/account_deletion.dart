@@ -18,6 +18,7 @@ class _AccountDeletionState extends State<AccountDeletion> {
   late TextEditingController emailController;
   late TextEditingController passwordController;
   bool isLoading = false;
+  bool isPasswordVisible = false; // State for password visibility
 
   // Variables to hold fetched user data
   String fetchedEmail = '';
@@ -43,7 +44,7 @@ class _AccountDeletionState extends State<AccountDeletion> {
         fetchedEmail = userData['email']; // Store fetched email
         fetchedPassword = userData['password']; // Store fetched password
         profileImageUrl = userData['profileImg'] ?? ''; // Set profile image URL
-        emailController.text = fetchedEmail; // Set email in controller
+        // Do not set emailController.text here to keep it empty for user input
       });
     } else {
       throw Exception('Failed to load user data');
@@ -122,12 +123,12 @@ class _AccountDeletionState extends State<AccountDeletion> {
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,
-                  placeholder: (context, url) => const CircularProgressIndicator(),
+                  placeholder: (context, url) => const CircularProgressIndicator (),
                   errorWidget: (context, url, error) => Container(
                     width: 100,
                     height: 100,
                     color: Colors.grey[300],
- child: const Icon(Icons.person, size: 50),
+                    child: const Icon(Icons.person, size: 50),
                   ),
                 ),
               ),
@@ -181,17 +182,28 @@ class _AccountDeletionState extends State<AccountDeletion> {
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: passwordController,
-                obscureText: true,
+                obscureText: !isPasswordVisible, // Toggle password visibility
                 style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Password',
-                  labelStyle: TextStyle(color: Colors.white),
-                  border: OutlineInputBorder(),
-                  enabledBorder: OutlineInputBorder(
+                  labelStyle: const TextStyle(color: Colors.white),
+                  border: const OutlineInputBorder(),
+                  enabledBorder: const OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),
-                  focusedBorder: OutlineInputBorder(
+                  focusedBorder: const OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isPasswordVisible = !isPasswordVisible; // Toggle the visibility
+                      });
+                    },
                   ),
                 ),
                 validator: (value) {
