@@ -7,6 +7,7 @@ import '../dashboard/dashboard.dart';
 import 'lib/api/Raphael_api_chat.dart';
 import 'package:http/http.dart' as http;
 import 'chatPembeliKurir.dart';
+import 'package:intl/intl.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -133,7 +134,10 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
                     ? item['nama_kurir'] ?? 'Unknown Kurir'
                     : item['username'] ?? 'Unknown User'),
                 subtitle: Text(item['message'] ?? ''),
-                trailing: Text(item['sent_at'] ?? ''),
+                trailing: Text(item['sent_at'] != null
+                    ? DateFormat('HH:mm')
+                        .format(DateTime.parse(item['sent_at']))
+                    : 'Unknown time'),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -230,7 +234,10 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
           final searchField = message['isKurir']
               ? message['nama_kurir'] ?? ''
               : message['username'] ?? '';
-          return searchField.toLowerCase().contains(lowerCaseQuery);
+          final messageContent = message['message'] ?? '';
+
+          return searchField.toLowerCase().contains(lowerCaseQuery) ||
+              messageContent.toLowerCase().contains(lowerCaseQuery);
         }).toList();
 
         // Urutkan hasil pencarian
@@ -250,7 +257,9 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
                   ? item['nama_kurir'] ?? 'Unknown Kurir'
                   : item['username'] ?? 'Unknown User'),
               subtitle: Text(item['message'] ?? ''),
-              trailing: Text(item['sent_at'] ?? ''),
+              trailing: Text(item['sent_at'] != null
+                  ? DateFormat('HH:mm').format(DateTime.parse(item['sent_at']))
+                  : 'Unknown time'),
               onTap: () {
                 onSelected(item);
                 close(context, item);
@@ -296,7 +305,7 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
         backgroundColor: const Color(0xFF658864),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchMessagesByPembeliAndUMKM(1, widget.id_umkm),
+        future: fetchMessagesByPembeliAndUMKM(widget.id_umkm),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -317,6 +326,10 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                   itemBuilder: (context, index) {
                     final message = messages[index];
                     final isReceiverUMKM = message['receiver_type'] == "UMKM";
+                    final sentAt = message['sent_at'] != null
+                        ? DateFormat('HH:mm')
+                            .format(DateTime.parse(message['sent_at']))
+                        : 'Unknown time';
 
                     return Row(
                       mainAxisAlignment: isReceiverUMKM
@@ -333,6 +346,10 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                         chatBubblePembeliUmkm(
                           text: message['message'],
                           isReceiverUMKM: isReceiverUMKM,
+                          sentAt: message['sent_at'] != null
+                              ? DateFormat('HH:mm')
+                                  .format(DateTime.parse(message['sent_at']))
+                              : 'Unknown time',
                         ),
                         if (isReceiverUMKM) const SizedBox(width: 8),
                         if (isReceiverUMKM)
@@ -365,8 +382,11 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                         ),
                         onSubmitted: (value) async {
                           if (value.trim().isNotEmpty) {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            int id_pembeli = prefs.getInt('sessionId') ?? 0;
                             await sendMessagePembeliKeUMKM(
-                                1, value.trim(), widget.id_umkm, 'UMKM');
+                                value.trim(), widget.id_umkm, 'UMKM');
                             setState(() {});
                             _messageController.clear();
                           }
@@ -377,8 +397,10 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                       icon: const Icon(Icons.send),
                       onPressed: () async {
                         if (_messageController.text.trim().isNotEmpty) {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          int id_pembeli = prefs.getInt('sessionId') ?? 0;
                           await sendMessagePembeliKeUMKM(
-                              1,
                               _messageController.text.trim(),
                               widget.id_umkm,
                               'UMKM');
@@ -401,23 +423,40 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
 class chatBubblePembeliUmkm extends StatelessWidget {
   final String text;
   final bool isReceiverUMKM;
+  final String sentAt;
 
   const chatBubblePembeliUmkm(
-      {super.key, required this.text, required this.isReceiverUMKM});
+      {super.key,
+      required this.text,
+      required this.isReceiverUMKM,
+      required this.sentAt});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width * 0.7,
-      ),
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: !isReceiverUMKM ? Colors.grey[300] : Colors.green[200],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Text(text),
+    return Column(
+      crossAxisAlignment:
+          isReceiverUMKM ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      children: [
+        Container(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.7,
+          ),
+          margin: const EdgeInsets.symmetric(vertical: 4),
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: !isReceiverUMKM ? Colors.grey[300] : Colors.green[200],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text(text),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 2),
+          child: Text(
+            sentAt,
+            style: const TextStyle(fontSize: 10, color: Colors.grey),
+          ),
+        ),
+      ],
     );
   }
 }

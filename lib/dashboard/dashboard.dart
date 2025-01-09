@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/BarangPenjual.dart';
 import 'package:tubes_ppb/api/api_service.dart';
 import 'dashboard_full_produk.dart';
 import 'dashboard_full_makanan.dart';
@@ -6,20 +7,65 @@ import 'dashboard_full_minuman.dart';
 import 'dashboard_full_misc.dart';
 import 'package:tubes_ppb/notification_page.dart';
 import 'package:tubes_ppb/component/product_card.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 // Import package carousel dari pub.dev
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 
-class Dashboard extends StatelessWidget {
+class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
+
+  @override
+  _DashboardState createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
+  late Future<Map<String, dynamic>> userDataFuture;
+  late String userId;
+
+  @override
+  void initState() {
+    super.initState();
+    userDataFuture = fetchUserData();
+  }
+
+  Future<Map<String, dynamic>> fetchUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userId = (prefs.getInt('sessionId') ?? 0).toString();
+
+    final response = await http.get(
+      Uri.parse('https://umkmapi.azurewebsites.net/pembeli/$userId'),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Gagal memuat data pengguna');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // Navbar
       appBar: AppBar(
-        title: const Text('Hello, Asep',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        title: FutureBuilder<Map<String, dynamic>>(
+          future: userDataFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Text('Loading...');
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              final userData = snapshot.data!;
+              final username = userData['username'] as String;
+              return Text('Halo, $username',
+                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold));
+            }
+          },
+        ),
         automaticallyImplyLeading:
             false, // Disable tombol back ketika di navigate ke page ini
         actions: <Widget>[
@@ -59,7 +105,7 @@ class Dashboard extends StatelessWidget {
                 // Limit the data to 4 items (or however many you want to show)
                 final data = snapshot.data!;
                 final limitedData =
-                    data.take(6).toList(); // Display only the first 4 items
+                    data.take(6).toList(); // Display only the first 6 items
 
                 return // Membuat carousel produk
                     FlutterCarousel(
@@ -79,7 +125,16 @@ class Dashboard extends StatelessWidget {
                   items: limitedData.map((item) {
                     return Builder(
                       builder: (BuildContext context) {
-                        return Container(
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PageBarang(product: item),
+                              ),
+                            );
+                          },
+                          child: Container(
                             width: MediaQuery.of(context).size.width,
                             margin: EdgeInsets.symmetric(horizontal: 5.0),
                             decoration: BoxDecoration(color: Colors.amber),
@@ -91,7 +146,9 @@ class Dashboard extends StatelessWidget {
                                   child: Text('Image not available'),
                                 );
                               },
-                            ));
+                            ),
+                          ),
+                        );
                       },
                     );
                   }).toList(),
@@ -153,9 +210,19 @@ class Dashboard extends StatelessWidget {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     final item = data[index];
-                    return ProductCardURL(
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    PageBarang(product: item)));
+                      },
+                      child: ProductCardURL(
                         title: item['nama_barang'],
-                        imageUrl: item['image_url']);
+                        imageUrl: item['image_url'],
+                      ),
+                    );
                   },
                 );
               },
@@ -215,9 +282,19 @@ class Dashboard extends StatelessWidget {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     final item = data[index];
-                    return ProductCardURL(
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    PageBarang(product: item)));
+                      },
+                      child: ProductCardURL(
                         title: item['nama_barang'],
-                        imageUrl: item['image_url']);
+                        imageUrl: item['image_url'],
+                      ),
+                    );
                   },
                 );
               },
@@ -277,9 +354,19 @@ class Dashboard extends StatelessWidget {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     final item = data[index];
-                    return ProductCardURL(
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    PageBarang(product: item)));
+                      },
+                      child: ProductCardURL(
                         title: item['nama_barang'],
-                        imageUrl: item['image_url']);
+                        imageUrl: item['image_url'],
+                      ),
+                    );
                   },
                 );
               },
@@ -339,9 +426,19 @@ class Dashboard extends StatelessWidget {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     final item = data[index];
-                    return ProductCardURL(
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    PageBarang(product: item)));
+                      },
+                      child: ProductCardURL(
                         title: item['nama_barang'],
-                        imageUrl: item['image_url']);
+                        imageUrl: item['image_url'],
+                      ),
+                    );
                   },
                 );
               },

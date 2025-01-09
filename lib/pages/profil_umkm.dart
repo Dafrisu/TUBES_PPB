@@ -12,7 +12,7 @@ class ProfilUMKM extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarUMKMku(titleText: 'Profil UMKMku'),
+      appBar: AppBarUMKMku(titleText: 'Profil UMKM'),
       body: FutureBuilder<Map<String, dynamic>>(
         future: getumkm(idUMKM),
         builder: (context, snapshot) {
@@ -42,15 +42,11 @@ class ProfilUMKM extends StatelessWidget {
                     isi: data['alamat'], 
                     label: 'Alamat', 
                     readOnly: true),
-                CustomFormField(
-                    isi: '',
-                    label: 'Deskripsi UMKM',
-                    readOnly: true),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: TextFormField(
-                    initialValue: '4 dari 5',
+                    initialValue: 'Lihat ulasan pembeli lainnya',
                     readOnly: true,
                     decoration: InputDecoration(
                         border: const UnderlineInputBorder(),
