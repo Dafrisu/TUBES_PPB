@@ -76,7 +76,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
       backgroundColor: const Color(0xFFC4D79D),
       appBar: AppBar(
         title: const Text(
-          'Profil',
+          '',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -130,6 +130,11 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      userData['username'],
+                      style: const TextStyle(fontSize: 16, color: Colors.black),
                     ),
                     const SizedBox(height: 5),
                     Text(

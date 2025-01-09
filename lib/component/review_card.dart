@@ -18,6 +18,7 @@ class ReviewCard extends StatelessWidget {
   final String tanggalUlasan;
   final String ulasan;
   final String imgSource;
+  final String fotoProfil;
 
   const ReviewCard(
       {super.key,
@@ -26,7 +27,8 @@ class ReviewCard extends StatelessWidget {
       required this.namaProduk,
       required this.tanggalUlasan,
       required this.ulasan,
-      required this.imgSource
+      required this.imgSource, 
+      required this.fotoProfil
       });
 
   @override

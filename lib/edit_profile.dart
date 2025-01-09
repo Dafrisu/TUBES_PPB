@@ -158,25 +158,48 @@ class _EditProfileState extends State<EditProfile> {
                 children: [
                   GestureDetector(
                     onTap: _showChangeProfilePictureDialog,
-                    child: ClipOval(
-                      child: CachedNetworkImage(
-                        imageUrl: profilePictureUrl,
-                        width: 120,
-                        height: 120,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => Container(
-                          width: 120,
-                          height: 120,
-                          color: Colors.grey[300],
-                          child: const Icon(
-                            Icons.person,
-                            size: 60,
-                            color: Colors.grey,
+                    child: Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        ClipOval(
+                          child: CachedNetworkImage(
+                            imageUrl: profilePictureUrl,
+                            width: 120,
+                            height: 120,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) =>
+                                const CircularProgressIndicator(),
+                            errorWidget: (context, url, error) => Container(
+                              width: 120,
+                              height: 120,
+                              color: Colors.grey[300],
+                              child: const Icon(
+                                Icons.person,
+                                size: 60,
+                                color: Colors.grey,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.blue,
+                              shape: BoxShape.circle,
+                            ),
+                            child: IconButton(
+                              onPressed: _showChangeProfilePictureDialog,
+                              icon: const Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                                size: 18,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 16),

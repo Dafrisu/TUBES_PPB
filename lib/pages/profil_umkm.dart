@@ -42,10 +42,6 @@ class ProfilUMKM extends StatelessWidget {
                     isi: data['alamat'], 
                     label: 'Alamat', 
                     readOnly: true),
-                CustomFormField(
-                    isi: '',
-                    label: 'Deskripsi UMKM',
-                    readOnly: true),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
