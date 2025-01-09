@@ -31,7 +31,6 @@ class DeliveryPage extends StatefulWidget {
 
 class _DeliveryPageState extends State<DeliveryPage> {
   String namaKurir = 'Kurir';
-  int id_umkm = 1;
 
   @override
   void initState() {
@@ -125,7 +124,8 @@ class _DeliveryPageState extends State<DeliveryPage> {
             const SizedBox(height: 20),
             Expanded(
               child: FutureBuilder<List<Map<String, dynamic>>>(
-                future: fetchpesananditerima(id_umkm),
+                future: fetchPesanAndIterima(
+                    1), // Pass the ID you want to fetch data for
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -136,14 +136,15 @@ class _DeliveryPageState extends State<DeliveryPage> {
                   }
 
                   final orders = snapshot.data!.map((order) {
-                    return OrderItemData.fromJson(order);
+                    return OrderItemData.fromJson(order); // Map data to model
                   }).toList();
 
                   return ListView.builder(
+                    // Display the orders as a ListView
                     itemCount: orders.length,
                     itemBuilder: (context, index) {
                       final order = orders[index];
-                      return OrderCard(order: order);
+                      return OrderCard(order: order); // Display each order
                     },
                   );
                 },
@@ -196,14 +197,10 @@ class OrderCard extends StatefulWidget {
 class _OrderCardState extends State<OrderCard> {
   bool isPressed = false;
 
-  void _onButtonPressed() async {
-    bool success = await updateStatusPesananSelesai(
-        widget.order.idPesanan, widget.order.idPesanan);
-    if (success) {
-      setState(() {
-        isPressed = true;
-      });
-    }
+  void _onButtonPressed() {
+    setState(() {
+      isPressed = true;
+    });
   }
 
   @override
