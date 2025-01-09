@@ -37,6 +37,14 @@ class Cartpage extends StatefulWidget {
 
 class _cartpagestate extends State<Cartpage> {
   Future<List<Map<String, dynamic>>> keranjangstandby = keranjangpembeli(1);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    keranjangstandby = keranjangpembeli(1);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +60,7 @@ class _cartpagestate extends State<Cartpage> {
             return const Center(child: Text('No data available'));
           }
 
-          final data = snapshot.data!;
+          var data = snapshot.data!;
           return Column(
             children: [
               if (data.isEmpty)
@@ -68,7 +76,7 @@ class _cartpagestate extends State<Cartpage> {
                   child: ListView.builder(
                       itemCount: data.length,
                       itemBuilder: (BuildContext context, int index) {
-                        final item = data[index];
+                        var item = data[index];
                         return Card(
                           child: GestureDetector(
                               // Tambahkan padding ke dalam Card
@@ -108,23 +116,46 @@ class _cartpagestate extends State<Cartpage> {
                                     Row(
                                       children: [
                                         TextButton(
-                                            onPressed: () {
-                                              // if (data.listcart[index]["qty"] >
-                                              //     1) {
-                                              //   setState(() {
-                                              //     data.listcart[index]["qty"] -=
-                                              //         1;
-                                              //   });
-                                              // }
+                                            onPressed: () async {
+                                              try {
+                                                var plus = await keranjangmin(
+                                                    item['id_keranjang']);
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        content: Text(
+                                                            plus['message'])));
+                                                setState(() {
+                                                  keranjangstandby =
+                                                      keranjangpembeli(1);
+                                                });
+                                              } catch (error) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        content: Text(
+                                                            'error : $error')));
+                                              }
                                             },
                                             child: Icon(Icons.remove)),
                                         Text('QTY: ${item["kuantitas"]}'),
                                         TextButton(
-                                            onPressed: () {
-                                              // setState(() {
-                                              //   data.listcart[index]["qty"] +=
-                                              //       1;
-                                              // });
+                                            onPressed: () async {
+                                              try {
+                                                var plus = await keranjangplus(
+                                                    item['id_keranjang']);
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        content: Text(
+                                                            plus['message'])));
+                                                setState(() {
+                                                  keranjangstandby =
+                                                      keranjangpembeli(1);
+                                                });
+                                              } catch (error) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        content: Text(
+                                                            'error : $error')));
+                                              }
                                             },
                                             child: Icon(Icons.add)),
                                       ],
