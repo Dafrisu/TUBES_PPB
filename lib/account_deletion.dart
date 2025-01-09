@@ -21,6 +21,8 @@ class _AccountDeletionState extends State<AccountDeletion> {
   bool isLoading = false;
   bool isPasswordVisible = false;
 
+  late String defaultImg =
+      "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg";
   String fetchedEmail = '';
   String fetchedPassword = '';
   String profileImageUrl = '';
@@ -43,7 +45,7 @@ class _AccountDeletionState extends State<AccountDeletion> {
       setState(() {
         fetchedEmail = userData['email'];
         fetchedPassword = userData['password'];
-        profileImageUrl = userData['profileImg'] ?? '';
+        profileImageUrl = userData['profileImg'] ?? ''; // Handle null case
       });
     } else {
       throw Exception('Failed to load user data');
@@ -116,35 +118,54 @@ class _AccountDeletionState extends State<AccountDeletion> {
             children: [
               const SizedBox(height: 16.0),
               ClipOval(
-                child: profileImageUrl.isNotEmpty
-                    ? profileImageUrl
-                            .startsWith('/') // Check if it's a local file path
-                        ? Image.file(
-                            File(profileImageUrl),
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
+                child: (profileImageUrl.isEmpty)
+                    ? Image.network(
+                        defaultImg, // Default image URL
+                        width: 120,
+                        height: 120,
+                        fit: BoxFit.cover,
+                      )
+                    : profileImageUrl.startsWith('/')
+                        ? FutureBuilder<bool>(
+                            future: File(profileImageUrl).exists(),
+                            builder: (context, fileSnapshot) {
+                              if (fileSnapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else if (fileSnapshot.hasError ||
+                                  !fileSnapshot.data!) {
+                                // File does not exist, show default image
+                                return Image.network(
+                                  defaultImg, // Default image URL
+                                  width: 120,
+                                  height: 120,
+                                  fit: BoxFit.cover,
+                                );
+                              } else {
+                                // File exists, show the image
+                                return Image.file(
+                                  File(profileImageUrl),
+                                  width: 120,
+                                  height: 120,
+                                  fit: BoxFit.cover,
+                                );
+                              }
+                            },
                           )
                         : CachedNetworkImage(
-                            imageUrl: profileImageUrl, // Treat as a URL
-                            width: 100,
-                            height: 100,
+                            imageUrl: profileImageUrl,
+                            width: 120,
+                            height: 120,
                             fit: BoxFit.cover,
                             placeholder: (context, url) =>
                                 const CircularProgressIndicator(),
-                            errorWidget: (context, url, error) => Container(
-                              width: 100,
-                              height: 100,
-                              color: Colors.grey[300],
-                              child: const Icon(Icons.person, size: 50),
+                            errorWidget: (context, url, error) => Image.network(
+                              defaultImg, // Default image URL
+                              width: 120,
+                              height: 120,
+                              fit: BoxFit.cover,
                             ),
-                          )
-                    : Container(
-                        width: 100,
-                        height: 100,
-                        color: Colors.grey[300],
-                        child: const Icon(Icons.person, size: 50),
-                      ),
+                          ),
               ),
               const SizedBox(height: 16.0),
               const Text(
