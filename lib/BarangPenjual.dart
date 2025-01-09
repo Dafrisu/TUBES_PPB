@@ -7,6 +7,8 @@ import 'package:tubes_ppb/api/api_getprofileumkm.dart';
 import 'package:tubes_ppb/LamanPenjual.dart';
 import 'package:tubes_ppb/api/api_keranjang.dart';
 import 'package:tubes_ppb/api/api_loginPembeli.dart';
+import 'package:tubes_ppb/api/api_service.dart';
+import 'package:tubes_ppb/component/review_card.dart';
 import 'cart.dart';
 
 class PageBarang extends StatefulWidget {
@@ -98,10 +100,16 @@ class _PageBarangState extends State<PageBarang> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        SizedBox(
+                          height: 8,
+                        ),
                         Text(
                           data["nama_barang"],
                           style: GoogleFonts.montserrat(
                               textStyle: const TextStyle(fontSize: 30)),
+                        ),
+                        SizedBox(
+                          height: 8,
                         ),
                         Text(
                           'RP.${data["harga"]}',
@@ -140,13 +148,16 @@ class _PageBarangState extends State<PageBarang> {
                               const TextStyle(fontWeight: FontWeight.bold),
                           collapseOnTextTap: true,
                         ),
-                        const Text(
-                          "Varian Produk",
+                        SizedBox(
+                          height: 8,
                         ),
-                        const Align(
+                        const Text(
+                          "Stok",
+                        ),
+                        Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            "sementara anggap varian",
+                            "${data["stok"]}",
                             textAlign: TextAlign.left,
                             style: TextStyle(fontWeight: FontWeight.normal),
                           ),
@@ -216,33 +227,40 @@ class _PageBarangState extends State<PageBarang> {
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                     ),
                   ),
-                  Card(
-                    color: Colors.white,
-                    child: ListTile(
-                      minTileHeight: 100,
-                      title: Text(
-                        'test Ulasan',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                      subtitle: const Text(
-                        'INI ULASAN PEMBELIINI ULASAN PEMBELIINI ULASAN PEMBELIINI ULASAN PEMBELIINI ULASAN PEMBELIINI ULASAN PEMBELI',
-                        style: TextStyle(fontSize: 10),
-                      ),
-                      leading: SizedBox(
-                        width: 90,
-                        height: 90,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.green,
-                          radius: 45,
-                          child: Text(
-                            "avatarrr",
-                            style: TextStyle(
-                                fontSize: 18), // Ukuran teks di dalam avatar
+                  FutureBuilder<List<Map<String, dynamic>>>(
+                      future: fetchUlasansByProdukId(widget.product['id']),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          return const Center(child: Text('No data available'));
+                        }
+                        var data = snapshot.data!;
+                        return SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              ...data.map((review) {
+                                return ReviewCard(
+                                  username: review['username'],
+                                  rating: review['rating'],
+                                  tanggalUlasan: review['tanggalUlasan'],
+                                  ulasan: review['ulasan'],
+                                  namaProduk: review['namaProduk'],
+                                  imgSource: review['imgSource'],
+                                  fotoProfil: review['fotoProfil'] ??
+                                      'assets/Profilepic.png',
+                                );
+                              }).toList(),
+                            ],
                           ),
-                        ),
-                      ),
-                    ),
-                  )
+                        );
+                      }),
                 ],
               ),
             );
@@ -258,9 +276,7 @@ class _PageBarangState extends State<PageBarang> {
           child: FutureBuilder(
               future: getproduk(widget.product['id']),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator(); // Menunggu data
-                } else if (snapshot.hasError) {
+                if (snapshot.hasError) {
                   return Text(
                       'Error: ${snapshot.error}'); // Menampilkan pesan error
                 } else if (!snapshot.hasData || snapshot.data == null) {

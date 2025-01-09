@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/notif.dart';
 import 'masukkanEmail.dart';
 import 'homepage.dart';
 import 'package:tubes_ppb/kurir.dart';
@@ -189,7 +190,8 @@ class _LoginState extends State<login> {
                         } catch (error) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Terjadi kesalahan, coba lagi nanti'),
+                              content:
+                                  Text('Terjadi kesalahan, coba lagi nanti'),
                             ),
                           );
                         }

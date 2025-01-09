@@ -6,6 +6,7 @@ import 'package:tubes_ppb/edit_profile.dart';
 import 'package:tubes_ppb/login.dart';
 import 'account_deletion.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
 
 class ProfileSettings extends StatefulWidget {
   const ProfileSettings({super.key});
@@ -76,7 +77,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
       backgroundColor: const Color(0xFFC4D79D),
       appBar: AppBar(
         title: const Text(
-          '',
+          'Pengaturan Akun',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -103,24 +104,46 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                   children: [
                     const SizedBox(height: 20),
                     ClipOval(
-                      child: CachedNetworkImage(
-                        imageUrl: userData['profileImg'],
-                        width: 120,
-                        height: 120,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => Container(
-                          width: 120,
-                          height: 120,
-                          color: Colors.grey[300],
-                          child: const Icon(
-                            Icons.person,
-                            size: 60,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
+                      child: userData['profileImg'] != null &&
+                              userData['profileImg'].isNotEmpty
+                          ? userData['profileImg'].startsWith(
+                                  '/') // Check if it's a local file path
+                              ? Image.file(
+                                  File(userData['profileImg']),
+                                  width: 120,
+                                  height: 120,
+                                  fit: BoxFit.cover,
+                                )
+                              : CachedNetworkImage(
+                                  imageUrl:
+                                      userData['profileImg'], // Treat as a URL
+                                  width: 120,
+                                  height: 120,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) =>
+                                      const CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      Container(
+                                    width: 120,
+                                    height: 120,
+                                    color: Colors.grey[300],
+                                    child: const Icon(
+                                      Icons.person,
+                                      size: 60,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                )
+                          : Container(
+                              width: 120,
+                              height: 120,
+                              color: Colors.grey[300],
+                              child: const Icon(
+                                Icons.person,
+                                size: 60,
+                                color: Colors.grey,
+                              ),
+                            ),
                     ),
                     const SizedBox(height: 10),
                     Text(
@@ -151,12 +174,13 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => EditProfile(
-                                  userId: userId,
-                                  onProfileUpdated: () {
-                                    setState(() {
-                                      userDataFuture = fetchUserData();
-                                    });
-                                  }),
+                                userId: userId,
+                                onProfileUpdated: () {
+                                  setState(() {
+                                    userDataFuture = fetchUserData();
+                                  });
+                                },
+                              ),
                             ),
                           );
                         },
@@ -182,8 +206,9 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    AccountDeletion(userId: userId)),
+                              builder: (context) =>
+                                  AccountDeletion(userId: userId),
+                            ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
