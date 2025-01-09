@@ -6,7 +6,7 @@ class notifservices {
 
   Future<void> initnotif() async {
     AndroidInitializationSettings androidinit =
-        const AndroidInitializationSettings('flutter_logo');
+        const AndroidInitializationSettings('logo');
 
     var initSetting = InitializationSettings(android: androidinit);
     await notifplugin.initialize(initSetting,
@@ -17,7 +17,7 @@ class notifservices {
   notificationDetails() {
     return const NotificationDetails(
         android: AndroidNotificationDetails("channelId", "channelName",
-            importance: Importance.max, icon: 'flutter_logo'));
+            importance: Importance.max, icon: 'logo'));
   }
 
   Future shownotif(
