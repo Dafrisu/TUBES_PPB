@@ -383,11 +383,6 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                         ),
                         onSubmitted: (value) async {
                           if (value.trim().isNotEmpty) {
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            int id_pembeli = prefs.getInt('sessionId') ?? 0;
-                            int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
-
                             await sendMessagePembeliKeUMKM(
                                 value.trim(), widget.id_umkm, 'UMKM');
                             setState(() {});
@@ -400,10 +395,6 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                       icon: const Icon(Icons.send),
                       onPressed: () async {
                         if (_messageController.text.trim().isNotEmpty) {
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          int id_pembeli = prefs.getInt('sessionId') ?? 0;
-                          int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
                           await sendMessagePembeliKeUMKM(
                               _messageController.text.trim(),
                               widget.id_umkm,
