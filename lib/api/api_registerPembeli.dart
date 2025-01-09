@@ -1,9 +1,10 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future<bool> registerPembeli(String nama, String nomorTelepon, String username, String email, String password, String alamat) async {
-  final checkUserUrl = 'http://localhost/checkPembeli';
-  final registerUrl = 'http://localhost/pembeli';
+Future<bool> registerPembeli(String nama, String nomorTelepon, String username,
+    String email, String password, String alamat) async {
+  final checkUserUrl = 'https://umkmapi.azurewebsites.net/checkPembeli';
+  final registerUrl = 'https://umkmapi.azurewebsites.net/pembeli';
 
   try {
     // Check if Pembeli already exists
@@ -45,7 +46,7 @@ Future<bool> registerPembeli(String nama, String nomorTelepon, String username, 
       }),
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 201 || response.statusCode == 200) {
       print('Registration successful');
       return true;
     } else {
