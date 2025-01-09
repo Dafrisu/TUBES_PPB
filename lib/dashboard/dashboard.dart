@@ -61,7 +61,7 @@ class _DashboardState extends State<Dashboard> {
             } else {
               final userData = snapshot.data!;
               final username = userData['username'] as String;
-              return Text('Hello, $username',
+              return Text('Halo, $username',
                   style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold));
             }
           },
