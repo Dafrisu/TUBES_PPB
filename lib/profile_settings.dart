@@ -52,17 +52,18 @@ class _ProfileSettingsState extends State<ProfileSettings> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Close the dialog
               },
               child: const Text('Batal'),
             ),
             TextButton(
               onPressed: () async {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
-                await prefs.remove('sessionId');
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const login()),
+                await prefs.remove('sessionId'); // Remove session ID
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                      builder: (context) => const login()), // Navigate to login
+                  (Route<dynamic> route) => false, // Remove all previous routes
                 );
               },
               child: const Text('Keluar'),
