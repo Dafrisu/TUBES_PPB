@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tubes_ppb/api/api_loginKurir.dart';
 
 //API buat chat
 Future<List<Map<String, dynamic>>> fetchchatpembeli() async {
@@ -35,14 +36,14 @@ Future<List<Map<String, dynamic>>> fetchMessagesByPembeliAndUMKM(
   }
 }
 
-Future<List<Map<String, dynamic>>> fetchMessagesByPembeliAndKurir(
-    int id_kurir) async {
+Future<List<Map<String, dynamic>>> fetchMessagesByPembeliAndKurir() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   int id_pembeli = prefs.getInt('sessionId') ?? 0;
+  int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
 
   try {
     final response = await http.get(Uri.parse(
-        'https://umkmapi.azurewebsites.net/getmsgPembeliKurir/$id_pembeli/13'));
+        'https://umkmapi.azurewebsites.net/getmsgPembeliKurir/$id_pembeli/$id_kurir'));
 
     final List<dynamic> data = jsonDecode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -53,9 +54,11 @@ Future<List<Map<String, dynamic>>> fetchMessagesByPembeliAndKurir(
 }
 
 Future<List<Map<String, dynamic>>> fetchchatkurir() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
   try {
-    final response = await http.get(
-        Uri.parse('https://umkmapi.azurewebsites.net/message/msgKurir/13'));
+    final response = await http.get(Uri.parse(
+        'https://umkmapi.azurewebsites.net/message/msgKurir/$id_kurir'));
 
     final List<dynamic> data = jsonDecode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -65,24 +68,13 @@ Future<List<Map<String, dynamic>>> fetchchatkurir() async {
   }
 }
 
-Future<String> fetchKurirData() async {
-  final response = await http.get(Uri.parse(
-      'https://umkmapi.azurewebsites.net/kurir/13')); // Ganti dengan URL yang sesuai
-
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
-    return data['nama_kurir'] ?? 'Kurir';
-  } else {
-    print('Failed to load kurir data');
-    return 'Kurir';
-  }
-}
-
-Future<List<Map<String, dynamic>>> fetchMessagesByKurirAndPembeli(
-    int id_kurir, int id_pembeli) async {
+Future<List<Map<String, dynamic>>> fetchMessagesByKurirAndPembeli() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  int id_pembeli = prefs.getInt('sessionId') ?? 0;
+  int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
   try {
     final response = await http.get(Uri.parse(
-        'https://umkmapi.azurewebsites.net/getmsgKurirPembeli/13/$id_pembeli'));
+        'https://umkmapi.azurewebsites.net/getmsgKurirPembeli/$id_kurir/$id_pembeli'));
 
     final List<dynamic> data = jsonDecode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -133,16 +125,18 @@ Future<Map<String, dynamic>> sendMessagePembeliKeKurir(
     String text, int id_kurir, String data) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   int id_pembeli = prefs.getInt('sessionId') ?? 0;
+  int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
+
   try {
     final response = await http.post(
       Uri.parse(
-          'https://umkmapi.azurewebsites.net/sendchat/pembelikekurir/$id_pembeli/13'),
+          'https://umkmapi.azurewebsites.net/sendchat/pembelikekurir/$id_pembeli/$id_kurir'),
       headers: {
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
         'id_pembeli': id_pembeli,
-        'id_kurir': 13,
+        'id_kurir': id_kurir,
         'message': text,
         'sent_at': DateTime.now().toIso8601String(),
         'is_read': false,
@@ -165,17 +159,20 @@ Future<Map<String, dynamic>> sendMessagePembeliKeKurir(
 }
 
 Future<Map<String, dynamic>> sendMessageKurirkePembeli(
-    int id_pembeli, String text, int id_kurir, String data) async {
+    String text, String data) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  int id_pembeli = prefs.getInt('sessionId') ?? 0;
+  int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
   try {
     final response = await http.post(
       Uri.parse(
-          'https://umkmapi.azurewebsites.net/sendchat/kurirkepembeli/13/1'),
+          'https://umkmapi.azurewebsites.net/sendchat/kurirkepembeli/$id_kurir/$id_pembeli'),
       headers: {
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
-        'id_pembeli': 1,
-        'id_kurir': 13,
+        'id_pembeli': id_pembeli,
+        'id_kurir': id_kurir,
         'message': text,
         'sent_at': DateTime.now().toIso8601String(),
         'is_read': false,
@@ -197,57 +194,83 @@ Future<Map<String, dynamic>> sendMessageKurirkePembeli(
   }
 }
 
-Future<bool> updateStatusPesananMasuk(int id_umkm, int idBatch) async {
-  try {
-    final response = await http.put(
-      Uri.parse(
-          'https://umkmapi.azurewebsites.net/updatestatuspesananmasuk/$id_umkm/$idBatch'),
-    );
+Future<Map<String, dynamic>> fetchKurirData() async {
+  final response = await http.get(Uri.parse(
+      'https://umkmapi.azurewebsites.net/kurir/$kurirSessionId')); // Menggunakan kurirSessionId global
 
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      throw Exception('Gagal update status pesanan');
-    }
-  } catch (error) {
-    print('Error update status pesanan diterima: $error');
-    return false;
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    return {
+      'nama_kurir': data['nama_kurir'] ?? 'Kurir',
+      'id_umkm': data['id_umkm'] ?? 0, // Mengembalikan id_umkm
+    };
+  } else {
+    print('Failed to load kurir data');
+    return {
+      'nama_kurir': 'Kurir',
+      'id_umkm': 0, // Nilai default jika gagal
+    };
   }
 }
 
-Future<List<Map<String, dynamic>>> fetchPesanAndIterima(int id) async {
+Future<List<Map<String, dynamic>>> getPesananDiterima() async {
   try {
+    // Ambil data kurir dari fetchKurirData
+    Map<String, dynamic> kurirData = await fetchKurirData();
+    int idUmkm = kurirData['id_umkm'];
+
+    if (idUmkm == 0) {
+      print('ID UMKM tidak ditemukan');
+      return [];
+    }
+
     final response = await http.get(
-      Uri.parse(
-          'https://your-api-url.com/getpesananditerima/$id'), // Replace with your actual URL
+      Uri.parse('https://umkmapi.azurewebsites.net/getpesananditerima/$idUmkm'),
     );
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
-      return data.cast<Map<String, dynamic>>();
+
+      // Pastikan data dapat dikonversi menjadi list map
+      final List<Map<String, dynamic>> listPesanan =
+          data.cast<Map<String, dynamic>>();
+
+      return listPesanan;
     } else {
-      throw Exception('Failed to load orders');
+      throw Exception('Gagal mengambil data pesanan diterima');
     }
   } catch (error) {
-    print(error);
+    print('Error saat mengambil data pesanan diterima: $error');
     return [];
   }
 }
 
-Future<bool> updateStatusPesananSelesai(int id_umkm, int idBatch) async {
+Future<void> updateStatusPesananSelesai(int idBatch) async {
   try {
-    final response = await http.put(
-      Uri.parse(
-          'https://umkmapi.azurewebsites.net/updatestatuspesananselesai/$id_umkm/$idBatch'),
-    );
+    // Ambil data kurir untuk mendapatkan id_umkm
+    Map<String, dynamic> kurirData = await fetchKurirData();
+    int idUmkm = kurirData['id_umkm'];
+
+    if (idUmkm == 0) {
+      print('ID UMKM tidak ditemukan');
+      return;
+    }
+
+    // URL untuk update status pesanan
+    final url = Uri.parse(
+        'https://umkmapi.azurewebsites.net/updatestatuspesananselesai/$idUmkm/$idBatch');
+
+    // Mengirim request PUT untuk update status
+    final response = await http.put(url);
 
     if (response.statusCode == 200) {
-      return true;
+      // Status berhasil diperbarui
+      print('Status pesanan selesai berhasil diperbarui');
     } else {
-      throw Exception('Gagal update status pesanan');
+      // Gagal memperbarui status pesanan
+      print('Gagal memperbarui status pesanan: ${response.statusCode}');
     }
   } catch (error) {
-    print('Error update status pesanan selesai: $error');
-    return false;
+    print('Error saat memperbarui status pesanan: $error');
   }
 }

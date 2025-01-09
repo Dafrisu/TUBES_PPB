@@ -1,34 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:tubes_ppb/api/api_loginPembeli.dart';
 import 'package:tubes_ppb/edit_profile.dart';
 import 'package:tubes_ppb/homepage.dart';
+import 'package:tubes_ppb/profile_settings.dart';
 import 'Data.dart' as data;
 import 'api/Dafa_api_getriwayaPembelian.dart';
 import 'api/api_keranjang.dart';
 import 'dashboard/dashboard.dart'; // import dashboard page darryl
-
-// void main() {
-//   runApp(Order());
-// }
-
-// class Order extends StatelessWidget {
-//   final Future<List<Map<String, dynamic>>> keranjang =
-//       fetchkeranjangbyidbatch();
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       title: 'Order Page',
-//       theme: ThemeData(
-//         primarySwatch: Colors.green,
-//       ),
-//       home: OrderPage(
-//         isikeranjang: keranjang,
-//       ),
-//     );
-//   }
-// }
+import 'package:http/http.dart' as http;
 
 class OrderPage extends StatefulWidget {
   final Future<List<Map<String, dynamic>>> isikeranjang;
@@ -43,6 +25,7 @@ class _OrderPageState extends State<OrderPage> {
   int totalsemuanya = 0;
   late final LocalAuthentication auth;
   bool _supportState = false;
+  late Future<Map<String, dynamic>> alamat;
 
   @override
   void initState() {
@@ -55,6 +38,7 @@ class _OrderPageState extends State<OrderPage> {
         _supportState = isSupported;
       });
     });
+    alamat = fetchUserData();
   }
 
   void calculateTotal() async {
@@ -83,7 +67,7 @@ class _OrderPageState extends State<OrderPage> {
     List<Map<String, dynamic>> keranjang = await widget.isikeranjang;
     for (var item in keranjang) {
       //nanti diganti session
-      sendpesanan(item['id_keranjang'], totalsemuanya.toDouble(), sessionId);
+      sendpesanan(item['id_keranjang'], totalsemuanya.toDouble());
     }
   }
 
@@ -109,21 +93,43 @@ class _OrderPageState extends State<OrderPage> {
       );
       if (authenticated) {
         sendallpesanan();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Pesanan Berhasil Masuk'),
+            duration: Duration(seconds: 3),
+          ),
+        );
         lastbatch = lastbatch + 1;
         addbatch(sessionId, lastbatch);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Homepage(),
+          ),
+        );
       } else {
-        throw new Error();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('UMKM kecewa 😭'),
+            duration: Duration(seconds: 3),
+          ),
+        );
       }
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Homepage(),
-        ),
-      );
-      return Future.value();
     } catch (e) {
       print(e);
       return Future.error(e);
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchUserData() async {
+    final response = await http.get(
+      Uri.parse('https://umkmapi.azurewebsites.net/pembeli/$sessionId'),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Gagal memuat data pengguna');
     }
   }
 
@@ -153,15 +159,34 @@ class _OrderPageState extends State<OrderPage> {
                     'Alamat Pengantaran',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    'Alamat',
-                    style: TextStyle(fontSize: 16),
+                  FutureBuilder<Map<String, dynamic>>(
+                    future: alamat,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else if (!snapshot.hasData) {
+                        return Text('No data available');
+                      }
+                      return Text(
+                        snapshot.data!['alamat'],
+                        style: TextStyle(fontSize: 16),
+                      );
+                    },
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       OutlinedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfileSettings(),
+                            ),
+                          );
+                        },
                         style: OutlinedButton.styleFrom(
                           side: BorderSide(
                               color: Color.fromARGB(255, 101, 136, 100)),
