@@ -197,23 +197,69 @@ Future<Map<String, dynamic>> sendMessageKurirkePembeli(
   }
 }
 
-Future<List<Map<String, dynamic>>> fetchpesananditerima() async {
+Future<List<Map<String, dynamic>>> fetchpesananditerima(int id_umkm) async {
   try {
     final response = await http.get(
-        Uri.parse('https://umkmapi.azurewebsites.net/getpesananditerima/1'));
+      Uri.parse(
+          'https://umkmapi.azurewebsites.net/getpesananditerima/$id_umkm'),
+    );
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
 
-      final List<Map<String, dynamic>> listProperties =
-          data.cast<Map<String, dynamic>>();
+      final List<Map<String, dynamic>> listProperties = data.map((item) {
+        return {
+          'id_batch': item['id_batch'],
+          'total_belanja': item['total_belanja'],
+          'kuantitas': item['kuantitas'],
+          'nama_barang': item['nama_barang'],
+          'status_pesanan': item['status_pesanan'],
+          'alamat_pembeli': item['alamat_pembeli'],
+        };
+      }).toList();
 
       return listProperties;
     } else {
       throw Exception('Gagal load Pesanan');
     }
   } catch (error) {
-    print(error);
+    print('Error fetching pesanan diterima: $error');
     return [];
+  }
+}
+
+Future<bool> updateStatusPesananMasuk(int id_umkm, int idBatch) async {
+  try {
+    final response = await http.put(
+      Uri.parse(
+          'https://umkmapi.azurewebsites.net/updatestatuspesananmasuk/$id_umkm/$idBatch'),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Gagal update status pesanan');
+    }
+  } catch (error) {
+    print('Error update status pesanan diterima: $error');
+    return false;
+  }
+}
+
+Future<bool> updateStatusPesananSelesai(int id_umkm, int idBatch) async {
+  try {
+    final response = await http.put(
+      Uri.parse(
+          'https://umkmapi.azurewebsites.net/updatestatuspesananselesai/$id_umkm/$idBatch'),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Gagal update status pesanan');
+    }
+  } catch (error) {
+    print('Error update status pesanan selesai: $error');
+    return false;
   }
 }

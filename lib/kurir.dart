@@ -31,6 +31,7 @@ class DeliveryPage extends StatefulWidget {
 
 class _DeliveryPageState extends State<DeliveryPage> {
   String namaKurir = 'Kurir';
+  int id_umkm = 1;
 
   @override
   void initState() {
@@ -124,7 +125,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
             const SizedBox(height: 20),
             Expanded(
               child: FutureBuilder<List<Map<String, dynamic>>>(
-                future: fetchpesananditerima(),
+                future: fetchpesananditerima(id_umkm),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -195,10 +196,14 @@ class OrderCard extends StatefulWidget {
 class _OrderCardState extends State<OrderCard> {
   bool isPressed = false;
 
-  void _onButtonPressed() {
-    setState(() {
-      isPressed = true;
-    });
+  void _onButtonPressed() async {
+    bool success = await updateStatusPesananSelesai(
+        widget.order.idPesanan, widget.order.idPesanan);
+    if (success) {
+      setState(() {
+        isPressed = true;
+      });
+    }
   }
 
   @override
