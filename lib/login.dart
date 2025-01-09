@@ -178,8 +178,8 @@ class _LoginState extends State<login> {
                           await fetchLogin(
                               emailController.text, passwordController.text);
                           if (sessionId != 0) {
-                            sharedPrefService.writeCache(
-                                key: 'sessionId', value: sessionId.toString());
+                           await sharedPrefService.writeCache(
+                                key: 'sessionId', value: sessionId);
                             Navigator.push(
                               context,
                               MaterialPageRoute(

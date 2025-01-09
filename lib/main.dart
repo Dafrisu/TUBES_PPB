@@ -15,24 +15,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SharedPrefService{
     Future writeCache({
       required String key,
-      required String value}) async {
+      required int value}) async {
       final SharedPreferences pref = await SharedPreferences.getInstance();
-
-     bool isSaved = await pref.setString("sessionId", value);
+     bool isSaved = await pref.setInt(key, value);
      debugPrint(isSaved.toString());
     }
 
-    Future<String?> readCache({required String key}) async {
+    Future<int> readCache({required String key}) async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
-    String? value = pref.getString(key);
+    int? value = pref.getInt(key);
     debugPrint(value.toString());
-    return value;
+    return value ?? 0;
     
   }
 
     Future removeCache({required String key}) async {
       final SharedPreferences pref = await SharedPreferences.getInstance();
-
       bool isRemoved = await pref.clear();
       debugPrint(isRemoved.toString());
     }

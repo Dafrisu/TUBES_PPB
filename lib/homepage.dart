@@ -17,7 +17,7 @@ class Homepage extends StatefulWidget {
 
 class Screens extends State<Homepage> {
   int pages = 0;
-  String? sessionId;
+  int sessionId = 0;
 
   SharedPrefService sharedPrefService = SharedPrefService();
 
@@ -31,7 +31,7 @@ class Screens extends State<Homepage> {
   }
 
   Future<void> _loadSessionId() async {
-    sessionId = await sharedPrefService.readCache(key: "sessionId");
+      sessionId = await sharedPrefService.readCache(key: "sessionId");
     setState(() {});
   }
 
@@ -48,7 +48,7 @@ class Screens extends State<Homepage> {
   Widget build(BuildContext context) {
     print("sessionID di homepage: $sessionId");
     
-    getlastbatch(int.tryParse(sessionId  ?? '0') ?? 0);
+    getlastbatch(sessionId);
     return Scaffold(
       body: PageView(
         controller: pageController, // Menambahkan PageController

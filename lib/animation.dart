@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:tubes_ppb/landing.dart';
+import 'package:tubes_ppb/main.dart';
+import 'package:tubes_ppb/homepage.dart';
 
 //packages
 import 'package:google_fonts/google_fonts.dart';
@@ -43,16 +45,26 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  SharedPrefService sharedPrefService = SharedPrefService();
+
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 2), () {
+    _navigateToNextScreen();
+  }
+
+  Future<void> _navigateToNextScreen() async {
+    int sessionId = await sharedPrefService.readCache(key: "sessionId");
+    if (sessionId != 0) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const Homepage()),
+      );
+    } else {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const landingPage()),
       );
-    });
+    }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -173,7 +185,7 @@ class ClipperFirst extends CustomClipper<Path> {
   @override
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
     // TODO: implement shouldReclip
-    throw UnimplementedError();
+    return false;
   }
 }
 
@@ -250,7 +262,7 @@ class ClipperTwo extends CustomClipper<Path> {
   @override
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
     // TODO: implement shouldReclip
-    throw UnimplementedError();
+    return false;
   }
 }
 
@@ -327,6 +339,6 @@ class ClipperThird extends CustomClipper<Path> {
   @override
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
     // TODO: implement shouldReclip
-    throw UnimplementedError();
+    return false;
   }
 }
