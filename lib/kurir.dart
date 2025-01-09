@@ -200,9 +200,36 @@ class _OrderCardState extends State<OrderCard> {
   bool isPressed = false;
 
   void _onButtonPressed() {
-    setState(() {
-      isPressed = true;
-    });
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Konfirmasi"),
+          content: const Text(
+              "Apakah Anda yakin ingin menandai pesanan ini sebagai selesai?"),
+          actions: [
+            TextButton(
+              child: const Text("Batal"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text("Ya"),
+              onPressed: () async {
+                Navigator.of(context).pop();
+
+                await updateStatusPesananSelesai(widget.order.idPesanan);
+
+                setState(() {
+                  isPressed = true;
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -240,7 +267,7 @@ class _OrderCardState extends State<OrderCard> {
                   isPressed ? Colors.green : const Color(0xFF7B5400),
             ),
             child: Text(
-              isPressed ? 'Diantar' : 'Dikemas',
+              isPressed ? 'Selesai' : 'Diterima',
               style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
             ),
           ),
