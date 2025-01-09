@@ -2,15 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:tubes_ppb/component/appbar.dart';
 import 'package:tubes_ppb/edit_profile.dart';
 import 'package:tubes_ppb/login.dart';
 import 'account_deletion.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfileSettings extends StatelessWidget {
+class ProfileSettings extends StatefulWidget {
   const ProfileSettings({super.key});
 
-  Future<Map<String, dynamic>> fetchUserData(String userId) async {
+  @override
+  _ProfileSettingsState createState() => _ProfileSettingsState();
+}
+
+class _ProfileSettingsState extends State<ProfileSettings> {
+  late Future<Map<String, dynamic>> userDataFuture;
+  late String userId;
+
+  @override
+  void initState() {
+    super.initState();
+    userDataFuture = fetchUserData();
+  }
+
+  Future<Map<String, dynamic>> fetchUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userId = (prefs.getInt('sessionId') ?? 0).toString();
+
     final response = await http.get(
       Uri.parse('https://umkmapi.azurewebsites.net/pembeli/$userId'),
     );
@@ -18,24 +35,63 @@ class ProfileSettings extends StatelessWidget {
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
-      throw Exception('Failed to load user data');
+      throw Exception('Gagal memuat data pengguna');
     }
+  }
+
+  void _showSignOutConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Keluar'),
+          content: const Text('Apakah Anda yakin ingin keluar?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                await prefs.remove('sessionId');
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const login()),
+                );
+              },
+              child: const Text('Keluar'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    const String userId = "6"; // Replace with the actual user ID
-
     return Scaffold(
       backgroundColor: const Color(0xFFC4D79D),
-      appBar: AppBarUMKMku(titleText: 'Profil'),
+      appBar: AppBar(
+        title: const Text(
+          'Profil',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        backgroundColor: const Color(0xFFC4D79D),
+        automaticallyImplyLeading: false,
+      ),
       body: FutureBuilder<Map<String, dynamic>>(
-        future: fetchUserData(userId),
+        future: userDataFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(child: Text('Kesalahan: ${snapshot.error}'));
           } else if (snapshot.hasData) {
             final userData = snapshot.data!;
             return Center(
@@ -52,7 +108,8 @@ class ProfileSettings extends StatelessWidget {
                         width: 120,
                         height: 120,
                         fit: BoxFit.cover,
-                        placeholder: (context, url) => const CircularProgressIndicator(),
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
                         errorWidget: (context, url, error) => Container(
                           width: 120,
                           height: 120,
@@ -88,23 +145,27 @@ class ProfileSettings extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => EditProfile(userId: userId, onProfileUpdated: () {
-                                // Refresh the data when returning from EditProfile
-                                (context as Element).markNeedsBuild();
-                              }),
+                              builder: (context) => EditProfile(
+                                  userId: userId,
+                                  onProfileUpdated: () {
+                                    setState(() {
+                                      userDataFuture = fetchUserData();
+                                    });
+                                  }),
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         icon: const Icon(Icons.person),
-                        label: const Text('Pengaturan akun'),
+                        label: const Text('Pengaturan Akun'),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -115,14 +176,16 @@ class ProfileSettings extends StatelessWidget {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context)
-                            => AccountDeletion(userId: userId)),
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    AccountDeletion(userId: userId)),
                           );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -136,23 +199,18 @@ class ProfileSettings extends StatelessWidget {
                       constraints: const BoxConstraints(maxWidth: 375),
                       width: double.infinity,
                       child: ElevatedButton.icon(
-                        onPressed: () {
-                          // Navigate to the login screen
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => const login()),
-                          );
-                        },
+                        onPressed: _showSignOutConfirmationDialog,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orange,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         icon: const Icon(Icons.exit_to_app),
-                        label: const Text('Sign Out'),
+                        label: const Text('Keluar'),
                       ),
                     ),
                   ],
@@ -160,7 +218,7 @@ class ProfileSettings extends StatelessWidget {
               ),
             );
           }
-          return const Center(child: Text('No data available'));
+          return const Center(child: Text('Tidak ada data yang tersedia'));
         },
       ),
     );

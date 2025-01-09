@@ -27,27 +27,6 @@ class DaftarUlasan extends StatelessWidget {
           return SingleChildScrollView(
             child: Column(
               children: [
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Overall Rating: 4.1',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(width: 8),
-                      Icon(
-                        Icons.star,
-                        color: Colors.yellow,
-                        size: 24.0,
-                      ),
-                    ],
-                  ),
-                ),
                 ...data.map((review) {
                   return ReviewCard(
                     username: review['username'],

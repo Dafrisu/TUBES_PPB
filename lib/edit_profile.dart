@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:tubes_ppb/profile_settings.dart';
+import 'package:tubes_ppb/homepage.dart';
 
 class EditProfile extends StatefulWidget {
   final String userId;
-  final Function onProfileUpdated; // Callback function
+  final Function onProfileUpdated;
 
-  const EditProfile({super.key, required this.userId, required this.onProfileUpdated});
+  const EditProfile(
+      {super.key, required this.userId, required this.onProfileUpdated});
 
   @override
   State<EditProfile> createState() => _EditProfileState();
@@ -25,6 +26,7 @@ class _EditProfileState extends State<EditProfile> {
 
   bool isLoading = true;
   String profilePictureUrl = '';
+  bool isPasswordVisible = false;
 
   @override
   void initState() {
@@ -71,10 +73,9 @@ class _EditProfileState extends State<EditProfile> {
           isLoading = false;
         });
       } else {
-        throw Exception('Failed to load user data');
+        throw Exception('Gagal memuat data pengguna');
       }
     } catch (error) {
-      print('Error fetching user data: $error');
       setState(() {
         isLoading = false;
       });
@@ -91,7 +92,7 @@ class _EditProfileState extends State<EditProfile> {
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to update profile: ${response.body}');
+      throw Exception('Gagal memperbarui profil: ${response.body}');
     }
   }
 
@@ -101,11 +102,11 @@ class _EditProfileState extends State<EditProfile> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Change Profile Picture URL'),
+          title: const Text('Ubah URL Foto Profil'),
           content: TextField(
             controller: profilePictureController,
             decoration: const InputDecoration(
-              labelText: 'Profile Picture URL',
+              labelText: 'URL Foto Profil',
               border: OutlineInputBorder(),
             ),
           ),
@@ -114,7 +115,7 @@ class _EditProfileState extends State<EditProfile> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text('Batal'),
             ),
             TextButton(
               onPressed: () {
@@ -123,7 +124,7 @@ class _EditProfileState extends State<EditProfile> {
                 });
                 Navigator.of(context).pop();
               },
-              child: const Text('Save'),
+              child: const Text('Simpan'),
             ),
           ],
         );
@@ -136,7 +137,16 @@ class _EditProfileState extends State<EditProfile> {
     return Scaffold(
       backgroundColor: const Color(0xFFC4D79D),
       appBar: AppBar(
-        title: const Text('Edit Profile'),
+        title: Container(
+          child: const Text(
+            'Edit Profil',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
+        ),
+        backgroundColor: const Color(0xFFC4D79D),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -154,7 +164,8 @@ class _EditProfileState extends State<EditProfile> {
                         width: 120,
                         height: 120,
                         fit: BoxFit.cover,
-                        placeholder: (context, url) => const CircularProgressIndicator(),
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
                         errorWidget: (context, url, error) => Container(
                           width: 120,
                           height: 120,
@@ -169,35 +180,35 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  TextField(
-                    controller: fullNameController,
-                    decoration: const InputDecoration(labelText: 'Full Name'),
-                  ),
+                  _buildTextField(fullNameController, 'Nama Lengkap'),
                   const SizedBox(height: 16),
-                  TextField(
-                    controller: emailController,
-                    decoration: const InputDecoration(labelText: 'Email'),
-                  ),
+                  _buildTextField(emailController, 'Email'),
                   const SizedBox(height: 16),
-                  TextField(
-                    controller: phoneController,
-                    decoration: const InputDecoration(labelText: 'Phone Number'),
-                  ),
+                  _buildTextField(phoneController, 'Nomor Telepon'),
                   const SizedBox(height: 16),
-                  TextField(
-                    controller: addressController,
-                    decoration: const InputDecoration(labelText: 'Address'),
-                  ),
+                  _buildTextField(addressController, 'Alamat'),
                   const SizedBox(height: 16),
-                  TextField(
-                    controller: usernameController,
-                    decoration: const InputDecoration(labelText: 'Username'),
-                  ),
+                  _buildTextField(usernameController, 'Nama Pengguna'),
                   const SizedBox(height: 16),
                   TextField(
                     controller: passwordController,
-                    decoration: const InputDecoration(labelText: 'Password'),
-                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: 'Kata Sandi',
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            isPasswordVisible = !isPasswordVisible;
+                          });
+                        },
+                      ),
+                      border: OutlineInputBorder(),
+                    ),
+                    obscureText: !isPasswordVisible,
                   ),
                   const SizedBox(height: 16),
                   Container(
@@ -216,34 +227,48 @@ class _EditProfileState extends State<EditProfile> {
                         };
                         try {
                           await updateProfile(widget.userId, updatedData);
-                          widget.onProfileUpdated(); // Call the callback to refresh data
+                          widget.onProfileUpdated();
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Profile updated successfully!')),
+                            const SnackBar(
+                                content: Text('Profil berhasil diperbarui!')),
                           );
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => const ProfileSettings()),
+                            MaterialPageRoute(
+                                builder: (context) => const Homepage()),
                           );
                         } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Error: ${e.toString()}')),
+                            SnackBar(
+                                content: Text('Kesalahan: ${e.toString()}')),
                           );
                         }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      child: const Text('Update Profile'),
+                      child: const Text('Perbarui Profil'),
                     ),
                   ),
                 ],
               ),
             ),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String label) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        border: const OutlineInputBorder(),
+      ),
     );
   }
 }
