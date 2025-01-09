@@ -1,11 +1,12 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'api_loginPembeli.dart';
 
 //API buat riwayat Pembelian
 Future<List<Map<String, dynamic>>> fetchriwayatpembelian() async {
   try {
-    final response = await http.get(
-        Uri.parse('https://umkmapi.azurewebsites.net/getriwayatpesanan/1'));
+    final response = await http.get(Uri.parse(
+        'https://umkmapi.azurewebsites.net/getriwayatpesanan/$sessionId'));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
@@ -26,7 +27,7 @@ Future<List<Map<String, dynamic>>> fetchriwayatpembelian() async {
 Future<List<Map<String, dynamic>>> fetchpesananaktifpembeli() async {
   try {
     final response = await http.get(Uri.parse(
-        'https://umkmapi.azurewebsites.net/getallpesananaktifpembeli/1'));
+        'https://umkmapi.azurewebsites.net/getallpesananaktifpembeli/$sessionId'));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
@@ -44,32 +45,10 @@ Future<List<Map<String, dynamic>>> fetchpesananaktifpembeli() async {
   }
 }
 
-Future<List<Map<String, dynamic>>> fetchkeranjangbyidbatch() async {
-  try {
-    final response = await http.get(Uri.parse(
-        'https://umkmapi.azurewebsites.net/getkeranjangbyidbatch/1/1'));
-
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
-
-      final List<Map<String, dynamic>> listProperties =
-          data.cast<Map<String, dynamic>>();
-
-      return listProperties;
-    } else {
-      throw Exception('Gagal load Riwayat Pesanan');
-    }
-  } catch (error) {
-    print(error);
-    return [];
-  }
-}
-
-Future<void> sendpesanan(
-    int id_keranjang, double total_belanja, int id_pembeli) async {
+Future<void> sendpesanan(int id_keranjang, double total_belanja) async {
   // URL endpoint API
   final Uri url = Uri.parse(
-      'https://umkmapi.azurewebsites.net/addpesanan/$id_keranjang/$total_belanja/$id_pembeli');
+      'https://umkmapi.azurewebsites.net/addpesanan/$id_keranjang/$total_belanja/$sessionId');
   try {
     // Melakukan POST request
     final response = await http.post(url);
@@ -86,5 +65,26 @@ Future<void> sendpesanan(
   } catch (error) {
     // Menangkap error jaringan atau lainnya
     print('Error: $error');
+  }
+}
+
+Future<List<Map<String, dynamic>>> fetchpembeli() async {
+  try {
+    final response = await http
+        .get(Uri.parse('https://umkmapi.azurewebsites.net/pembeli/$sessionId'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+
+      final List<Map<String, dynamic>> listProperties =
+          data.cast<Map<String, dynamic>>();
+
+      return listProperties;
+    } else {
+      throw Exception('Gagal load Riwayat Pesanan');
+    }
+  } catch (error) {
+    print(error);
+    return [];
   }
 }
