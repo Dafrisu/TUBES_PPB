@@ -100,10 +100,16 @@ class _PageBarangState extends State<PageBarang> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        SizedBox(
+                          height: 8,
+                        ),
                         Text(
                           data["nama_barang"],
                           style: GoogleFonts.montserrat(
                               textStyle: const TextStyle(fontSize: 30)),
+                        ),
+                        SizedBox(
+                          height: 8,
                         ),
                         Text(
                           'RP.${data["harga"]}',
@@ -142,13 +148,16 @@ class _PageBarangState extends State<PageBarang> {
                               const TextStyle(fontWeight: FontWeight.bold),
                           collapseOnTextTap: true,
                         ),
-                        const Text(
-                          "Varian Produk",
+                        SizedBox(
+                          height: 8,
                         ),
-                        const Align(
+                        const Text(
+                          "Stok",
+                        ),
+                        Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            "sementara anggap varian",
+                            "${data["stok"]}",
                             textAlign: TextAlign.left,
                             style: TextStyle(fontWeight: FontWeight.normal),
                           ),
@@ -252,33 +261,6 @@ class _PageBarangState extends State<PageBarang> {
                           ),
                         );
                       }),
-                  Card(
-                    color: Colors.white,
-                    child: ListTile(
-                      minTileHeight: 100,
-                      title: Text(
-                        'test Ulasan',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                      subtitle: const Text(
-                        'INI ULASAN PEMBELIINI ULASAN PEMBELIINI ULASAN PEMBELIINI ULASAN PEMBELIINI ULASAN PEMBELIINI ULASAN PEMBELI',
-                        style: TextStyle(fontSize: 10),
-                      ),
-                      leading: SizedBox(
-                        width: 90,
-                        height: 90,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.green,
-                          radius: 45,
-                          child: Text(
-                            "avatarrr",
-                            style: TextStyle(
-                                fontSize: 18), // Ukuran teks di dalam avatar
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
                 ],
               ),
             );
@@ -294,9 +276,7 @@ class _PageBarangState extends State<PageBarang> {
           child: FutureBuilder(
               future: getproduk(widget.product['id']),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator(); // Menunggu data
-                } else if (snapshot.hasError) {
+                if (snapshot.hasError) {
                   return Text(
                       'Error: ${snapshot.error}'); // Menampilkan pesan error
                 } else if (!snapshot.hasData || snapshot.data == null) {
