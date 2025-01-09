@@ -245,57 +245,32 @@ Future<List<Map<String, dynamic>>> getPesananDiterima() async {
   }
 }
 
-Future<bool> updateStatusPesananMasuk(int id_umkm, int idBatch) async {
+Future<void> updateStatusPesananSelesai(int idBatch) async {
   try {
-    final response = await http.put(
-      Uri.parse(
-          'https://umkmapi.azurewebsites.net/updatestatuspesananmasuk/$id_umkm/$idBatch'),
-    );
+    // Ambil data kurir untuk mendapatkan id_umkm
+    Map<String, dynamic> kurirData = await fetchKurirData();
+    int idUmkm = kurirData['id_umkm'];
+
+    if (idUmkm == 0) {
+      print('ID UMKM tidak ditemukan');
+      return;
+    }
+
+    // URL untuk update status pesanan
+    final url = Uri.parse(
+        'https://umkmapi.azurewebsites.net/updatestatuspesananselesai/$idUmkm/$idBatch');
+
+    // Mengirim request PUT untuk update status
+    final response = await http.put(url);
 
     if (response.statusCode == 200) {
-      return true;
+      // Status berhasil diperbarui
+      print('Status pesanan selesai berhasil diperbarui');
     } else {
-      throw Exception('Gagal update status pesanan');
+      // Gagal memperbarui status pesanan
+      print('Gagal memperbarui status pesanan: ${response.statusCode}');
     }
   } catch (error) {
-    print('Error update status pesanan diterima: $error');
-    return false;
-  }
-}
-
-Future<List<Map<String, dynamic>>> fetchPesanAndIterima(int id) async {
-  try {
-    final response = await http.get(
-      Uri.parse(
-          'https://your-api-url.com/getpesananditerima/$id'), // Replace with your actual URL
-    );
-
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
-      return data.cast<Map<String, dynamic>>();
-    } else {
-      throw Exception('Failed to load orders');
-    }
-  } catch (error) {
-    print(error);
-    return [];
-  }
-}
-
-Future<bool> updateStatusPesananSelesai(int id_umkm, int idBatch) async {
-  try {
-    final response = await http.put(
-      Uri.parse(
-          'https://umkmapi.azurewebsites.net/updatestatuspesananselesai/$id_umkm/$idBatch'),
-    );
-
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      throw Exception('Gagal update status pesanan');
-    }
-  } catch (error) {
-    print('Error update status pesanan selesai: $error');
-    return false;
+    print('Error saat memperbarui status pesanan: $error');
   }
 }
