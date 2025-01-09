@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/api/api_loginPembeli.dart';
 import 'package:tubes_ppb/component/appbar.dart';
 import 'package:tubes_ppb/api/api_keranjang.dart';
 import 'package:tubes_ppb/orderpage.dart';
@@ -36,17 +37,26 @@ class Cartpage extends StatefulWidget {
 }
 
 class _cartpagestate extends State<Cartpage> {
-  Future<List<Map<String, dynamic>>> keranjangstandby = keranjangpembeli(1);
+  Future<List<Map<String, dynamic>>> keranjangstandby =
+      keranjangpembeli(sessionId);
+
+// Method untuk memanggil ulang data
+  void reloadKeranjang() {
+    setState(() {
+      keranjangstandby = keranjangpembeli(sessionId);
+    });
+  }
 
   @override
   void initState() {
     // TODO: implement initState
 
-    keranjangstandby = keranjangpembeli(1);
+    keranjangstandby = keranjangpembeli(sessionId);
   }
 
   @override
   Widget build(BuildContext context) {
+    reloadKeranjang();
     return Scaffold(
       appBar: AppBarUMKMku(titleText: 'Keranjang'),
       body: FutureBuilder(
@@ -57,7 +67,7 @@ class _cartpagestate extends State<Cartpage> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No data available'));
+            return const Center(child: Text('Keranjang Kosong'));
           }
 
           var data = snapshot.data!;
@@ -126,7 +136,8 @@ class _cartpagestate extends State<Cartpage> {
                                                             plus['message'])));
                                                 setState(() {
                                                   keranjangstandby =
-                                                      keranjangpembeli(1);
+                                                      keranjangpembeli(
+                                                          sessionId);
                                                 });
                                               } catch (error) {
                                                 ScaffoldMessenger.of(context)
@@ -148,7 +159,8 @@ class _cartpagestate extends State<Cartpage> {
                                                             plus['message'])));
                                                 setState(() {
                                                   keranjangstandby =
-                                                      keranjangpembeli(1);
+                                                      keranjangpembeli(
+                                                          sessionId);
                                                 });
                                               } catch (error) {
                                                 ScaffoldMessenger.of(context)
