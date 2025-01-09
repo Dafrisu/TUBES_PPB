@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/api/api_keranjang.dart';
+import 'package:tubes_ppb/api/api_loginPembeli.dart';
 import 'Chat/chatPembeliUmkm.dart'; // import page chat el
 import 'Dafa_riwayat_pembelian.dart'; // import page riwayat dafa
 import 'dashboard/dashboard.dart'; // import dashboard page darryl
@@ -14,29 +16,51 @@ class Homepage extends StatefulWidget {
 
 class Screens extends State<Homepage> {
   int pages = 0;
-  List<Widget> pagelist = const [
-    Dashboard(),
-    cart(),
-    RiwayatPembelian(), // Ganti jadi page riwayat dafa
-    CombinedInboxPage(),
-    ProfileSettings(),
-  ];
+
+  // Membuat controller untuk PageView
+  PageController pageController = PageController();
+
+  // Fungsi untuk memuat ulang data keranjang
+  void refreshKeranjang() {
+    setState(() {
+      // Menambahkan perubahan halaman di PageView
+      pageController.jumpToPage(1); // Pindah ke halaman 'Keranjang'
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    print("sessionID: $sessionId");
+    getlastbatch(sessionId);
     return Scaffold(
-      body: IndexedStack(
-        index: pages,
-        children: pagelist,
+      body: PageView(
+        controller: pageController, // Menambahkan PageController
+        onPageChanged: (index) {
+          setState(() {
+            pages = index;
+          });
+        },
+        children: [
+          Dashboard(),
+          cart(), // Keranjang
+          RiwayatPembelian(),
+          CombinedInboxPage(),
+          ProfileSettings(),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
           setState(() {
             pages = index;
+            // Pindah ke halaman Keranjang dan refresh
+            pageController.jumpToPage(index);
+            if (index == 1) {
+              refreshKeranjang(); // Refresh Keranjang saat tab dipilih
+            }
           });
         },
         currentIndex: pages,
-        items: const [
+        items: [
           BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined),
               label: 'Home',

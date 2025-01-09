@@ -47,7 +47,7 @@ Future<void> getlastbatch(int id_pembeli) async {
     } else {
       lastbatch = data['latest_batch'];
     }
-    print(lastbatch);
+    print("last batch on API: $lastbatch");
   } catch (error) {
     print("error: ${error}");
   }

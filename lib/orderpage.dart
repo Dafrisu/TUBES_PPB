@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:tubes_ppb/api/api_loginPembeli.dart';
 import 'package:tubes_ppb/edit_profile.dart';
 import 'package:tubes_ppb/homepage.dart';
 import 'Data.dart' as data;
@@ -82,7 +83,7 @@ class _OrderPageState extends State<OrderPage> {
     List<Map<String, dynamic>> keranjang = await widget.isikeranjang;
     for (var item in keranjang) {
       //nanti diganti session
-      sendpesanan(item['id_keranjang'], totalsemuanya.toDouble(), 1);
+      sendpesanan(item['id_keranjang'], totalsemuanya.toDouble(), sessionId);
     }
   }
 
@@ -109,7 +110,7 @@ class _OrderPageState extends State<OrderPage> {
       if (authenticated) {
         sendallpesanan();
         lastbatch = lastbatch + 1;
-        addbatch(1, lastbatch);
+        addbatch(sessionId, lastbatch);
       } else {
         throw new Error();
       }
@@ -346,7 +347,7 @@ class _OrderPageState extends State<OrderPage> {
       bottomNavigationBar: OutlinedButton(
         onPressed: () {
           authenticate();
-          getlastbatch(1);
+          getlastbatch(sessionId);
         },
         style: OutlinedButton.styleFrom(
             backgroundColor: data.colorpalete[0]['green'],
