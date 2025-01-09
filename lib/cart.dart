@@ -60,9 +60,12 @@ class _cartpagestate extends State<Cartpage> with WidgetsBindingObserver {
     if (state == AppLifecycleState.paused) {
       // App goes to background
       keranjangstandby.then((data) {
+        print(data);
         if (data.isNotEmpty) {
-          notifservices()
-              .shownotif(title: 'holy shit jalan', body: 'madep lurd');
+          notifservices().shownotif(
+              title: 'Keranjangmu menunggu nih~~',
+              body:
+                  '${data[0]["Produk"]["nama_barang"]} sedang menunggu di keranjangmu!');
         }
       });
     } else if (state == AppLifecycleState.resumed) {

@@ -168,8 +168,6 @@ class _LoginState extends State<login> {
                         RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                   ),
                   onPressed: () async {
-                    notifservices().shownotif(
-                        title: 'holy shit jalan', body: 'madep lurd');
                     if (formKey.currentState?.validate() == true) {
                       if (selectedRole == 'pembeli') {
                         try {

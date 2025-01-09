@@ -63,18 +63,26 @@ Future<List<Map<String, dynamic>>> fetchDataUMKM() async {
 Future<List<Map<String, dynamic>>> fetchUlasansByProdukId(int id) async {
   // Construct the URL with the query parameter
   final response = await http.get(
-    Uri.parse('https://umkmapi.azurewebsites.net/ulasan/$id'),
+    Uri.parse('https://umkmapi.azurewebsites.net/ulasans/$id'),
   );
+  print(response.body);
 
   if (response.statusCode == 200) {
     // Decode the response body as a List
     final List<dynamic> data = jsonDecode(response.body);
 
-    // Cast the List<dynamic> to List<Map<String, dynamic>>
-    final List<Map<String, dynamic>> listProperties =
-        data.cast<Map<String, dynamic>>();
-
-    return listProperties;
+    return data.map((review) {
+      return {
+        'id_produk': review['id_produk'],
+        'username': review['username'],
+        'ulasan': review['ulasan'],
+        'rating': review['rating'],
+        'namaProduk': review['Produk']['nama_barang'],
+        'imgSource': review['Produk']['image_url'],
+        'tanggalUlasan': review['createdAt'],
+        'fotoProfil': review['Pembeli']['profileImg'],
+      };
+    }).toList();
   } else {
     throw Exception('Failed to load data');
   }
@@ -108,6 +116,7 @@ Future<List<Map<String, dynamic>>> fetchUlasansUMKM(int id) async {
   final response = await http.get(
     Uri.parse('https://umkmapi.azurewebsites.net/ulasans/umkm/$id'),
   );
+  print(response.body);
 
   if (response.statusCode == 200) {
     // Decode the response body as a List
@@ -115,13 +124,14 @@ Future<List<Map<String, dynamic>>> fetchUlasansUMKM(int id) async {
 
     return data.map((review) {
       return {
+        'id_produk': review['id_produk'],
         'username': review['username'],
         'ulasan': review['ulasan'],
         'rating': review['rating'],
         'namaProduk': review['Produk']['nama_barang'],
         'imgSource': review['Produk']['image_url'],
         'tanggalUlasan': review['createdAt'],
-        'fotoProfil' : review['Pembeli']['profileImg'],
+        'fotoProfil': review['Pembeli']['profileImg'],
       };
     }).toList();
   } else {
