@@ -76,7 +76,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
       backgroundColor: const Color(0xFFC4D79D),
       appBar: AppBar(
         title: const Text(
-          'Profil',
+          '',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
