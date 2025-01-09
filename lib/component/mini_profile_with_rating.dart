@@ -15,7 +15,7 @@ class MiniProfile extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 24,
-            backgroundImage: AssetImage('assets/avatar.jpg'), // Replace with your image asset path
+            backgroundImage: AssetImage('assets/Profilepic.png'), // Replace with your image asset path
           ),
           const SizedBox(width: 8.0),
           Column(
