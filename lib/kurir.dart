@@ -124,7 +124,8 @@ class _DeliveryPageState extends State<DeliveryPage> {
             const SizedBox(height: 20),
             Expanded(
               child: FutureBuilder<List<Map<String, dynamic>>>(
-                future: fetchpesananditerima(),
+                future: fetchPesanAndIterima(
+                    1), // Pass the ID you want to fetch data for
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
@@ -135,14 +136,15 @@ class _DeliveryPageState extends State<DeliveryPage> {
                   }
 
                   final orders = snapshot.data!.map((order) {
-                    return OrderItemData.fromJson(order);
+                    return OrderItemData.fromJson(order); // Map data to model
                   }).toList();
 
                   return ListView.builder(
+                    // Display the orders as a ListView
                     itemCount: orders.length,
                     itemBuilder: (context, index) {
                       final order = orders[index];
-                      return OrderCard(order: order);
+                      return OrderCard(order: order); // Display each order
                     },
                   );
                 },
