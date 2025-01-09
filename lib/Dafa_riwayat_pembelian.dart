@@ -89,10 +89,8 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                   itemCount: data.length,
                   itemBuilder: (context, index) {
                     List<String> imageUrl = data[index]['image_url'].split(',');
-                    print(imageUrl);
                     List<String> namaBarang =
                         data[index]['nama_barang'].split(',');
-                    print(namaBarang);
                     List<String> kuantitas_barang =
                         data[index]['kuantitas_barang'].toString().split(',');
                     int hitungbarang = namaBarang.length;
@@ -128,6 +126,16 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                                 color: Color.fromARGB(255, 101, 136, 100),
                               ),
                               onPressed: () {
+                                if (data[index]['status_pesanan'] ==
+                                    'Pesanan Masuk') {
+                                  counter = 1;
+                                } else if (data[index]['status_pesanan'] ==
+                                    "Pesanan Diterima") {
+                                  counter = 3;
+                                } else if (data[index]['status_pesanan'] ==
+                                    'Pesanan Selesai') {
+                                  counter = 4;
+                                }
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
@@ -182,10 +190,6 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                                             ),
                                           ),
                                           Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.8,
                                             padding: EdgeInsets.all(15),
                                             child: Column(
                                               crossAxisAlignment:
@@ -193,31 +197,23 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
                                               children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 15),
-                                                  child: Center(
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        border: Border(
-                                                          bottom: BorderSide(
-                                                              color:
-                                                                  Colors.black),
-                                                        ),
+                                                Center(
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      border: Border(
+                                                        bottom: BorderSide(
+                                                            color:
+                                                                Colors.black),
                                                       ),
-                                                      child: Text(
-                                                        "Informasi Produk",
-                                                        style: TextStyle(
-                                                          color: Color.fromARGB(
-                                                              255,
-                                                              101,
-                                                              136,
-                                                              100),
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
+                                                    ),
+                                                    child: Text(
+                                                      "Informasi Produk",
+                                                      style: TextStyle(
+                                                        color: Color.fromARGB(
+                                                            255, 101, 136, 100),
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
                                                       ),
                                                     ),
                                                   ),
@@ -442,11 +438,9 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                     List<String> imageUrl = data[index]['image_url'].split(',');
                     List<String> namaBarang =
                         data[index]['nama_barang'].split(',');
-                    print(namaBarang);
                     List<String> kuantitas_barang =
                         data[index]['kuantitas_barang'].toString().split(',');
                     int hitungbarang = namaBarang.length;
-                    print(imageUrl);
                     return Card(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
