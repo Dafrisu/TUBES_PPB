@@ -1,13 +1,15 @@
-import 'package:tubes_ppb/Dafa_riwayat_pembelian.dart';
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/login.dart';
+import 'package:tubes_ppb/api/api_gantiPassword.dart';
 
 class Formgantipassword extends StatelessWidget {
-  const Formgantipassword({super.key});
+  final String email;
+  const Formgantipassword({super.key, required this.email});
 
   @override
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
-    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(title: const Text('Ubah Password')),
@@ -24,7 +26,7 @@ class Formgantipassword extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               TextFormField(
-                controller: emailController,
+                controller: passwordController,
                 decoration: const InputDecoration(
                   labelText: 'Password Baru',
                   border: OutlineInputBorder(),
@@ -38,17 +40,16 @@ class Formgantipassword extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (formKey.currentState?.validate() == true) {
-                    // Aksi ketika email valid untuk reset password
+                    await changePassword(email, passwordController.text);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Password sudah di set ulang')),
+                      const SnackBar(content: Text('Password sudah di set ulang')),
                     );
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const RiwayatPembelian(),
+                        builder: (context) => const login(),
                       ),
                     );
                   }
