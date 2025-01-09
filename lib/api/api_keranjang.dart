@@ -84,6 +84,44 @@ Future<Map<String, dynamic>> searchOnKeranjang(
   }
 }
 
+Future<Map<String, dynamic>> keranjangplus(int id_keranjang) async {
+  try {
+    final response = await http.put(Uri.parse(
+        'https://umkmapi.azurewebsites.net/keranjangplus/$id_keranjang'));
+
+    print('response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      final error = jsonDecode(response.body);
+      throw Exception('Gagal: ${error['message']}');
+    }
+  } catch (error) {
+    print(error);
+    return {};
+  }
+}
+
+Future<Map<String, dynamic>> keranjangmin(int id_keranjang) async {
+  try {
+    final response = await http.put(Uri.parse(
+        'https://umkmapi.azurewebsites.net/keranjangmin/$id_keranjang'));
+
+    print('response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      final error = jsonDecode(response.body);
+      throw Exception('Gagal: ${error['message']}');
+    }
+  } catch (error) {
+    print(error);
+    return {};
+  }
+}
+
 Future<List<Map<String, dynamic>>> keranjangpembeli(int id_pembeli) async {
   try {
     final url = Uri.parse(
