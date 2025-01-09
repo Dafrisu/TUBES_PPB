@@ -10,6 +10,7 @@ import 'package:tubes_ppb/Dafa_register.dart';
 import 'api/api_loginPembeli.dart';
 import 'api/api_loginKurir.dart';
 import 'package:tubes_ppb/login_kurir.dart';
+import 'package:tubes_ppb/main.dart';
 
 //packages
 import 'package:google_fonts/google_fonts.dart';
@@ -24,6 +25,8 @@ class login extends StatefulWidget {
 }
 
 class _LoginState extends State<login> {
+  SharedPrefService sharedPrefService = SharedPrefService();
+
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -168,12 +171,15 @@ class _LoginState extends State<login> {
                         RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                   ),
                   onPressed: () async {
+                  
                     if (formKey.currentState?.validate() == true) {
                       if (selectedRole == 'pembeli') {
                         try {
                           await fetchLogin(
                               emailController.text, passwordController.text);
                           if (sessionId != 0) {
+                            sharedPrefService.writeCache(
+                                key: 'sessionId', value: sessionId.toString());
                             Navigator.push(
                               context,
                               MaterialPageRoute(

@@ -6,6 +6,7 @@ import 'Dafa_riwayat_pembelian.dart'; // import page riwayat dafa
 import 'dashboard/dashboard.dart'; // import dashboard page darryl
 import 'profile_settings.dart'; // import profile page mahes
 import 'cart.dart'; // import cart page haikal
+import 'main.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -16,9 +17,24 @@ class Homepage extends StatefulWidget {
 
 class Screens extends State<Homepage> {
   int pages = 0;
+  String? sessionId;
+
+  SharedPrefService sharedPrefService = SharedPrefService();
 
   // Membuat controller untuk PageView
   PageController pageController = PageController();
+
+   @override
+  void initState() {
+    super.initState();
+    _loadSessionId();
+  }
+
+  Future<void> _loadSessionId() async {
+    sessionId = await sharedPrefService.readCache(key: "sessionId");
+    setState(() {});
+  }
+
 
   // Fungsi untuk memuat ulang data keranjang
   void refreshKeranjang() {
@@ -30,8 +46,9 @@ class Screens extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    print("sessionID: $sessionId");
-    getlastbatch(sessionId);
+    print("sessionID di homepage: $sessionId");
+    
+    getlastbatch(int.tryParse(sessionId  ?? '0') ?? 0);
     return Scaffold(
       body: PageView(
         controller: pageController, // Menambahkan PageController

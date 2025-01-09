@@ -6,6 +6,7 @@ import 'package:tubes_ppb/edit_profile.dart';
 import 'package:tubes_ppb/login.dart';
 import 'account_deletion.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tubes_ppb/main.dart';
 import 'dart:io';
 
 class ProfileSettings extends StatefulWidget {
