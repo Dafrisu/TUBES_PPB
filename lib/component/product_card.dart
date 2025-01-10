@@ -43,7 +43,12 @@ class ProductCardURL extends StatelessWidget {
               width: 150), // nanti sesuaikan height sama width
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(title, style: const TextStyle(fontSize: 16)),
+            child: Text(
+              title,
+              style: const TextStyle(fontSize: 16),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),

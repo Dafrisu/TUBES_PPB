@@ -5,6 +5,8 @@ import 'dart:convert';
 import 'lib/api/Raphael_api_chat.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:tubes_ppb/api/api_loginKurir.dart';
+import 'package:tubes_ppb/api/api_loginPembeli.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -62,9 +64,9 @@ class _InboxPageKurirPembeliState extends State<InboxPageKurirPembeli> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PembeliKurirChatPage(
+                        builder: (context) => KurirPembeliChatPage(
                           sender: selectedMessage['nama_lengkap'],
-                          id_pembeli: selectedMessage['id_pembeli'],
+                          sessionId: selectedMessage['id_pembeli'],
                         ),
                       ),
                     );
@@ -110,9 +112,9 @@ class _InboxPageKurirPembeliState extends State<InboxPageKurirPembeli> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PembeliKurirChatPage(
+                      builder: (context) => KurirPembeliChatPage(
                           sender: item['nama_lengkap'],
-                          id_pembeli: item['id_pembeli']),
+                          sessionId: item['id_pembeli']),
                     ),
                   );
                 },
@@ -206,18 +208,18 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
   }
 }
 
-class PembeliKurirChatPage extends StatefulWidget {
+class KurirPembeliChatPage extends StatefulWidget {
   final String sender;
-  final int id_pembeli;
+  final int sessionId;
 
-  const PembeliKurirChatPage(
-      {super.key, required this.sender, required this.id_pembeli});
+  const KurirPembeliChatPage(
+      {super.key, required this.sender, required this.sessionId});
 
   @override
-  _PembeliKurirChatPageState createState() => _PembeliKurirChatPageState();
+  _KurirPembeliChatPageState createState() => _KurirPembeliChatPageState();
 }
 
-class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
+class _KurirPembeliChatPageState extends State<KurirPembeliChatPage> {
   final TextEditingController _messageController = TextEditingController();
 
   @override
@@ -270,7 +272,7 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                           const CircleAvatar(
                             radius: 15,
                             backgroundImage:
-                                AssetImage('lib/assets_images/Profilepic.png'),
+                                AssetImage('assets/Profilepic.png'),
                           ),
                         if (!isReceiverPembeli) const SizedBox(width: 8),
                         chatBubbleKurirPembeli(
@@ -286,7 +288,7 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                           const CircleAvatar(
                             radius: 15,
                             backgroundImage:
-                                AssetImage('lib/assets_images/Profilepic.png'),
+                                AssetImage('assets/Profilepic.png'),
                           ),
                       ],
                     );
@@ -312,6 +314,10 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                         ),
                         onSubmitted: (value) async {
                           if (value.trim().isNotEmpty) {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            int id_pembeli = prefs.getInt('sessionId') ?? 0;
+                            int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
                             await sendMessageKurirkePembeli(
                                 value.trim(), 'Pembeli');
                             setState(() {});
@@ -324,6 +330,10 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                       icon: const Icon(Icons.send),
                       onPressed: () async {
                         if (_messageController.text.trim().isNotEmpty) {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          int id_pembeli = prefs.getInt('sessionId') ?? 0;
+                          int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
                           await sendMessageKurirkePembeli(
                               _messageController.text.trim(), 'Pembeli');
                           setState(() {});

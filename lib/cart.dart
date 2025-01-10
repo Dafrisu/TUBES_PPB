@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/BarangPenjual.dart';
+import 'package:tubes_ppb/Data.dart';
+import 'package:tubes_ppb/api/api_getprodukbyID.dart';
 import 'package:tubes_ppb/api/api_loginPembeli.dart';
 import 'package:tubes_ppb/component/appbar.dart';
 import 'package:tubes_ppb/api/api_keranjang.dart';
@@ -60,8 +63,8 @@ class _cartpagestate extends State<Cartpage> with WidgetsBindingObserver {
     if (state == AppLifecycleState.paused) {
       // App goes to background
       keranjangstandby.then((data) {
-        print(data);
         if (data.isNotEmpty) {
+          print(data[0]);
           notifservices().shownotif(
               title: 'Keranjangmu menunggu nih~~',
               body:
@@ -109,94 +112,110 @@ class _cartpagestate extends State<Cartpage> with WidgetsBindingObserver {
                         var item = data[index];
                         return Card(
                           child: GestureDetector(
+                              onTap: () async {
+                                var produk = await getproduk(item['id_produk']);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => PageBarang(
+                                              product: produk,
+                                            )));
+                              },
                               // Tambahkan padding ke dalam Card
                               child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: 100,
-                                height: 100,
-                                child: Image.network(
-                                  item["Produk"]["image_url"],
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${item["Produk"]["nama_barang"]}',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 100,
+                                    height: 100,
+                                    child: Image.network(
+                                      item["Produk"]["image_url"],
+                                      fit: BoxFit.cover,
                                     ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      'Varian: ini mungkin Varian produk',
-                                      style: TextStyle(fontSize: 14),
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(height: 5),
-                                    Text('RP.${item["Produk"]["harga"]}'),
-                                    Row(
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        TextButton(
-                                            onPressed: () async {
-                                              try {
-                                                var plus = await keranjangmin(
-                                                    item['id_keranjang']);
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
-                                                        content: Text(
-                                                            plus['message'])));
-                                                setState(() {
-                                                  keranjangstandby =
-                                                      keranjangpembeli(
-                                                          sessionId);
-                                                });
-                                              } catch (error) {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
-                                                        content: Text(
-                                                            'error : $error')));
-                                              }
-                                            },
-                                            child: Icon(Icons.remove)),
-                                        Text('QTY: ${item["kuantitas"]}'),
-                                        TextButton(
-                                            onPressed: () async {
-                                              try {
-                                                var plus = await keranjangplus(
-                                                    item['id_keranjang']);
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
-                                                        content: Text(
-                                                            plus['message'])));
-                                                setState(() {
-                                                  keranjangstandby =
-                                                      keranjangpembeli(
-                                                          sessionId);
-                                                });
-                                              } catch (error) {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
-                                                        content: Text(
-                                                            'error : $error')));
-                                              }
-                                            },
-                                            child: Icon(Icons.add)),
+                                        Text(
+                                          '${item["Produk"]["nama_barang"]}',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          'Varian: ini mungkin Varian produk',
+                                          style: TextStyle(fontSize: 14),
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        SizedBox(height: 5),
+                                        Text('RP.${item["Produk"]["harga"]}'),
+                                        Row(
+                                          children: [
+                                            TextButton(
+                                                onPressed: () async {
+                                                  try {
+                                                    var plus =
+                                                        await keranjangmin(item[
+                                                            'id_keranjang']);
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                            content: Text(plus[
+                                                                'message'])));
+                                                    setState(() {
+                                                      keranjangstandby =
+                                                          keranjangpembeli(
+                                                              sessionId);
+                                                    });
+                                                  } catch (error) {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                            content: Text(
+                                                                'error : $error')));
+                                                  }
+                                                },
+                                                child: Icon(Icons.remove)),
+                                            Text('QTY: ${item["kuantitas"]}'),
+                                            TextButton(
+                                                onPressed: () async {
+                                                  try {
+                                                    var plus =
+                                                        await keranjangplus(item[
+                                                            'id_keranjang']);
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                            content: Text(plus[
+                                                                'message'])));
+                                                    setState(() {
+                                                      keranjangstandby =
+                                                          keranjangpembeli(
+                                                              sessionId);
+                                                    });
+                                                  } catch (error) {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                            content: Text(
+                                                                'error : $error')));
+                                                  }
+                                                },
+                                                child: Icon(Icons.add)),
+                                          ],
+                                        )
                                       ],
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          )),
+                                    ),
+                                  )
+                                ],
+                              )),
                         );
                       }),
                 ),

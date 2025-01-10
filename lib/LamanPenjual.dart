@@ -10,21 +10,20 @@ import 'cart.dart';
 class PagePenjual extends StatefulWidget {
   final int id_umkm;
   final String username;
-  const PagePenjual({super.key, required this.title, required this.id_umkm, required this.username});
+  const PagePenjual(
+      {super.key,
+      required this.title,
+      required this.id_umkm,
+      required this.username});
   final String title;
   @override
   State<PagePenjual> createState() => _PagePenjualState();
 }
 
 class _PagePenjualState extends State<PagePenjual> {
-  Future<void> setbarang() async {
-    setState(() {});
-  }
-
   @override
   void initState() {
     super.initState();
-    setbarang();
   }
 
   @override
@@ -65,7 +64,9 @@ class _PagePenjualState extends State<PagePenjual> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ProfilUMKM(idUMKM: widget.id_umkm,),
+                  builder: (context) => ProfilUMKM(
+                    idUMKM: widget.id_umkm,
+                  ),
                 ),
               );
             },
@@ -81,7 +82,13 @@ class _PagePenjualState extends State<PagePenjual> {
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return const Center(child: Text('No data available'));
                 }
-                final produk = snapshot.data!;
+                var produk = snapshot.data!;
+                Future<void> setbarang() async {
+                  setState(() {
+                    produk = snapshot.data!;
+                  });
+                }
+
                 return Expanded(
                   child: LiquidPullToRefresh(
                     onRefresh: setbarang,
