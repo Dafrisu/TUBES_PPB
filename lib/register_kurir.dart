@@ -103,7 +103,7 @@ class _RegisterKurirState extends State<RegisterKurir> {
         ),
         centerTitle: true,
         title: Text(
-          'Masuk',
+          ' ',
           style: GoogleFonts.montserrat(
               fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
         ),
@@ -120,9 +120,12 @@ class _RegisterKurirState extends State<RegisterKurir> {
                     style: GoogleFonts.montserrat(
                         fontSize: 32, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 20),
+                  Text('Pilih Role Anda ',
+                    style: GoogleFonts.montserrat(
+                        fontSize: 16, fontWeight: FontWeight.w700)),
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(
-                    labelText: 'Pilih Role Anda',
+                      border: OutlineInputBorder(),
                   ),
                   value: selectedRole,
                   items: [
@@ -162,7 +165,7 @@ class _RegisterKurirState extends State<RegisterKurir> {
                 TextFormField(
                   controller: namaController,
                   decoration:
-                      const InputDecoration(labelText: 'Masukkan Nama Anda'),
+                      const InputDecoration(labelText: 'Masukkan Nama Anda', border: OutlineInputBorder(),),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Tolong masukkan nama anda';
@@ -177,7 +180,7 @@ class _RegisterKurirState extends State<RegisterKurir> {
                 TextFormField(
                   controller: emailController,
                   decoration:
-                      const InputDecoration(labelText: 'Masukkan Email Anda'),
+                      const InputDecoration(labelText: 'Masukkan Email Anda', border: OutlineInputBorder(),),
                   validator: validateEmail,
                 ),
                 const SizedBox(height: 10),
@@ -202,7 +205,7 @@ class _RegisterKurirState extends State<RegisterKurir> {
                 TextFormField(
                   controller: passwordController,
                   decoration: const InputDecoration(
-                      labelText: 'Masukkan Password Anda'),
+                      labelText: 'Masukkan Password Anda', border: OutlineInputBorder(),),
                   obscureText: true,
                   validator: validatePassword,
                 ),
@@ -213,17 +216,17 @@ class _RegisterKurirState extends State<RegisterKurir> {
                 TextFormField(
                   controller: confirmPasswordController,
                   decoration: const InputDecoration(
-                      labelText: 'Masukkan Konfirmasi Password Anda'),
+                      labelText: 'Masukkan Konfirmasi Password Anda', border: OutlineInputBorder(),),
                   obscureText: true,
                   validator: validateConfirmPassword,
                 ),
                 const SizedBox(height: 10),
-                Text('UMKM',
+                Text('Pilih UMKM',
                     style: GoogleFonts.montserrat(
                         fontSize: 16, fontWeight: FontWeight.w700)),
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(
-                    labelText: 'Pilih UMKM Anda',
+                    border: OutlineInputBorder(),
                   ),
                   value: selectedUMKM,
                   items: umkmList.map((umkm) {
