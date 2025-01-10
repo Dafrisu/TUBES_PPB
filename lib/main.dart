@@ -6,8 +6,6 @@ import 'package:tubes_ppb/login.dart';
 import 'package:tubes_ppb/notif.dart';
 import 'userdata/user_provider.dart';
 import 'animation.dart';
-import 'api/api_service.dart';
-import 'package:tubes_ppb/dashboard/dashboard_test.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

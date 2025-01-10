@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/BarangPenjual.dart';
 import 'package:tubes_ppb/api/api_service.dart';
 import 'package:tubes_ppb/component/product_card.dart';
+import 'package:tubes_ppb/notification_page.dart';
 
 class FullMinumanPage extends StatelessWidget {
   const FullMinumanPage({super.key});
@@ -14,27 +16,13 @@ class FullMinumanPage extends StatelessWidget {
         actions: <Widget>[
           const SizedBox(width: 10),
           IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              // Handle search button press
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              // Handle profile button press
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.mail),
-            onPressed: () {
-              // Handle inbox button press
-            },
-          ),
-          IconButton(
             icon: const Icon(Icons.notifications),
             onPressed: () {
               // Handle notifications button press
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => NotificationsScreen()));
             },
           ),
         ],
@@ -61,9 +49,17 @@ class FullMinumanPage extends StatelessWidget {
             physics: const AlwaysScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               final item = data[index];
-              return ProductCardURL(
-                title: item['nama_barang'],
-                imageUrl: item['image_url'],
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PageBarang(product: item)));
+                },
+                child: ProductCardURL(
+                  title: item['nama_barang'],
+                  imageUrl: item['image_url'],
+                ),
               );
             },
           );
