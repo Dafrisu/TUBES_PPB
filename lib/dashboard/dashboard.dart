@@ -73,12 +73,6 @@ class _DashboardState extends State<Dashboard> {
         actions: <Widget>[
           const SizedBox(width: 10),
           IconButton(
-            icon: const Icon(Icons.search_outlined),
-            onPressed: () {
-              // Handle search logic
-            },
-          ),
-          IconButton(
             icon: const Icon(Icons.notifications),
             onPressed: () {
               // Handle notifications button press
