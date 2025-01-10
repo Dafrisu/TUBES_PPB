@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tubes_ppb/BarangPenjual.dart';
 import 'package:tubes_ppb/api/api_service.dart';
 import 'package:tubes_ppb/component/product_card.dart';
+import 'package:tubes_ppb/notification_page.dart';
 
 class FullProdukPage extends StatelessWidget {
   const FullProdukPage({super.key});
@@ -15,27 +16,13 @@ class FullProdukPage extends StatelessWidget {
         actions: <Widget>[
           const SizedBox(width: 10),
           IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              // Handle search button press
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              // Handle profile button press
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.mail),
-            onPressed: () {
-              // Handle inbox button press
-            },
-          ),
-          IconButton(
             icon: const Icon(Icons.notifications),
             onPressed: () {
               // Handle notifications button press
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => NotificationsScreen()));
             },
           ),
         ],

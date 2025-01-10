@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/BarangPenjual.dart';
-import 'package:tubes_ppb/api/api_loginPembeli.dart';
 import 'package:tubes_ppb/api/api_service.dart';
 import 'dashboard_full_produk.dart';
 import 'dashboard_full_makanan.dart';
@@ -72,12 +71,6 @@ class _DashboardState extends State<Dashboard> {
             false, // Disable tombol back ketika di navigate ke page ini
         actions: <Widget>[
           const SizedBox(width: 10),
-          IconButton(
-            icon: const Icon(Icons.search_outlined),
-            onPressed: () {
-              // Handle search logic
-            },
-          ),
           IconButton(
             icon: const Icon(Icons.notifications),
             onPressed: () {
