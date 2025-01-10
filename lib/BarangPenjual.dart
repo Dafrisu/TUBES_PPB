@@ -107,6 +107,8 @@ class _PageBarangState extends State<PageBarang> {
                           data["nama_barang"],
                           style: GoogleFonts.montserrat(
                               textStyle: const TextStyle(fontSize: 30)),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(
                           height: 8,

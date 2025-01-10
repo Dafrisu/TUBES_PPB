@@ -9,7 +9,7 @@ import 'animation.dart';
 import 'api/api_service.dart';
 import 'package:tubes_ppb/dashboard/dashboard_test.dart';
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   notifservices().initnotif();
   runApp(
