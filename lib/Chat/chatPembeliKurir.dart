@@ -70,7 +70,7 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                           const CircleAvatar(
                             radius: 15,
                             backgroundImage:
-                                AssetImage('lib/assets_images/Profilepic.png'),
+                                AssetImage('assets/Profilepic.png'),
                           ),
                         if (!isReceiverKurir) const SizedBox(width: 8),
                         chatBubblePembeliKurir(
@@ -86,7 +86,7 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                           const CircleAvatar(
                             radius: 15,
                             backgroundImage:
-                                AssetImage('lib/assets_images/Profilepic.png'),
+                                AssetImage('assets/Profilepic.png'),
                           ),
                       ],
                     );
