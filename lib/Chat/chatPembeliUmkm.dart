@@ -341,7 +341,7 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                           const CircleAvatar(
                             radius: 15,
                             backgroundImage:
-                                AssetImage('lib/assets_images/Profilepic.png'),
+                                AssetImage('assets/Profilepic.png'),
                           ),
                         if (!isReceiverUMKM) const SizedBox(width: 8),
                         chatBubblePembeliUmkm(
@@ -357,7 +357,7 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                           const CircleAvatar(
                             radius: 15,
                             backgroundImage:
-                                AssetImage('lib/assets_images/Profilepic.png'),
+                                AssetImage('assets/Profilepic.png'),
                           ),
                       ],
                     );
