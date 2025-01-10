@@ -7,7 +7,7 @@ import 'package:tubes_ppb/notif.dart';
 import 'userdata/user_provider.dart';
 import 'animation.dart';
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   notifservices().initnotif();
   runApp(
