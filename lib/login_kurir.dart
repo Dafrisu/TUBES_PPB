@@ -64,7 +64,7 @@ class _LoginKurirState extends State<LoginKurir> {
                         fontSize: 16, fontWeight: FontWeight.w700)),
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(
-                    labelText: 'Pilih Role Anda',
+                    border: OutlineInputBorder(),
                   ),
                   value: selectedRole,
                   items: [
@@ -103,7 +103,7 @@ class _LoginKurirState extends State<LoginKurir> {
                         fontSize: 16, fontWeight: FontWeight.w700)),
                 TextFormField(
                   controller: emailController,
-                  decoration: InputDecoration(labelText: 'Email'),
+                  decoration: InputDecoration(labelText: 'Email', border: OutlineInputBorder(),),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Masukkan Email Anda';
@@ -123,6 +123,7 @@ class _LoginKurirState extends State<LoginKurir> {
                   controller: passwordController,
                   decoration: const InputDecoration(
                     labelText: 'Masukkan Password',
+                    border: OutlineInputBorder(),
                   ),
                   obscureText: true,
                   validator: (value) {

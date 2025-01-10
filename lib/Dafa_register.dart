@@ -97,7 +97,7 @@ String? validateTelephone(String? value) {
         ),
         centerTitle: true,
         title: Text(
-          'Masuk',
+          ' ',
           style: GoogleFonts.montserrat(
               fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
         ),
@@ -114,13 +114,14 @@ String? validateTelephone(String? value) {
                     style: GoogleFonts.montserrat(
                         fontSize: 32, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 20),
-                Text('Pilih User ',
+                Text('Pilih Role Anda',
                     style: GoogleFonts.montserrat(
                         fontSize: 16, fontWeight: FontWeight.w700)),
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(
-                    labelText: 'Pilih Role Anda',
+                    border: OutlineInputBorder(),
                   ),
+                  
                   value: selectedRole,
                   items: [
                     DropdownMenuItem(
@@ -159,7 +160,8 @@ String? validateTelephone(String? value) {
                 TextFormField(
                   controller: namaController,
                   decoration:
-                      const InputDecoration(labelText: 'Masukkan Nama Anda'),
+                      const InputDecoration(labelText: 'Masukkan Nama Anda',
+                      border: OutlineInputBorder(),),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Tolong masukkan nama anda';
@@ -174,7 +176,7 @@ String? validateTelephone(String? value) {
                 TextFormField(
                   controller: emailController,
                   decoration:
-                      const InputDecoration(labelText: 'Masukkan Email Anda'),
+                      const InputDecoration(labelText: 'Masukkan Email Anda',border: OutlineInputBorder(),),
                   validator: validateEmail,
                 ),
                 const SizedBox(height: 10),
@@ -184,7 +186,7 @@ String? validateTelephone(String? value) {
                 TextFormField(
                   controller: usernameController,
                   decoration: const InputDecoration(
-                      labelText: 'Masukkan Username Anda'),
+                      labelText: 'Masukkan Username Anda',border: OutlineInputBorder(),),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Tolong masukkan username anda';
@@ -199,7 +201,7 @@ String? validateTelephone(String? value) {
                 TextFormField(
                   controller: passwordController,
                   decoration: const InputDecoration(
-                      labelText: 'Masukkan Password Anda'),
+                      labelText: 'Masukkan Password Anda', border: OutlineInputBorder(),),
                   obscureText: true,
                   validator: validatePassword,
                 ),
@@ -210,7 +212,7 @@ String? validateTelephone(String? value) {
                 TextFormField(
                   controller: confirmPasswordController,
                   decoration: const InputDecoration(
-                      labelText: 'Masukkan Konfirmasi Password Anda'),
+                      labelText: 'Masukkan Konfirmasi Password Anda',border: OutlineInputBorder(),),
                   obscureText: true,
                   validator: validateConfirmPassword,
                 ),
@@ -221,7 +223,7 @@ String? validateTelephone(String? value) {
                 TextFormField(
                   controller: telephoneController,
                   decoration: const InputDecoration(
-                      labelText: 'Masukkan Nomor Telepon Anda'),
+                      labelText: 'Masukkan Nomor Telepon Anda', border: OutlineInputBorder(),),
                   validator: validateTelephone,
                 ),
                 const SizedBox(height: 10),
@@ -231,7 +233,7 @@ String? validateTelephone(String? value) {
                 TextFormField(
                   controller: alamatController,
                   decoration: const InputDecoration(
-                      labelText: 'Masukkan Alamat Anda'),
+                      labelText: 'Masukkan Alamat Anda', border: OutlineInputBorder(),),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Tolong masukkan alamat anda';

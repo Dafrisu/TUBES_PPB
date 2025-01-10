@@ -86,7 +86,7 @@ Future<bool> checkPembeliByEmail(String email) async {
   }
 }
 
-Future<GantipassResponseModel> changePassword(String email, String newPassword) async {
+Future<bool> changePassword(String email, String newPassword) async {
   try {
     var response = await client.put(
       Uri.parse('https://umkmapi.azurewebsites.net/changepassword'), // Ensure the port matches your server
@@ -100,12 +100,15 @@ Future<GantipassResponseModel> changePassword(String email, String newPassword) 
     );
 
     if (response.statusCode == 200) {
-      var jsonString = response.body;
-      return gantipassResponseModelFromJson(jsonString);
+      var jsonResponse = jsonDecode(response.body);
+      return jsonResponse['message'] == 'Password changed successfully';
     } else {
-      throw Exception('Failed to change password');
+      print('Failed to change password: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      return false;
     }
   } catch (e) {
-    throw Exception('Failed to connect to the server');
+    print('Error: $e');
+    return false;
   }
 }
