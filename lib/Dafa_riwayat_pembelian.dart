@@ -381,7 +381,7 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
                                                             const EdgeInsets
                                                                 .only(top: 5),
                                                         child: Text(
-                                                          'Total harga : ${data[index]['total_belanja']}',
+                                                          'Total harga : ${data[index]['total_harga']}',
                                                           style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,

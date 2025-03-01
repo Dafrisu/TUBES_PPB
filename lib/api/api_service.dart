@@ -2,8 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 Future<List<Map<String, dynamic>>> fetchData() async {
-  final response =
-      await http.get(Uri.parse('https://umkmapi.azurewebsites.net/produk'));
+  final response = await http.get(Uri.parse('localhost/produk'));
 
   if (response.statusCode == 200) {
     // Decode the response body as a List
@@ -22,8 +21,7 @@ Future<List<Map<String, dynamic>>> fetchData() async {
 Future<List<Map<String, dynamic>>> fetchDataByType(String tipeBarang) async {
   // Construct the URL with the query parameter
   final response = await http.get(
-    Uri.parse(
-        'https://umkmapi.azurewebsites.net/produkbytipe/tipe?tipe_barang=$tipeBarang'),
+    Uri.parse('localhost/produkbytipe/tipe?tipe_barang=$tipeBarang'),
   );
 
   if (response.statusCode == 200) {
@@ -43,7 +41,7 @@ Future<List<Map<String, dynamic>>> fetchDataByType(String tipeBarang) async {
 Future<List<Map<String, dynamic>>> fetchDataUMKM() async {
   // Construct the URL with the query parameter
   final response = await http.get(
-    Uri.parse('https://umkmapi.azurewebsites.net/umkm'),
+    Uri.parse('localhost/umkm'),
   );
 
   if (response.statusCode == 200) {
@@ -63,7 +61,7 @@ Future<List<Map<String, dynamic>>> fetchDataUMKM() async {
 Future<List<Map<String, dynamic>>> fetchUlasansByProdukId(int id) async {
   // Construct the URL with the query parameter
   final response = await http.get(
-    Uri.parse('https://umkmapi.azurewebsites.net/ulasans/$id'),
+    Uri.parse('localhost/ulasans/$id'),
   );
   print(response.body);
 
@@ -91,7 +89,7 @@ Future<List<Map<String, dynamic>>> fetchUlasansByProdukId(int id) async {
 Future<List<Map<String, dynamic>>> fetchAllUlasans() async {
   // Construct the URL with the query parameter
   final response = await http.get(
-    Uri.parse('https://umkmapi.azurewebsites.net/ulasans'),
+    Uri.parse('localhost/ulasans'),
   );
 
   if (response.statusCode == 200) {
@@ -114,7 +112,7 @@ Future<List<Map<String, dynamic>>> fetchAllUlasans() async {
 Future<List<Map<String, dynamic>>> fetchUlasansUMKM(int id) async {
   // Construct the URL with the query parameter
   final response = await http.get(
-    Uri.parse('https://umkmapi.azurewebsites.net/ulasans/umkm/$id'),
+    Uri.parse('localhost/ulasans/umkm/$id'),
   );
   print(response.body);
 

@@ -5,8 +5,8 @@ import 'api_loginPembeli.dart';
 //API buat riwayat Pembelian
 Future<List<Map<String, dynamic>>> fetchriwayatpembelian() async {
   try {
-    final response = await http.get(Uri.parse(
-        'https://umkmapi.azurewebsites.net/getriwayatpesanan/$sessionId'));
+    final response =
+        await http.get(Uri.parse('localhost/getriwayatpesanan/$sessionId'));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
@@ -26,8 +26,8 @@ Future<List<Map<String, dynamic>>> fetchriwayatpembelian() async {
 
 Future<List<Map<String, dynamic>>> fetchpesananaktifpembeli() async {
   try {
-    final response = await http.get(Uri.parse(
-        'https://umkmapi.azurewebsites.net/getallpesananaktifpembeli/$sessionId'));
+    final response = await http
+        .get(Uri.parse('localhost/getallpesananaktifpembeli/$sessionId'));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
@@ -47,8 +47,8 @@ Future<List<Map<String, dynamic>>> fetchpesananaktifpembeli() async {
 
 Future<void> sendpesanan(int id_keranjang, double total_belanja) async {
   // URL endpoint API
-  final Uri url = Uri.parse(
-      'https://umkmapi.azurewebsites.net/addpesanan/$id_keranjang/$total_belanja/$sessionId');
+  final Uri url =
+      Uri.parse('localhost/addpesanan/$id_keranjang/$total_belanja/$sessionId');
   try {
     // Melakukan POST request
     final response = await http.post(url);
@@ -70,8 +70,7 @@ Future<void> sendpesanan(int id_keranjang, double total_belanja) async {
 
 Future<List<Map<String, dynamic>>> fetchpembeli() async {
   try {
-    final response = await http
-        .get(Uri.parse('https://umkmapi.azurewebsites.net/pembeli/$sessionId'));
+    final response = await http.get(Uri.parse('localhost/pembeli/$sessionId'));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);

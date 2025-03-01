@@ -12,7 +12,7 @@ Future<Map<String, dynamic>?> profilePembeli = Future.value(null);
 Future<void> fetchLogin(String email, String password) async {
   try {
     final response = await http.post(
-      Uri.parse('https://umkmapi.azurewebsites.net/loginpembeli'),
+      Uri.parse('localhost/loginpembeli'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -44,8 +44,7 @@ Future<void> fetchLogin(String email, String password) async {
 
 Future<Map<String, dynamic>> fetchUserData(int userId) async {
   try {
-    final response = await http
-        .get(Uri.parse('https://umkmapi.azurewebsites.net/pembeli/$sessionId'));
+    final response = await http.get(Uri.parse('localhost/pembeli/$sessionId'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
@@ -64,8 +63,7 @@ void nullifyProfilePembeli() {
 }
 
 void printdata() async {
-  Map<String, dynamic> keranjang =
-      await profilePembeli ?? {}; 
+  Map<String, dynamic> keranjang = await profilePembeli ?? {};
   keranjang.forEach((key, value) {
     print('$key: $value');
   });

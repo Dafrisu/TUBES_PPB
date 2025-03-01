@@ -32,7 +32,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     userId = (prefs.getInt('sessionId') ?? 0).toString();
 
     final response = await http.get(
-      Uri.parse('https://umkmapi.azurewebsites.net/pembeli/$userId'),
+      Uri.parse('localhost/pembeli/$userId'),
     );
 
     if (response.statusCode == 200) {

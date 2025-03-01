@@ -24,14 +24,15 @@ class _RegisterState extends State<Register> {
   final usernameController = TextEditingController();
   final alamatController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-  
+
   final emailRegex =
       RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
-  final passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
+  final passwordRegex = RegExp(
+      r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
   final telephoneRegex = RegExp(r'^\+?[\d\s]{10,15}$');
   String? selectedRole = 'pembeli';
 
-   String? validateEmail(String? value) {
+  String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Tolong masukkan email anda';
     } else if (!emailRegex.hasMatch(value)) {
@@ -41,15 +42,15 @@ class _RegisterState extends State<Register> {
   }
 
   String? validatePassword(String? value) {
-  if (value == null || value.isEmpty) {
-    return 'Tolong masukkan password anda';
-  } else if (!passwordRegex.hasMatch(value)) {
-    return 'Password harus memiliki minimal 8 karakter, termasuk satu huruf besar, satu huruf kecil, satu angka, dan satu karakter spesial';
+    if (value == null || value.isEmpty) {
+      return 'Tolong masukkan password anda';
+    } else if (!passwordRegex.hasMatch(value)) {
+      return 'Password harus memiliki minimal 8 karakter, termasuk satu huruf besar, satu huruf kecil, satu angka, dan satu karakter spesial';
+    }
+    return null;
   }
-  return null;
-}
 
- String? validateConfirmPassword(String? value) {
+  String? validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Tolong masukkan konfirmasi password anda';
     } else if (value != passwordController.text) {
@@ -58,14 +59,14 @@ class _RegisterState extends State<Register> {
     return null;
   }
 
-String? validateTelephone(String? value) {
-  if (value == null || value.isEmpty) {
-    return 'Tolong masukkan nomor telepon anda';
-  } else if (!telephoneRegex.hasMatch(value)) {
-    return 'Nomor telepon tidak valid';
+  String? validateTelephone(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Tolong masukkan nomor telepon anda';
+    } else if (!telephoneRegex.hasMatch(value)) {
+      return 'Nomor telepon tidak valid';
+    }
+    return null;
   }
-  return null;
-}
 
   @override
   void dispose() {
@@ -153,7 +154,7 @@ String? validateTelephone(String? value) {
                     return null;
                   },
                 ),
-                 const SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text('Nama',
                     style: GoogleFonts.montserrat(
                         fontSize: 16, fontWeight: FontWeight.w700)),
@@ -206,7 +207,7 @@ String? validateTelephone(String? value) {
                   validator: validatePassword,
                 ),
                 const SizedBox(height: 10),
-                 Text('Konfirmasi Password',
+                Text('Konfirmasi Password',
                     style: GoogleFonts.montserrat(
                         fontSize: 16, fontWeight: FontWeight.w700)),
                 TextFormField(
@@ -269,7 +270,7 @@ String? validateTelephone(String? value) {
                         );
                       }
 
-                       print('isRegistered: $isRegistered'); 
+                      print('isRegistered: $isRegistered');
 
                       if (!mounted) return;
 

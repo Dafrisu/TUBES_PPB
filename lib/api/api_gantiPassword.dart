@@ -7,7 +7,7 @@ var client = http.Client();
 Future<GantipassResponseModel> gantiPassword(String email) async {
   try {
     var response = await client.post(
-      Uri.parse('https://umkmapi.azurewebsites.net/otp/sendOTP'), // Ensure the port matches your server
+      Uri.parse('localhost/otp/sendOTP'), // Ensure the port matches your server
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -31,7 +31,7 @@ Future<GantipassResponseModel> gantiPassword(String email) async {
 Future<bool> verifyOTP(String email, String otpHash, String otpCode) async {
   try {
     var response = await client.post(
-      Uri.parse('https://umkmapi.azurewebsites.net/otp/verifyOTP'), 
+      Uri.parse('localhost/otp/verifyOTP'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -59,7 +59,8 @@ Future<bool> verifyOTP(String email, String otpHash, String otpCode) async {
 }
 
 Future<bool> checkPembeliByEmail(String email) async {
-  final checkUrl = 'https://umkmapi.azurewebsites.net/checkPembeliByEmail'; // Ensure the port matches your server
+  final checkUrl =
+      'localhost/checkPembeliByEmail'; // Ensure the port matches your server
 
   try {
     final checkResponse = await http.post(
@@ -89,7 +90,8 @@ Future<bool> checkPembeliByEmail(String email) async {
 Future<bool> changePassword(String email, String newPassword) async {
   try {
     var response = await client.put(
-      Uri.parse('https://umkmapi.azurewebsites.net/changepassword'), // Ensure the port matches your server
+      Uri.parse(
+          'localhost/changepassword'), // Ensure the port matches your server
       headers: <String, String>{
         'Content-Type': 'application/json',
       },

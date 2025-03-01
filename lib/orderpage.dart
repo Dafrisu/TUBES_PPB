@@ -123,7 +123,7 @@ class _OrderPageState extends State<OrderPage> {
 
   Future<Map<String, dynamic>> fetchUserData() async {
     final response = await http.get(
-      Uri.parse('https://umkmapi.azurewebsites.net/pembeli/$sessionId'),
+      Uri.parse('localhost/pembeli/$sessionId'),
     );
 
     if (response.statusCode == 200) {
