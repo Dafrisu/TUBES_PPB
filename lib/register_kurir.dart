@@ -24,10 +24,11 @@ class _RegisterKurirState extends State<RegisterKurir> {
   String? selectedRole = 'kurir';
   String? selectedUMKM;
   List<dynamic> umkmList = [];
-  
+
   final emailRegex =
       RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
-  final passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
+  final passwordRegex = RegExp(
+      r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
 
   @override
   void initState() {
@@ -35,7 +36,7 @@ class _RegisterKurirState extends State<RegisterKurir> {
     loadUMKM();
   }
 
-   Future<void> loadUMKM() async {
+  Future<void> loadUMKM() async {
     try {
       final umkmData = await fetchUMKM();
       setState(() {
@@ -46,9 +47,7 @@ class _RegisterKurirState extends State<RegisterKurir> {
     }
   }
 
-  
-
-   String? validateEmail(String? value) {
+  String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Tolong masukkan email anda';
     } else if (!emailRegex.hasMatch(value)) {
@@ -58,15 +57,15 @@ class _RegisterKurirState extends State<RegisterKurir> {
   }
 
   String? validatePassword(String? value) {
-  if (value == null || value.isEmpty) {
-    return 'Tolong masukkan password anda';
-  } else if (!passwordRegex.hasMatch(value)) {
-    return 'Password harus memiliki minimal 8 karakter, termasuk satu huruf besar, satu huruf kecil, satu angka, dan satu karakter spesial';
+    if (value == null || value.isEmpty) {
+      return 'Tolong masukkan password anda';
+    } else if (!passwordRegex.hasMatch(value)) {
+      return 'Password harus memiliki minimal 8 karakter, termasuk satu huruf besar, satu huruf kecil, satu angka, dan satu karakter spesial';
+    }
+    return null;
   }
-  return null;
-}
 
- String? validateConfirmPassword(String? value) {
+  String? validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Tolong masukkan konfirmasi password anda';
     } else if (value != passwordController.text) {
@@ -158,7 +157,7 @@ class _RegisterKurirState extends State<RegisterKurir> {
                     return null;
                   },
                 ),
-                 const SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text('Nama',
                     style: GoogleFonts.montserrat(
                         fontSize: 16, fontWeight: FontWeight.w700)),
@@ -210,7 +209,7 @@ class _RegisterKurirState extends State<RegisterKurir> {
                   validator: validatePassword,
                 ),
                 const SizedBox(height: 10),
-                 Text('Konfirmasi Password',
+                Text('Konfirmasi Password',
                     style: GoogleFonts.montserrat(
                         fontSize: 16, fontWeight: FontWeight.w700)),
                 TextFormField(
@@ -279,8 +278,7 @@ class _RegisterKurirState extends State<RegisterKurir> {
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content:
-                                  Text('Email sudah digunakan')),
+                              content: Text('Email sudah digunakan')),
                         );
                       }
                     }
