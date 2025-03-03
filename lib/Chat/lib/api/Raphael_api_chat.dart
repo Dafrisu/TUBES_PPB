@@ -11,8 +11,8 @@ Future<List<Map<String, dynamic>>> fetchchatpembeli() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   int id_pembeli = prefs.getInt('sessionId') ?? 0;
   try {
-    final response =
-        await http.get(Uri.parse('localhost/message/msgPembeli/$sessionId'));
+    final response = await http
+        .get(Uri.parse('http://10.0.2.2/message/msgPembeli/$sessionId'));
 
     final List<dynamic> data = jsonDecode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -27,8 +27,8 @@ Future<List<Map<String, dynamic>>> fetchMessagesByPembeliAndUMKM(
   SharedPreferences prefs = await SharedPreferences.getInstance();
   int id_pembeli = prefs.getInt('sessionId') ?? 0;
   try {
-    final response = await http
-        .get(Uri.parse('localhost/getmsgPembeliUMKM/$sessionId/$id_umkm'));
+    final response = await http.get(
+        Uri.parse('http://10.0.2.2/getmsgPembeliUMKM/$sessionId/$id_umkm'));
 
     final List<dynamic> data = jsonDecode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -44,8 +44,8 @@ Future<List<Map<String, dynamic>>> fetchMessagesByPembeliAndKurir() async {
   int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
 
   try {
-    final response = await http.get(
-        Uri.parse('localhost/getmsgPembeliKurir/$sessionId/$kurirSessionId'));
+    final response = await http.get(Uri.parse(
+        'http://10.0.2.2/getmsgPembeliKurir/$sessionId/$kurirSessionId'));
 
     final List<dynamic> data = jsonDecode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -59,8 +59,8 @@ Future<List<Map<String, dynamic>>> fetchchatkurir() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
   try {
-    final response =
-        await http.get(Uri.parse('localhost/message/msgKurir/$kurirSessionId'));
+    final response = await http
+        .get(Uri.parse('http://10.0.2.2/message/msgKurir/$kurirSessionId'));
 
     final List<dynamic> data = jsonDecode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -79,8 +79,8 @@ Future<List<Map<String, dynamic>>> fetchMessagesByKurirAndPembeli() async {
   print('Debug: id_kurir = $kurirSessionId, id_pembeli = $sessionId');
 
   try {
-    final response = await http.get(
-        Uri.parse('localhost/getmsgKurirPembeli/$kurirSessionId/$sessionId'));
+    final response = await http.get(Uri.parse(
+        'http://10.0.2.2/getmsgKurirPembeli/$kurirSessionId/$sessionId'));
 
     final List<dynamic> data = jsonDecode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -97,7 +97,7 @@ Future<Map<String, dynamic>> sendMessagePembeliKeUMKM(
   int id_pembeli = prefs.getInt('sessionId') ?? 0;
   try {
     final response = await http.post(
-      Uri.parse('localhost/sendchat/pembelikeumkm/$sessionId/$id_umkm'),
+      Uri.parse('http://10.0.2.2/sendchat/pembelikeumkm/$sessionId/$id_umkm'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -134,7 +134,8 @@ Future<Map<String, dynamic>> sendMessagePembeliKeKurir(
 
   try {
     final response = await http.post(
-      Uri.parse('localhost/sendchat/pembelikekurir/$sessionId/$kurirSessionId'),
+      Uri.parse(
+          'http://10.0.2.2/sendchat/pembelikekurir/$sessionId/$kurirSessionId'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -169,7 +170,8 @@ Future<Map<String, dynamic>> sendMessageKurirkePembeli(
   int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
   try {
     final response = await http.post(
-      Uri.parse('localhost/sendchat/kurirkepembeli/$kurirSessionId/$sessionId'),
+      Uri.parse(
+          'http://10.0.2.2/sendchat/kurirkepembeli/$kurirSessionId/$sessionId'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -199,7 +201,7 @@ Future<Map<String, dynamic>> sendMessageKurirkePembeli(
 
 Future<Map<String, dynamic>> fetchKurirData() async {
   final response = await http.get(Uri.parse(
-      'localhost/kurir/$kurirSessionId')); // Menggunakan kurirSessionId global
+      'http://10.0.2.2/kurir/$kurirSessionId')); // Menggunakan kurirSessionId global
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
@@ -228,7 +230,7 @@ Future<List<Map<String, dynamic>>> getPesananDiterima() async {
     }
 
     final response = await http.get(
-      Uri.parse('localhost/getpesananditerima/$idUmkm'),
+      Uri.parse('http://10.0.2.2/getpesananditerima/$idUmkm'),
     );
 
     if (response.statusCode == 200) {
@@ -260,8 +262,8 @@ Future<void> updateStatusPesananSelesai(int idBatch) async {
     }
 
     // URL untuk update status pesanan
-    final url =
-        Uri.parse('localhost/updatestatuspesananselesai/$idUmkm/$idBatch');
+    final url = Uri.parse(
+        'http://10.0.2.2/updatestatuspesananselesai/$idUmkm/$idBatch');
 
     // Mengirim request PUT untuk update status
     final response = await http.put(url);

@@ -12,7 +12,7 @@ Future<Map<String, dynamic>?> profilePembeli = Future.value(null);
 Future<void> fetchLogin(String email, String password) async {
   try {
     final response = await http.post(
-      Uri.parse('localhost/loginpembeli'),
+      Uri.parse('http://10.0.2.2/loginpembeli'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -44,7 +44,8 @@ Future<void> fetchLogin(String email, String password) async {
 
 Future<Map<String, dynamic>> fetchUserData(int userId) async {
   try {
-    final response = await http.get(Uri.parse('localhost/pembeli/$sessionId'));
+    final response =
+        await http.get(Uri.parse('http://10.0.2.2/pembeli/$sessionId'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
