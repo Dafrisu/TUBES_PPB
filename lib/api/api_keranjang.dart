@@ -6,7 +6,7 @@ int lastbatch = 0;
 Future<Map<String, dynamic>> addtoKeranjang(
     int id_pembeli, int id_produk, int id_batch) async {
   try {
-    final url = Uri.parse('localhost/keranjang');
+    final url = Uri.parse('http://10.0.2.2/keranjang');
 
     final response = await http.post(
       url,
@@ -39,7 +39,8 @@ Future<Map<String, dynamic>> addtoKeranjang(
 
 Future<void> getlastbatch(int id_pembeli) async {
   try {
-    var response = await http.get(Uri.parse('localhost/lastbatch/$id_pembeli'));
+    var response =
+        await http.get(Uri.parse('http://10.0.2.2/lastbatch/$id_pembeli'));
     Map<String, dynamic> data = jsonDecode(response.body);
     if (data['latest_batch'] == null) {
       lastbatch = 1;
@@ -54,7 +55,7 @@ Future<void> getlastbatch(int id_pembeli) async {
 
 Future<void> addbatch(int id_pembeli, int id_batch) async {
   try {
-    final url = Uri.parse('localhost/addbatch/$id_pembeli/$id_batch');
+    final url = Uri.parse('http://10.0.2.2/addbatch/$id_pembeli/$id_batch');
     final response = await http.post(url);
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
@@ -72,7 +73,7 @@ Future<Map<String, dynamic>> searchOnKeranjang(
     int id_pembeli, int id_produk, int id_batch) async {
   try {
     final response = await http.get(Uri.parse(
-        'localhost/searchkeranjang/$id_pembeli/$id_produk/$id_batch'));
+        'http://10.0.2.2/searchkeranjang/$id_pembeli/$id_produk/$id_batch'));
     Map<String, dynamic> data = jsonDecode(response.body);
 
     return data;
@@ -84,8 +85,8 @@ Future<Map<String, dynamic>> searchOnKeranjang(
 
 Future<Map<String, dynamic>> keranjangplus(int id_keranjang) async {
   try {
-    final response =
-        await http.put(Uri.parse('localhost/keranjangplus/$id_keranjang'));
+    final response = await http
+        .put(Uri.parse('http://10.0.2.2/keranjangplus/$id_keranjang'));
 
     print('response body: ${response.body}');
 
@@ -104,7 +105,7 @@ Future<Map<String, dynamic>> keranjangplus(int id_keranjang) async {
 Future<Map<String, dynamic>> keranjangmin(int id_keranjang) async {
   try {
     final response =
-        await http.put(Uri.parse('localhost/keranjangmin/$id_keranjang'));
+        await http.put(Uri.parse('http://10.0.2.2/keranjangmin/$id_keranjang'));
 
     print('response body: ${response.body}');
 
@@ -122,7 +123,7 @@ Future<Map<String, dynamic>> keranjangmin(int id_keranjang) async {
 
 Future<List<Map<String, dynamic>>> keranjangpembeli(int id_pembeli) async {
   try {
-    final url = Uri.parse('localhost/keranjangstandby/$id_pembeli');
+    final url = Uri.parse('http://10.0.2.2/keranjangstandby/$id_pembeli');
 
     final response = await http.get(url);
 

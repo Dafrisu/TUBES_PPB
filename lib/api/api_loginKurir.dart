@@ -6,7 +6,7 @@ int kurirSessionId = 0;
 
 Future<bool> loginKurir(String email, String password) async {
   final response = await http.post(
-    Uri.parse('localhost/loginKurir'),
+    Uri.parse('http://10.0.2.2/loginKurir'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },

@@ -123,7 +123,7 @@ class _OrderPageState extends State<OrderPage> {
 
   Future<Map<String, dynamic>> fetchUserData() async {
     final response = await http.get(
-      Uri.parse('localhost/pembeli/$sessionId'),
+      Uri.parse('http://10.0.2.2/pembeli/$sessionId'),
     );
 
     if (response.statusCode == 200) {
