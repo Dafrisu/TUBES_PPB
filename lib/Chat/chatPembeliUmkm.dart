@@ -312,11 +312,9 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No messages available.'));
           }
 
-          final messages = snapshot.data!;
+          final messages = snapshot.data ?? [];
 
           return Column(
             children: [
