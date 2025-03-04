@@ -10,6 +10,7 @@ import 'package:tubes_ppb/api/api_loginPembeli.dart';
 import 'package:tubes_ppb/api/api_service.dart';
 import 'package:tubes_ppb/component/review_card.dart';
 import 'cart.dart';
+import 'package:tubes_ppb/Chat/chatPembeliUmkm.dart';
 
 class PageBarang extends StatefulWidget {
   final Map<String, dynamic> product;
@@ -199,7 +200,17 @@ class _PageBarangState extends State<PageBarang> {
                                 radius: 30,
                               ),
                               trailing: OutlinedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PembeliUmkmChatPage(
+                                        sender: umkm['username'],
+                                        id_umkm: ID_umkm,
+                                      ),
+                                    ),
+                                  );
+                                },
                                 style: OutlinedButton.styleFrom(
                                     minimumSize: Size(30, 40)),
                                 child: const Text(
