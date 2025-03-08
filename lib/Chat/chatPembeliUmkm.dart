@@ -136,8 +136,8 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
                     : item['username'] ?? 'Unknown User'),
                 subtitle: Text(item['message'] ?? ''),
                 trailing: Text(item['sent_at'] != null
-                    ? DateFormat('HH:mm')
-                        .format(DateTime.parse(item['sent_at']))
+                    ? DateFormat('HH:mm').format(
+                        DateFormat("HH:mm:ss.SSSSSS").parse(item['sent_at']))
                     : 'Unknown time'),
                 onTap: () {
                   Navigator.push(
@@ -326,10 +326,10 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                     final message = messages[index];
                     final isReceiverUMKM = message['receiver_type'] == "UMKM";
                     final sentAt = message['sent_at'] != null
-                        ? DateFormat('HH:mm')
-                            .format(DateTime.parse(message['sent_at']))
+                        ? DateFormat('HH:mm').format(
+                            DateFormat("HH:mm:ss.SSSSSS")
+                                .parse(message['sent_at']))
                         : 'Unknown time';
-
                     return Row(
                       mainAxisAlignment: isReceiverUMKM
                           ? MainAxisAlignment.end
@@ -346,8 +346,9 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                           text: message['message'],
                           isReceiverUMKM: isReceiverUMKM,
                           sentAt: message['sent_at'] != null
-                              ? DateFormat('HH:mm')
-                                  .format(DateTime.parse(message['sent_at']))
+                              ? DateFormat('HH:mm').format(
+                                  DateFormat("HH:mm:ss.SSSSSS")
+                                      .parse(message['sent_at']))
                               : 'Unknown time',
                         ),
                         if (isReceiverUMKM) const SizedBox(width: 8),

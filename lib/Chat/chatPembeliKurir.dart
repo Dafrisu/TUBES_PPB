@@ -57,10 +57,10 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                     final message = messages[index];
                     final isReceiverKurir = message['receiver_type'] == "Kurir";
                     final sentAt = message['sent_at'] != null
-                        ? DateFormat('HH:mm')
-                            .format(DateTime.parse(message['sent_at']))
+                        ? DateFormat('HH:mm').format(
+                            DateFormat("HH:mm:ss.SSSSSS")
+                                .parse(message['sent_at']))
                         : 'Unknown time';
-
                     return Row(
                       mainAxisAlignment: isReceiverKurir
                           ? MainAxisAlignment.end
@@ -77,8 +77,9 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                           text: message['message'],
                           isReceiverKurir: isReceiverKurir,
                           sentAt: message['sent_at'] != null
-                              ? DateFormat('HH:mm')
-                                  .format(DateTime.parse(message['sent_at']))
+                              ? DateFormat('HH:mm').format(
+                                  DateFormat("HH:mm:ss.SSSSSS")
+                                      .parse(message['sent_at']))
                               : 'Unknown time',
                         ),
                         if (isReceiverKurir) const SizedBox(width: 8),

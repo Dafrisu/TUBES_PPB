@@ -105,8 +105,8 @@ class _InboxPageKurirPembeliState extends State<InboxPageKurirPembeli> {
                 title: Text(item['nama_lengkap']),
                 subtitle: Text(item['message']),
                 trailing: Text(item['sent_at'] != null
-                    ? DateFormat('HH:mm')
-                        .format(DateTime.parse(item['sent_at']))
+                    ? DateFormat('HH:mm').format(
+                        DateFormat("HH:mm:ss.SSSSSS").parse(item['sent_at']))
                     : 'Unknown time'),
                 onTap: () {
                   Navigator.push(
@@ -259,8 +259,9 @@ class _KurirPembeliChatPageState extends State<KurirPembeliChatPage> {
                     final isReceiverPembeli =
                         message['receiver_type'] == "Pembeli";
                     final sentAt = message['sent_at'] != null
-                        ? DateFormat('HH:mm')
-                            .format(DateTime.parse(message['sent_at']))
+                        ? DateFormat('HH:mm').format(
+                            DateFormat("HH:mm:ss.SSSSSS")
+                                .parse(message['sent_at']))
                         : 'Unknown time';
 
                     return Row(
@@ -279,8 +280,9 @@ class _KurirPembeliChatPageState extends State<KurirPembeliChatPage> {
                           text: message['message'],
                           isReceiverPembeli: isReceiverPembeli,
                           sentAt: message['sent_at'] != null
-                              ? DateFormat('HH:mm')
-                                  .format(DateTime.parse(message['sent_at']))
+                              ? DateFormat('HH:mm').format(
+                                  DateFormat("HH:mm:ss.SSSSSS")
+                                      .parse(message['sent_at']))
                               : 'Unknown time',
                         ),
                         if (isReceiverPembeli) const SizedBox(width: 8),
