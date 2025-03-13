@@ -3,8 +3,8 @@ import 'dart:convert';
 
 Future<List<Map<String, dynamic>>> getprodukUMKM(int id_umkm) async {
   try {
-    final response = await http.get(
-        Uri.parse('https://umkmapi.azurewebsites.net/produkumkm/$id_umkm'));
+    final response =
+        await http.get(Uri.parse('http://10.0.2.2/produkumkm/$id_umkm'));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);

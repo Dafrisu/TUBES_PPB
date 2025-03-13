@@ -3,8 +3,8 @@ import 'dart:convert';
 
 Future<bool> registerPembeli(String nama, String nomorTelepon, String username,
     String email, String password, String alamat) async {
-  final checkUserUrl = 'https://umkmapi.azurewebsites.net/checkPembeli';
-  final registerUrl = 'https://umkmapi.azurewebsites.net/pembeli';
+  final checkUserUrl = 'http://10.0.2.2/checkPembeli';
+  final registerUrl = 'http://10.0.2.2/pembeli';
 
   try {
     // Check if Pembeli already exists
