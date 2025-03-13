@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/BarangPenjual.dart';
 import 'package:tubes_ppb/api/api_service.dart';
+import 'package:tubes_ppb/bookmark.dart';
 import 'dashboard_full_produk.dart';
 import 'dashboard_full_makanan.dart';
 import 'dashboard_full_minuman.dart';
@@ -70,6 +71,16 @@ class _DashboardState extends State<Dashboard> {
         automaticallyImplyLeading:
             false, // Disable tombol back ketika di navigate ke page ini
         actions: <Widget>[
+          IconButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Bookmark()));
+              },
+              icon: Image.asset(
+                'lib/assets_images/Love-unmarked.png',
+                width: 30,
+                height: 30,
+              )),
           const SizedBox(width: 10),
           IconButton(
             icon: const Icon(Icons.notifications),
