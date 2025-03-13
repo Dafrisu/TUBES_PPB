@@ -7,9 +7,9 @@ import 'package:tubes_ppb/notif.dart';
 import 'userdata/user_provider.dart';
 import 'animation.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  notifservices().initnotif();
+  await notifservices().initnotif();
   runApp(
     ChangeNotifierProvider(
       create: (context) => UserProvider(),
