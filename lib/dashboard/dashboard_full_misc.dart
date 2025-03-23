@@ -11,7 +11,8 @@ class FullMiscPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Misc', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        title: const Text('Misc',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
         actions: <Widget>[
           const SizedBox(width: 10),
           IconButton(
@@ -45,7 +46,7 @@ class FullMiscPage extends StatelessWidget {
               childAspectRatio: 0.75,
             ),
             itemCount: data.length,
-            physics: const AlwaysScrollableScrollPhysics(), 
+            physics: const AlwaysScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               final item = data[index];
               return InkWell(
@@ -58,6 +59,7 @@ class FullMiscPage extends StatelessWidget {
                 child: ProductCardURL(
                   title: item['nama_barang'],
                   imageUrl: item['image_url'],
+                  price: item['harga'],
                 ),
               );
             },

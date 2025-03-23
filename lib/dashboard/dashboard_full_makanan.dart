@@ -61,6 +61,7 @@ class FullMakananPage extends StatelessWidget {
                 child: ProductCardURL(
                   title: item['nama_barang'],
                   imageUrl: item['image_url'],
+                  price: item['harga'],
                 ),
               );
             },

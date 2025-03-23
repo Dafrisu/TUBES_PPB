@@ -28,9 +28,13 @@ class ProductCard extends StatelessWidget {
 class ProductCardURL extends StatelessWidget {
   final String title;
   final String imageUrl;
+  final int price;
 
   const ProductCardURL(
-      {super.key, required this.title, required this.imageUrl});
+      {super.key,
+      required this.title,
+      required this.imageUrl,
+      required this.price});
 
   @override
   Widget build(BuildContext context) {
@@ -39,17 +43,32 @@ class ProductCardURL extends StatelessWidget {
         children: <Widget>[
           Image.network(imageUrl,
               fit: BoxFit.cover,
-              height: 150,
-              width: 150), // nanti sesuaikan height sama width
+              height: 250,
+              width: 250), // nanti sesuaikan height sama width
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              title,
-              style: const TextStyle(fontSize: 16),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
+              padding: const EdgeInsets.all(8.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  title,
+                  textAlign: TextAlign.start,
+                  style: const TextStyle(fontSize: 16),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )),
+          Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Rp.${price}',
+                  textAlign: TextAlign.start,
+                  style: const TextStyle(fontSize: 16),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )),
         ],
       ),
     );

@@ -227,6 +227,7 @@ class _DashboardState extends State<Dashboard> {
                       child: ProductCardURL(
                         title: item['nama_barang'],
                         imageUrl: item['image_url'],
+                        price: item['harga'],
                       ),
                     );
                   },
@@ -299,6 +300,7 @@ class _DashboardState extends State<Dashboard> {
                       child: ProductCardURL(
                         title: item['nama_barang'],
                         imageUrl: item['image_url'],
+                        price: item['harga'],
                       ),
                     );
                   },
@@ -371,6 +373,7 @@ class _DashboardState extends State<Dashboard> {
                       child: ProductCardURL(
                         title: item['nama_barang'],
                         imageUrl: item['image_url'],
+                        price: item['harga'],
                       ),
                     );
                   },
@@ -443,6 +446,7 @@ class _DashboardState extends State<Dashboard> {
                       child: ProductCardURL(
                         title: item['nama_barang'],
                         imageUrl: item['image_url'],
+                        price: item['harga'],
                       ),
                     );
                   },
