@@ -49,6 +49,7 @@ class FullMinumanPage extends StatelessWidget {
             physics: const AlwaysScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               final item = data[index];
+              print(item['harga']);
               return InkWell(
                 onTap: () {
                   Navigator.push(
@@ -59,6 +60,7 @@ class FullMinumanPage extends StatelessWidget {
                 child: ProductCardURL(
                   title: item['nama_barang'],
                   imageUrl: item['image_url'],
+                  price: item['harga'],
                 ),
               );
             },
