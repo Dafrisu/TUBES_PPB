@@ -48,3 +48,31 @@ Future<Map<String, dynamic>> checkbookmark(
     return {};
   }
 }
+
+Future<void> addtobookmark(int id_pembeli, int id_produk) async {
+  try {
+    final response = await http
+        .post(Uri.parse("http://10.0.2.2/bookmark/$id_pembeli/$id_produk"));
+    if (response.statusCode == 200) {
+      print(response.body);
+    } else {
+      print(response.body);
+    }
+  } catch (error) {
+    print(error);
+  }
+}
+
+Future<void> deletebookmark(int id_pembeli, int id_produk) async {
+  try {
+    final response = await http
+        .delete(Uri.parse("http://10.0.2.2/bookmark/$id_pembeli/$id_produk"));
+    if (response.statusCode == 200) {
+      print(response.body);
+    } else {
+      print(response.body);
+    }
+  } catch (error) {
+    print(error);
+  }
+}

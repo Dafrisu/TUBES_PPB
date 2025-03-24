@@ -23,6 +23,10 @@ class PageBarang extends StatefulWidget {
 class _PageBarangState extends State<PageBarang> {
   // This widget is the root of your application./
 
+  Future<void> refreshbarang() async {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     print("last batch: $lastbatch");
@@ -36,7 +40,7 @@ class _PageBarangState extends State<PageBarang> {
           // back button
           leading: IconButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(true);
               },
               icon: const Icon(
                 Icons.arrow_back_ios_new,
@@ -65,22 +69,32 @@ class _PageBarangState extends State<PageBarang> {
                   }
 
                   bool isbookmarked = snapshot.data!["bookmarked"];
-                  if (isbookmarked) {
-                    return IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.favorite,
-                          color: Colors.red,
-                          size: 30,
-                        ));
-                  } else {
-                    return IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.favorite_border,
-                          size: 30,
-                        ));
-                  }
+                  return IconButton(
+                    onPressed: () async {
+                      if (isbookmarked) {
+                        await deletebookmark(sessionId, widget.product['id']);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Bookmark dihapus!'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      } else {
+                        await addtobookmark(sessionId, widget.product['id']);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Berhasil ditambahkan ke bookmark!'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      }
+                      refreshbarang();
+                    },
+                    icon: Icon(
+                        isbookmarked ? Icons.favorite : Icons.favorite_border),
+                    color: isbookmarked ? Colors.red : Colors.black,
+                    iconSize: 30,
+                  );
                 }),
             IconButton(
               icon: Icon(

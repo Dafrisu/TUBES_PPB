@@ -1,4 +1,6 @@
 import "package:flutter/material.dart";
+import "package:tubes_ppb/BarangPenjual.dart";
+import "package:tubes_ppb/api/api_getprodukbyID.dart";
 import 'Data.dart' as data;
 import "package:tubes_ppb/api/api_bookmark.dart";
 import "package:tubes_ppb/api/api_loginPembeli.dart";
@@ -12,6 +14,12 @@ class Bookmark extends StatefulWidget {
 }
 
 class _BookmarkState extends State<Bookmark> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +53,23 @@ class _BookmarkState extends State<Bookmark> {
                 final product = bookmark["Produk"];
                 print(bookmark);
                 return InkWell(
-                  onTap: () {},
+                  onTap: () async {
+                    final data = await getproduk(bookmark["id_produk"]);
+                    if (data.isNotEmpty) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  PageBarang(product: data))).then((value) {
+                        if (value == true) {
+                          setState(() {});
+                        }
+                      });
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("gagal mendapatkan data")));
+                    }
+                  },
                   child: ProductCardURL(
                       title: product['nama_barang'],
                       imageUrl: product["image_url"],
