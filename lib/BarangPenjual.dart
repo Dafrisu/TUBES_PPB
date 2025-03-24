@@ -2,6 +2,7 @@ import 'package:expandable_text/expandable_text.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/Data.dart' as dataprovider;
+import 'package:tubes_ppb/api/api_bookmark.dart';
 import 'package:tubes_ppb/api/api_getprodukbyID.dart';
 import 'package:tubes_ppb/api/api_getprofileumkm.dart';
 import 'package:tubes_ppb/LamanPenjual.dart';
@@ -44,6 +45,43 @@ class _PageBarangState extends State<PageBarang> {
 
           // cart button
           actions: <Widget>[
+            FutureBuilder<Map<String, dynamic>>(
+                future: checkbookmark(widget.product['id'], sessionId),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return IconButton(
+                        onPressed: null,
+                        icon: Icon(
+                          Icons.favorite_border,
+                          size: 30,
+                        ));
+                  } else if (snapshot.hasError) {
+                    return IconButton(
+                        onPressed: null,
+                        icon: Icon(
+                          Icons.close,
+                          size: 30,
+                        ));
+                  }
+
+                  bool isbookmarked = snapshot.data!["bookmarked"];
+                  if (isbookmarked) {
+                    return IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.favorite,
+                          color: Colors.red,
+                          size: 30,
+                        ));
+                  } else {
+                    return IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.favorite_border,
+                          size: 30,
+                        ));
+                  }
+                }),
             IconButton(
               icon: Icon(
                 Icons.shopping_cart,
@@ -53,7 +91,7 @@ class _PageBarangState extends State<PageBarang> {
                 Navigator.push(
                     context, MaterialPageRoute(builder: (context) => cart()));
               },
-            )
+            ),
           ]),
 
       // Body (List view sortalike)

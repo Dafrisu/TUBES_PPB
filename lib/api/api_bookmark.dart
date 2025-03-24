@@ -29,3 +29,22 @@ Future<List<Map<String, dynamic>>> getbookmark(int id_pembeli) async {
     return [];
   }
 }
+
+Future<Map<String, dynamic>> checkbookmark(
+    int id_produk, int id_pembeli) async {
+  try {
+    final response = await http.get(
+        Uri.parse('http://10.0.2.2/bookmark/check/$id_produk/$id_pembeli'));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+
+      return data;
+    } else {
+      throw Exception('Gagal memeriksa bookmark');
+    }
+  } catch (error) {
+    print(error);
+    return {};
+  }
+}
