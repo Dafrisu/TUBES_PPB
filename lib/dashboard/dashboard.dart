@@ -76,10 +76,9 @@ class _DashboardState extends State<Dashboard> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => Bookmark()));
               },
-              icon: Image.asset(
-                'lib/assets_images/Love-unmarked.png',
-                width: 30,
-                height: 30,
+              icon: Icon(
+                Icons.favorite,
+                size: 30,
               )),
           const SizedBox(width: 10),
           IconButton(

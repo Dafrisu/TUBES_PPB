@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'Data.dart' as data;
 import "package:tubes_ppb/api/api_bookmark.dart";
 import "package:tubes_ppb/api/api_loginPembeli.dart";
 import "package:tubes_ppb/component/product_card.dart";
@@ -15,7 +16,7 @@ class _BookmarkState extends State<Bookmark> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: data.colorpalete[0]["green"],
         title: Text(
           'Wishlist',
           style: TextStyle(color: Colors.white, fontFamily: 'roboto'),
