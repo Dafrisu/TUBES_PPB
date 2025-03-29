@@ -291,6 +291,23 @@ class PembeliUmkmChatPage extends StatefulWidget {
 
 class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
   final TextEditingController _messageController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+
+  Stream<List<Map<String, dynamic>>> getMessagesStream() async* {
+    while (true) {
+      await Future.delayed(const Duration(seconds: 2));
+      yield await fetchMessagesByPembeliAndUMKM(widget.id_umkm);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollToBottom();
+      });
+    }
+  }
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -305,8 +322,8 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
         ),
         backgroundColor: const Color(0xFF658864),
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchMessagesByPembeliAndUMKM(widget.id_umkm),
+      body: StreamBuilder<List<Map<String, dynamic>>>(
+        stream: getMessagesStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -316,10 +333,15 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
 
           final messages = snapshot.data ?? [];
 
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _scrollToBottom();
+          });
+
           return Column(
             children: [
               Expanded(
                 child: ListView.builder(
+                  controller: _scrollController,
                   padding: const EdgeInsets.all(16),
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
@@ -345,11 +367,7 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                         chatBubblePembeliUmkm(
                           text: message['message'],
                           isReceiverUMKM: isReceiverUMKM,
-                          sentAt: message['sent_at'] != null
-                              ? DateFormat('HH:mm').format(
-                                  DateFormat("HH:mm:ss.SSSSSS")
-                                      .parse(message['sent_at']))
-                              : 'Unknown time',
+                          sentAt: sentAt,
                         ),
                         if (isReceiverUMKM) const SizedBox(width: 8),
                         if (isReceiverUMKM)
@@ -363,56 +381,58 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                   },
                 ),
               ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                margin: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(30), // Rounded corners
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _messageController,
-                        decoration: const InputDecoration(
-                          hintText: 'Type a message',
-                          border: InputBorder.none,
-                        ),
-                        onSubmitted: (value) async {
-                          if (value.trim().isNotEmpty) {
-                            await sendMessagePembeliKeUMKM(
-                                value.trim(), widget.id_umkm, 'UMKM');
-                            setState(() {});
-                            _messageController.clear();
-                          }
-                        },
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.send),
-                      onPressed: () async {
-                        if (_messageController.text.trim().isNotEmpty) {
-                          await sendMessagePembeliKeUMKM(
-                              _messageController.text.trim(),
-                              widget.id_umkm,
-                              'UMKM');
-                          setState(() {});
-                          _messageController.clear();
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
+              _buildMessageInput(),
             ],
           );
         },
       ),
     );
   }
+
+  Widget _buildMessageInput() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _messageController,
+              decoration: const InputDecoration(
+                hintText: 'Type a message',
+                border: InputBorder.none,
+              ),
+              onSubmitted: (value) async {
+                if (value.trim().isNotEmpty) {
+                  await sendMessagePembeliKeUMKM(
+                      value.trim(), widget.id_umkm, 'UMKM');
+                  _messageController.clear();
+                  _scrollToBottom();
+                }
+              },
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.send),
+            onPressed: () async {
+              if (_messageController.text.trim().isNotEmpty) {
+                await sendMessagePembeliKeUMKM(
+                    _messageController.text.trim(), widget.id_umkm, 'UMKM');
+                _messageController.clear();
+                _scrollToBottom();
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
 }
+
 
 class chatBubblePembeliUmkm extends StatelessWidget {
   final String text;
