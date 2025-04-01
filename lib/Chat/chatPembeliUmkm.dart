@@ -8,6 +8,7 @@ import 'lib/api/Raphael_api_chat.dart';
 import 'package:http/http.dart' as http;
 import 'chatPembeliKurir.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
 
 class CombinedInboxPage extends StatefulWidget {
   const CombinedInboxPage({super.key});
+  
 
   @override
   _CombinedInboxPageState createState() => _CombinedInboxPageState();
@@ -34,6 +36,7 @@ class CombinedInboxPage extends StatefulWidget {
 class _CombinedInboxPageState extends State<CombinedInboxPage> {
   Future<List<Map<String, dynamic>>> getchatpembeli = fetchchatpembeli();
   Future<List<Map<String, dynamic>>> getchatkurir = fetchchatkurir();
+  
 
   @override
   Widget build(BuildContext context) {
@@ -292,11 +295,67 @@ class PembeliUmkmChatPage extends StatefulWidget {
 class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  List<Map<String, dynamic>> _previousMessages = [];
+
+  final FlutterLocalNotificationsPlugin _notificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeNotifications();
+  }
+
+  void _initializeNotifications() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+
+    await _notificationsPlugin.initialize(initializationSettings);
+  }
+
+  Future<void> _showNotification(String message) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'message_channel_id',
+      'New Message Notifications',
+      channelDescription: 'Notifications for new chat messages',
+      importance: Importance.high,
+      priority: Priority.high,
+      showWhen: true,
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await _notificationsPlugin.show(
+      0,
+      widget.sender,
+      message,
+      platformChannelSpecifics,
+    );
+  }
 
   Stream<List<Map<String, dynamic>>> getMessagesStream() async* {
     while (true) {
       await Future.delayed(const Duration(seconds: 2));
-      yield await fetchMessagesByPembeliAndUMKM(widget.id_umkm);
+      final newMessages = await fetchMessagesByPembeliAndUMKM(widget.id_umkm);
+
+      if (_previousMessages.isNotEmpty &&
+          newMessages.length > _previousMessages.length) {
+        final latestMessage = newMessages.last;
+
+        // Check if the message is from UMKM (not sent by Pembeli)
+        if (latestMessage['id_pengirim'] != widget.id_umkm) {
+          _showNotification(latestMessage['message']);
+        }
+      }
+
+      _previousMessages = List.from(newMessages);
+      yield newMessages;
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _scrollToBottom();
       });
