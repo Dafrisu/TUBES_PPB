@@ -348,7 +348,7 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
         final latestMessage = newMessages.last;
 
         // Check if the message is from UMKM (not sent by Pembeli)
-        if (latestMessage['id_pengirim'] != widget.id_umkm) {
+        if (latestMessage['receiver_type'] != "UMKM") {
           _showNotification(latestMessage['message']);
         }
       }
