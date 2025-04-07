@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tubes_ppb/BarangPenjual.dart';
 import 'package:tubes_ppb/api/api_service.dart';
 import 'package:tubes_ppb/bookmark.dart';
+import 'package:tubes_ppb/searchpage.dart';
 import 'dashboard_full_produk.dart';
 import 'dashboard_full_makanan.dart';
 import 'dashboard_full_minuman.dart';
@@ -71,6 +72,15 @@ class _DashboardState extends State<Dashboard> {
         automaticallyImplyLeading:
             false, // Disable tombol back ketika di navigate ke page ini
         actions: <Widget>[
+          IconButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => searchpage()));
+              },
+              icon: Icon(
+                Icons.search,
+                size: 30,
+              )),
           IconButton(
               onPressed: () {
                 Navigator.push(context,
