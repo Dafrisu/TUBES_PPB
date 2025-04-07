@@ -38,7 +38,7 @@ class _DashboardState extends State<Dashboard> {
     userId = (prefs.getInt('sessionId') ?? 0).toString();
 
     final response = await http.get(
-      Uri.parse('http://10.0.2.2/pembeli/$userId'),
+      Uri.parse('https://umkmapi-production.up.railway.app/pembeli/$userId'),
     );
 
     if (response.statusCode == 200) {
