@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_ppb/api/api_service.dart';
+import 'package:tubes_ppb/api/api_ulasans.dart';
 import '../component/review_card.dart';
 import '../component/appbar.dart';
 
