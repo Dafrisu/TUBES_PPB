@@ -5,13 +5,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubes_ppb/api/api_loginKurir.dart';
 import 'package:tubes_ppb/api/api_loginPembeli.dart';
 
-
 Future<List<Map<String, dynamic>>> fetchchatpembeli() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   int id_pembeli = prefs.getInt('sessionId') ?? 0;
   try {
-    final response = await http
-        .get(Uri.parse('https://umkmapi-production.up.railway.app/message/msgPembeli/$sessionId'));
+    final response = await http.get(Uri.parse(
+        'https://umkmapi-production.up.railway.app/message/msgPembeli/$sessionId'));
 
     final List<dynamic> data = jsonDecode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -26,8 +25,8 @@ Future<List<Map<String, dynamic>>> fetchMessagesByPembeliAndUMKM(
   SharedPreferences prefs = await SharedPreferences.getInstance();
   int id_pembeli = prefs.getInt('sessionId') ?? 0;
   try {
-    final response = await http.get(
-        Uri.parse('https://umkmapi-production.up.railway.app/getmsgPembeliUMKM/$sessionId/$id_umkm'));
+    final response = await http.get(Uri.parse(
+        'https://umkmapi-production.up.railway.app/getmsgPembeliUMKM/$sessionId/$id_umkm'));
 
     final List<dynamic> data = jsonDecode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -58,8 +57,8 @@ Future<List<Map<String, dynamic>>> fetchchatkurir() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
   try {
-    final response = await http
-        .get(Uri.parse('https://umkmapi-production.up.railway.app/message/msgKurir/$kurirSessionId'));
+    final response = await http.get(Uri.parse(
+        'https://umkmapi-production.up.railway.app/message/msgKurir/$kurirSessionId'));
 
     final List<dynamic> data = jsonDecode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -96,7 +95,8 @@ Future<Map<String, dynamic>> sendMessagePembeliKeUMKM(
   int id_pembeli = prefs.getInt('sessionId') ?? 0;
   try {
     final response = await http.post(
-      Uri.parse('https://umkmapi-production.up.railway.app/sendchat/pembelikeumkm/$sessionId/$id_umkm'),
+      Uri.parse(
+          'https://umkmapi-production.up.railway.app/sendchat/pembelikeumkm/$sessionId/$id_umkm'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -229,7 +229,8 @@ Future<List<Map<String, dynamic>>> getPesananDiterima() async {
     }
 
     final response = await http.get(
-      Uri.parse('https://umkmapi-production.up.railway.app/getpesananditerima/$idUmkm'),
+      Uri.parse(
+          'https://umkmapi-production.up.railway.app/getpesananditerima/$idUmkm'),
     );
 
     if (response.statusCode == 200) {
@@ -280,7 +281,7 @@ Future<void> updateStatusPesananSelesai(int idBatch) async {
 }
 
 const String baseUrl =
-    "https://umkmapi-production.up.railway.app"; // Update with your actual backend URL
+    "https://umkmapi-production.up.railway.app/"; // Update with your actual backend URL
 
 Future<Map<String, dynamic>> getLatestMsgPembeliUMKM(int idUmkm) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();

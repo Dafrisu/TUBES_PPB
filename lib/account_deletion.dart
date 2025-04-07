@@ -37,7 +37,7 @@ class _AccountDeletionState extends State<AccountDeletion> {
 
   Future<void> fetchUserData(String userId) async {
     final response = await http.get(
-      Uri.parse('http://10.0.2.2/pembeli/$userId'),
+      Uri.parse('https://umkmapi-production.up.railway.app/pembeli/$userId'),
     );
 
     if (response.statusCode == 200) {
@@ -71,7 +71,8 @@ class _AccountDeletionState extends State<AccountDeletion> {
       }
 
       final response = await http.delete(
-        Uri.parse('http://10.0.2.2/pembeli/${widget.userId}'),
+        Uri.parse(
+            'https://umkmapi-production.up.railway.app/pembeli/${widget.userId}'),
       );
 
       if (response.statusCode != 200) {

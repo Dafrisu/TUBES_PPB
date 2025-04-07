@@ -3,8 +3,8 @@ import 'dart:convert';
 
 Future<bool> registerKurir(
     String email, String nama, String password, String idUmkm) async {
-  final checkUrl = 'http://10.0.2.2/checkkurir';
-  final registerUrl = 'http://10.0.2.2/kurir';
+  final checkUrl = 'https://umkmapi-production.up.railway.app/checkkurir';
+  final registerUrl = 'https://umkmapi-production.up.railway.app/kurir';
 
   try {
     // Check if Kurir already exists
@@ -59,7 +59,8 @@ Future<bool> registerKurir(
 }
 
 Future<List<dynamic>> fetchUMKM() async {
-  final response = await http.get(Uri.parse('http://http://10.0.2.2/umkm'));
+  final response = await http
+      .get(Uri.parse('http://https://umkmapi-production.up.railway.app/umkm'));
   if (response.statusCode == 200) {
     return jsonDecode(response.body);
   } else {
