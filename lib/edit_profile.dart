@@ -61,7 +61,7 @@ class _EditProfileState extends State<EditProfile> {
   Future<void> fetchUserData(String id) async {
     try {
       final response = await http.get(
-        Uri.parse('http://10.0.2.2/pembeli/$id'),
+        Uri.parse('https://umkmapi-production.up.railway.app/pembeli/$id'),
       );
 
       if (response.statusCode == 200) {
@@ -88,7 +88,7 @@ class _EditProfileState extends State<EditProfile> {
 
   Future<void> updateProfile(String id, Map<String, dynamic> data) async {
     final response = await http.put(
-      Uri.parse('http://10.0.2.2/pembeli/$id'),
+      Uri.parse('https://umkmapi-production.up.railway.app/pembeli/$id'),
       headers: {
         'Content-Type': 'application/json',
       },

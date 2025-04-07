@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tubes_ppb/BarangPenjual.dart';
 import 'package:tubes_ppb/api/api_service.dart';
 import 'package:tubes_ppb/bookmark.dart';
+import 'package:tubes_ppb/searchpage.dart';
 import 'dashboard_full_produk.dart';
 import 'dashboard_full_makanan.dart';
 import 'dashboard_full_minuman.dart';
@@ -37,7 +38,7 @@ class _DashboardState extends State<Dashboard> {
     userId = (prefs.getInt('sessionId') ?? 0).toString();
 
     final response = await http.get(
-      Uri.parse('http://10.0.2.2/pembeli/$userId'),
+      Uri.parse('https://umkmapi-production.up.railway.app/pembeli/$userId'),
     );
 
     if (response.statusCode == 200) {
@@ -71,6 +72,15 @@ class _DashboardState extends State<Dashboard> {
         automaticallyImplyLeading:
             false, // Disable tombol back ketika di navigate ke page ini
         actions: <Widget>[
+          IconButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => searchpage()));
+              },
+              icon: Icon(
+                Icons.search,
+                size: 30,
+              )),
           IconButton(
               onPressed: () {
                 Navigator.push(context,

@@ -8,6 +8,10 @@ import 'lib/api/Raphael_api_chat.dart';
 import 'package:http/http.dart' as http;
 import 'chatPembeliKurir.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:async/async.dart'; // For StreamGroup and CombineLatestStream
+import 'dart:async'; // For Stream functionality
+import 'package:rxdart/rxdart.dart'; // For CombineLatestStream
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -32,8 +36,156 @@ class CombinedInboxPage extends StatefulWidget {
 }
 
 class _CombinedInboxPageState extends State<CombinedInboxPage> {
-  Future<List<Map<String, dynamic>>> getchatpembeli = fetchchatpembeli();
-  Future<List<Map<String, dynamic>>> getchatkurir = fetchchatkurir();
+  // Create stream controllers to manage message streams
+  final StreamController<List<Map<String, dynamic>>> _pembeliStreamController =
+      StreamController<List<Map<String, dynamic>>>.broadcast();
+  final StreamController<List<Map<String, dynamic>>> _kurirStreamController =
+      StreamController<List<Map<String, dynamic>>>.broadcast();
+
+  // Expose streams
+  Stream<List<Map<String, dynamic>>> get pembeliStream =>
+      _pembeliStreamController.stream;
+  Stream<List<Map<String, dynamic>>> get kurirStream =>
+      _kurirStreamController.stream;
+
+  // Track latest message ID
+  int _latestProcessedMessageId = 0;
+  final FlutterLocalNotificationsPlugin _notificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  // Timer for periodic updates
+  Timer? _pollingTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeNotifications();
+    _startMessageStreaming();
+  }
+
+  void _initializeNotifications() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+
+    await _notificationsPlugin.initialize(initializationSettings);
+  }
+
+  void _startMessageStreaming() {
+    // Initial load of messages
+    _fetchAndStreamMessages();
+
+    // Set up periodic polling with a timer instead of recursive Future.delayed
+    _pollingTimer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      if (mounted) {
+        _fetchAndStreamMessages();
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
+  Future<void> _fetchAndStreamMessages() async {
+    try {
+      // Fetch latest messages
+      final List<Map<String, dynamic>> pembeliMessages =
+          await fetchchatpembeli();
+      final List<Map<String, dynamic>> kurirMessages = await fetchchatkurir();
+
+      // Add to stream controllers
+      if (mounted) {
+        _pembeliStreamController.add(pembeliMessages);
+        _kurirStreamController.add(kurirMessages);
+      }
+
+      // Process for notifications
+      _processLatestMessage(pembeliMessages, kurirMessages);
+    } catch (e) {
+      print('Error fetching messages: $e');
+      // Add empty lists on error to prevent stream errors
+      if (mounted) {
+        _pembeliStreamController.add([]);
+        _kurirStreamController.add([]);
+      }
+    }
+  }
+
+  void _processLatestMessage(List<Map<String, dynamic>> pembeliMessages,
+      List<Map<String, dynamic>> kurirMessages) {
+    // Combine and process messages
+    final List<Map<String, dynamic>> inboxMessages = [
+      ...pembeliMessages.map((msg) => {...msg, 'isKurir': false}),
+      ...kurirMessages.map((msg) => {...msg, 'isKurir': true}),
+    ];
+
+    // Filter valid messages
+    final filteredMessages = inboxMessages.where((msg) {
+      if (msg['isKurir']) {
+        return msg['nama_kurir'] != null &&
+            msg['nama_kurir'] != 'Unknown Kurir';
+      } else {
+        return msg['username'] != null && msg['username'] != 'Unknown User';
+      }
+    }).toList();
+
+    // Sort by ID in descending order
+    filteredMessages.sort((a, b) => b['id_chat'].compareTo(a['id_chat']));
+
+    // Check for new messages
+    if (filteredMessages.isNotEmpty) {
+      // Get latest message
+      final latestMessage = filteredMessages.first;
+      final latestMessageId = latestMessage['id_chat'];
+
+      // Check if this is a new message
+      if (latestMessageId > _latestProcessedMessageId) {
+        // Skip notification on first load
+        if (_latestProcessedMessageId > 0) {
+          String sender = latestMessage['isKurir']
+              ? latestMessage['nama_kurir'] ?? 'Unknown Kurir'
+              : latestMessage['username'] ?? 'Unknown User';
+
+          _showNotification(sender, latestMessage['message'] ?? 'New message');
+        }
+
+        // Update latest message ID
+        _latestProcessedMessageId = latestMessageId;
+      }
+    }
+  }
+
+  Future<void> _showNotification(String sender, String message) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'inbox_channel_id',
+      'Inbox Notifications',
+      channelDescription: 'Notifications for new messages in inbox',
+      importance: Importance.high,
+      priority: Priority.high,
+      showWhen: true,
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await _notificationsPlugin.show(
+      DateTime.now().millisecond, // Unique ID based on current time
+      sender,
+      message,
+      platformChannelSpecifics,
+    );
+  }
+
+  @override
+  void dispose() {
+    // Clean up resources
+    _pollingTimer?.cancel();
+    _pembeliStreamController.close();
+    _kurirStreamController.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +213,12 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
           IconButton(
             icon: const Icon(Icons.search, color: Colors.white),
             onPressed: () {
+              // Use the streams for search
               showSearch(
                 context: context,
                 delegate: MessageSearchDelegate(
-                  getchatpembeli: getchatpembeli,
-                  getchatkurir: getchatkurir,
+                  pembeliStream: pembeliStream,
+                  kurirStream: kurirStream,
                   onSelected: (selectedMessage) {
                     Navigator.push(
                       context,
@@ -90,8 +243,8 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
           ),
         ],
       ),
-      body: FutureBuilder<List<List<Map<String, dynamic>>>>(
-        future: Future.wait([getchatpembeli, getchatkurir]),
+      body: StreamBuilder<List<List<Map<String, dynamic>>>>(
+        stream: CombineLatestStream.list([pembeliStream, kurirStream]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -122,6 +275,11 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
 
           filteredMessages.sort((a, b) => b['id_chat'].compareTo(a['id_chat']));
 
+          // Initialize latestProcessedMessageId on first load if not already set
+          if (_latestProcessedMessageId == 0 && filteredMessages.isNotEmpty) {
+            _latestProcessedMessageId = filteredMessages.first['id_chat'];
+          }
+
           return ListView.builder(
             itemCount: filteredMessages.length,
             itemBuilder: (context, index) {
@@ -136,8 +294,8 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
                     : item['username'] ?? 'Unknown User'),
                 subtitle: Text(item['message'] ?? ''),
                 trailing: Text(item['sent_at'] != null
-                    ? DateFormat('HH:mm').format(
-                        DateFormat("HH:mm:ss.SSSSSS").parse(item['sent_at']))
+                    ? DateFormat('HH:mm')
+                        .format(DateFormat("HH:mm").parse(item['sent_at']))
                     : 'Unknown time'),
                 onTap: () {
                   Navigator.push(
@@ -163,15 +321,25 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
 }
 
 class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
-  final Future<List<Map<String, dynamic>>> getchatpembeli;
-  final Future<List<Map<String, dynamic>>> getchatkurir;
-  final ValueChanged<Map<String, dynamic>> onSelected;
+  final Stream<List<Map<String, dynamic>>> pembeliStream;
+  final Stream<List<Map<String, dynamic>>> kurirStream;
+  final Function(Map<String, dynamic>) onSelected;
+  List<Map<String, dynamic>>? _pembeliCache;
+  List<Map<String, dynamic>>? _kurirCache;
 
   MessageSearchDelegate({
-    required this.getchatpembeli,
-    required this.getchatkurir,
+    required this.pembeliStream,
+    required this.kurirStream,
     required this.onSelected,
-  });
+  }) {
+    // Initialize cache from streams
+    pembeliStream.listen((data) {
+      _pembeliCache = data;
+    });
+    kurirStream.listen((data) {
+      _kurirCache = data;
+    });
+  }
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -197,8 +365,8 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return FutureBuilder<List<List<Map<String, dynamic>>>>(
-      future: Future.wait([getchatpembeli, getchatkurir]),
+    return StreamBuilder<List<List<Map<String, dynamic>>>>(
+      stream: CombineLatestStream.list([pembeliStream, kurirStream]),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -210,9 +378,9 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
           return const Center(child: Text('Tidak ada pesan.'));
         }
 
-        final lowerCaseQuery = (query ?? '').toLowerCase();
+        final lowerCaseQuery = query.toLowerCase();
 
-        // Gabungkan data pembeli dan kurir
+        // Combine and filter messages
         final inboxMessages = [
           ...List<Map<String, dynamic>>.from(snapshot.data![0])
               .map((msg) => {...msg, 'isKurir': false}),
@@ -220,35 +388,22 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
               .map((msg) => {...msg, 'isKurir': true}),
         ];
 
-        // Filter pesan dengan nama valid
         final filteredMessages = inboxMessages.where((msg) {
-          if (msg['isKurir']) {
-            return msg['nama_kurir'] != null &&
-                msg['nama_kurir'] != 'Unknown Kurir';
-          } else {
-            return msg['username'] != null && msg['username'] != 'Unknown User';
-          }
-        }).toList();
-
-        // Filter pesan berdasarkan query pencarian
-        final searchResults = filteredMessages.where((message) {
-          final searchField = message['isKurir']
-              ? message['nama_kurir'] ?? ''
-              : message['username'] ?? '';
-          final messageContent = message['message'] ?? '';
+          final searchField =
+              msg['isKurir'] ? msg['nama_kurir'] ?? '' : msg['username'] ?? '';
+          final messageContent = msg['message'] ?? '';
 
           return searchField.toLowerCase().contains(lowerCaseQuery) ||
               messageContent.toLowerCase().contains(lowerCaseQuery);
         }).toList();
 
-        // Urutkan hasil pencarian
-        searchResults.sort((a, b) => b['id_chat'].compareTo(a['id_chat']));
+        // Sort messages by ID in descending order
+        filteredMessages.sort((a, b) => b['id_chat'].compareTo(a['id_chat']));
 
-        // Tampilkan hasil pencarian
         return ListView.builder(
-          itemCount: searchResults.length,
+          itemCount: filteredMessages.length,
           itemBuilder: (context, index) {
-            final item = searchResults[index];
+            final item = filteredMessages[index];
             return ListTile(
               leading: const CircleAvatar(
                 backgroundColor: Colors.grey,
@@ -259,11 +414,11 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
                   : item['username'] ?? 'Unknown User'),
               subtitle: Text(item['message'] ?? ''),
               trailing: Text(item['sent_at'] != null
-                  ? DateFormat('HH:mm').format(DateTime.parse(item['sent_at']))
+                  ? DateFormat('HH:mm').format(
+                      DateFormat("HH:mm:ss.SSSSSS").parse(item['sent_at']))
                   : 'Unknown time'),
               onTap: () {
                 onSelected(item);
-                close(context, item);
               },
             );
           },
@@ -291,6 +446,79 @@ class PembeliUmkmChatPage extends StatefulWidget {
 
 class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
   final TextEditingController _messageController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  List<Map<String, dynamic>> _previousMessages = [];
+
+  final FlutterLocalNotificationsPlugin _notificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeNotifications();
+  }
+
+  void _initializeNotifications() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+
+    await _notificationsPlugin.initialize(initializationSettings);
+  }
+
+  Future<void> _showNotification(String message) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'message_channel_id',
+      'New Message Notifications',
+      channelDescription: 'Notifications for new chat messages',
+      importance: Importance.high,
+      priority: Priority.high,
+      showWhen: true,
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await _notificationsPlugin.show(
+      0,
+      widget.sender,
+      message,
+      platformChannelSpecifics,
+    );
+  }
+
+  Stream<List<Map<String, dynamic>>> getMessagesStream() async* {
+    while (true) {
+      await Future.delayed(const Duration(seconds: 2));
+      final newMessages = await fetchMessagesByPembeliAndUMKM(widget.id_umkm);
+
+      if (_previousMessages.isNotEmpty &&
+          newMessages.length > _previousMessages.length) {
+        final latestMessage = newMessages.last;
+
+        // Check if the message is from UMKM (not sent by Pembeli)
+        if (latestMessage['receiver_type'] != "UMKM") {
+          _showNotification(latestMessage['message']);
+        }
+      }
+
+      _previousMessages = List.from(newMessages);
+      yield newMessages;
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollToBottom();
+      });
+    }
+  }
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -305,8 +533,8 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
         ),
         backgroundColor: const Color(0xFF658864),
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchMessagesByPembeliAndUMKM(widget.id_umkm),
+      body: StreamBuilder<List<Map<String, dynamic>>>(
+        stream: getMessagesStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -316,10 +544,15 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
 
           final messages = snapshot.data ?? [];
 
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _scrollToBottom();
+          });
+
           return Column(
             children: [
               Expanded(
                 child: ListView.builder(
+                  controller: _scrollController,
                   padding: const EdgeInsets.all(16),
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
@@ -345,11 +578,7 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                         chatBubblePembeliUmkm(
                           text: message['message'],
                           isReceiverUMKM: isReceiverUMKM,
-                          sentAt: message['sent_at'] != null
-                              ? DateFormat('HH:mm').format(
-                                  DateFormat("HH:mm:ss.SSSSSS")
-                                      .parse(message['sent_at']))
-                              : 'Unknown time',
+                          sentAt: sentAt,
                         ),
                         if (isReceiverUMKM) const SizedBox(width: 8),
                         if (isReceiverUMKM)
@@ -363,56 +592,58 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
                   },
                 ),
               ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                margin: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(30), // Rounded corners
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _messageController,
-                        decoration: const InputDecoration(
-                          hintText: 'Type a message',
-                          border: InputBorder.none,
-                        ),
-                        onSubmitted: (value) async {
-                          if (value.trim().isNotEmpty) {
-                            await sendMessagePembeliKeUMKM(
-                                value.trim(), widget.id_umkm, 'UMKM');
-                            setState(() {});
-                            _messageController.clear();
-                          }
-                        },
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.send),
-                      onPressed: () async {
-                        if (_messageController.text.trim().isNotEmpty) {
-                          await sendMessagePembeliKeUMKM(
-                              _messageController.text.trim(),
-                              widget.id_umkm,
-                              'UMKM');
-                          setState(() {});
-                          _messageController.clear();
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
+              _buildMessageInput(),
             ],
           );
         },
       ),
     );
   }
+
+  Widget _buildMessageInput() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _messageController,
+              decoration: const InputDecoration(
+                hintText: 'Type a message',
+                border: InputBorder.none,
+              ),
+              onSubmitted: (value) async {
+                if (value.trim().isNotEmpty) {
+                  await sendMessagePembeliKeUMKM(
+                      value.trim(), widget.id_umkm, 'UMKM');
+                  _messageController.clear();
+                  _scrollToBottom();
+                }
+              },
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.send),
+            onPressed: () async {
+              if (_messageController.text.trim().isNotEmpty) {
+                await sendMessagePembeliKeUMKM(
+                    _messageController.text.trim(), widget.id_umkm, 'UMKM');
+                _messageController.clear();
+                _scrollToBottom();
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
 }
+
 
 class chatBubblePembeliUmkm extends StatelessWidget {
   final String text;

@@ -169,10 +169,14 @@ class _cartpagestate extends State<Cartpage> with WidgetsBindingObserver {
                                                         .showSnackBar(SnackBar(
                                                             content: Text(plus[
                                                                 'message'])));
+                                                    // untuk menunggu data di fetch dulu sebelum refresh
+                                                    var updatedData =
+                                                        await keranjangpembeli(
+                                                            sessionId);
                                                     setState(() {
                                                       keranjangstandby =
-                                                          keranjangpembeli(
-                                                              sessionId);
+                                                          Future.value(
+                                                              updatedData);
                                                     });
                                                   } catch (error) {
                                                     ScaffoldMessenger.of(
@@ -195,10 +199,14 @@ class _cartpagestate extends State<Cartpage> with WidgetsBindingObserver {
                                                         .showSnackBar(SnackBar(
                                                             content: Text(plus[
                                                                 'message'])));
+                                                    // untuk menunggu data di fetch dulu sebelum refresh
+                                                    var updatedData =
+                                                        await keranjangpembeli(
+                                                            sessionId);
                                                     setState(() {
                                                       keranjangstandby =
-                                                          keranjangpembeli(
-                                                              sessionId);
+                                                          Future.value(
+                                                              updatedData);
                                                     });
                                                   } catch (error) {
                                                     ScaffoldMessenger.of(

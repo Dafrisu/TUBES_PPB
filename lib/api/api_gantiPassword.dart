@@ -8,7 +8,7 @@ Future<GantipassResponseModel> gantiPassword(String email) async {
   try {
     var response = await client.post(
       Uri.parse(
-          'http://10.0.2.2/otp/sendOTP'), // Ensure the port matches your server
+          'https://umkmapi-production.up.railway.app/otp/sendOTP'), // Ensure the port matches your server
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -32,7 +32,7 @@ Future<GantipassResponseModel> gantiPassword(String email) async {
 Future<bool> verifyOTP(String email, String otpHash, String otpCode) async {
   try {
     var response = await client.post(
-      Uri.parse('http://10.0.2.2/otp/verifyOTP'),
+      Uri.parse('https://umkmapi-production.up.railway.app/otp/verifyOTP'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -61,7 +61,7 @@ Future<bool> verifyOTP(String email, String otpHash, String otpCode) async {
 
 Future<bool> checkPembeliByEmail(String email) async {
   final checkUrl =
-      'http://10.0.2.2/checkPembeliByEmail'; // Ensure the port matches your server
+      'https://umkmapi-production.up.railway.app/checkPembeliByEmail'; // Ensure the port matches your server
 
   try {
     final checkResponse = await http.post(
@@ -92,7 +92,7 @@ Future<bool> changePassword(String email, String newPassword) async {
   try {
     var response = await client.put(
       Uri.parse(
-          'http://10.0.2.2/changepassword'), // Ensure the port matches your server
+          'https://umkmapi-production.up.railway.app/changepassword'), // Ensure the port matches your server
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
