@@ -283,7 +283,7 @@ class _RegisterState extends State<Register> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => landingPage(),
+                            builder: (context) => login(),
                           ),
                         );
                       } else {
