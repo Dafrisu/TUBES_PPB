@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:tubes_ppb/api/api_loginKurir.dart';
 import 'package:tubes_ppb/api/api_loginPembeli.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -31,7 +32,30 @@ class InboxPageKurirPembeli extends StatefulWidget {
 }
 
 class _InboxPageKurirPembeliState extends State<InboxPageKurirPembeli> {
-  Future<List<Map<String, dynamic>>> getchatkurir = fetchchatkurir();
+  // Use a StreamController to manage message updates
+  late Stream<List<Map<String, dynamic>>> _kurirMessages;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the message stream
+    _kurirMessages = _getKurirMessagesStream();
+  }
+
+  Stream<List<Map<String, dynamic>>> _getKurirMessagesStream() async* {
+    while (true) {
+      try {
+        // Fetch latest messages from the API
+        final messages = await fetchchatkurir();
+        yield messages;
+      } catch (e) {
+        print('Error fetching courier messages: $e');
+        yield [];
+      }
+      // Wait before next update
+      await Future.delayed(const Duration(seconds: 2));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +83,7 @@ class _InboxPageKurirPembeliState extends State<InboxPageKurirPembeli> {
               showSearch(
                 context: context,
                 delegate: MessageSearchDelegate(
-                  getchatkurir: getchatkurir,
+                  messagesStream: _kurirMessages,
                   onSelected: (selectedMessage) {
                     Navigator.push(
                       context,
@@ -77,10 +101,11 @@ class _InboxPageKurirPembeliState extends State<InboxPageKurirPembeli> {
           ),
         ],
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: getchatkurir,
+      body: StreamBuilder<List<Map<String, dynamic>>>(
+        stream: _kurirMessages,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.connectionState == ConnectionState.waiting &&
+              !snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(
@@ -128,13 +153,19 @@ class _InboxPageKurirPembeliState extends State<InboxPageKurirPembeli> {
 }
 
 class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
-  final Future<List<Map<String, dynamic>>> getchatkurir;
+  final Stream<List<Map<String, dynamic>>> messagesStream;
   final ValueChanged<Map<String, dynamic>> onSelected;
+  List<Map<String, dynamic>> _cachedMessages = [];
 
   MessageSearchDelegate({
-    required this.getchatkurir,
+    required this.messagesStream,
     required this.onSelected,
-  });
+  }) {
+    // Initialize cache from stream
+    messagesStream.listen((messages) {
+      _cachedMessages = messages;
+    });
+  }
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -160,26 +191,32 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return FutureBuilder<List<Map<String, dynamic>>>(
-      future: getchatkurir,
+    return StreamBuilder<List<Map<String, dynamic>>>(
+      stream: messagesStream,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.connectionState == ConnectionState.waiting &&
+            !snapshot.hasData) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(
             child: Text('Terjadi kesalahan: ${snapshot.error}'),
           );
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+        }
+
+        // Use cached messages if stream hasn't emitted yet
+        final messages = snapshot.data ?? _cachedMessages;
+
+        if (messages.isEmpty) {
           return const Center(child: Text('Tidak ada pesan.'));
         }
 
-        final results = snapshot.data!.where((message) {
-          final usernameMatches = message['nama_lengkap']
+        final results = messages.where((message) {
+          final nameMatches = message['nama_lengkap']
               .toLowerCase()
               .contains(query.toLowerCase());
           final messageMatches =
               message['message'].toLowerCase().contains(query.toLowerCase());
-          return usernameMatches || messageMatches;
+          return nameMatches || messageMatches;
         }).toList();
 
         results.sort((a, b) => b['id_chat'].compareTo(a['id_chat']));
@@ -221,6 +258,80 @@ class KurirPembeliChatPage extends StatefulWidget {
 
 class _KurirPembeliChatPageState extends State<KurirPembeliChatPage> {
   final TextEditingController _messageController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  List<Map<String, dynamic>> _previousMessages = [];
+
+  final FlutterLocalNotificationsPlugin _notificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeNotifications();
+  }
+
+  void _initializeNotifications() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+
+    await _notificationsPlugin.initialize(initializationSettings);
+  }
+
+  Future<void> _showNotification(String message) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'kurir_pembeli_message_channel_id',
+      'New Pembeli Message Notifications',
+      channelDescription: 'Notifications for new chat messages from buyers',
+      importance: Importance.high,
+      priority: Priority.high,
+      showWhen: true,
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await _notificationsPlugin.show(
+      2, // Different ID from other notifications
+      widget.sender,
+      message,
+      platformChannelSpecifics,
+    );
+  }
+
+  Stream<List<Map<String, dynamic>>> getMessagesStream() async* {
+    while (true) {
+      await Future.delayed(const Duration(seconds: 2));
+      final newMessages =
+          await fetchMessagesByKurirAndPembeli(widget.id_pembeli);
+
+      if (_previousMessages.isNotEmpty &&
+          newMessages.length > _previousMessages.length) {
+        final latestMessage = newMessages.last;
+
+        // Check if the message is from Pembeli (not sent by Kurir)
+        if (latestMessage['receiver_type'] != "Pembeli") {
+          _showNotification(latestMessage['message']);
+        }
+      }
+
+      _previousMessages = List.from(newMessages);
+      yield newMessages;
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollToBottom();
+      });
+    }
+  }
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -235,10 +346,11 @@ class _KurirPembeliChatPageState extends State<KurirPembeliChatPage> {
         ),
         backgroundColor: const Color(0xFF658864),
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchMessagesByKurirAndPembeli(widget.id_pembeli),
+      body: StreamBuilder<List<Map<String, dynamic>>>(
+        stream: getMessagesStream(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.connectionState == ConnectionState.waiting &&
+              !snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
@@ -248,10 +360,15 @@ class _KurirPembeliChatPageState extends State<KurirPembeliChatPage> {
 
           final messages = snapshot.data!;
 
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _scrollToBottom();
+          });
+
           return Column(
             children: [
               Expanded(
                 child: ListView.builder(
+                  controller: _scrollController,
                   padding: const EdgeInsets.all(16),
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
@@ -279,11 +396,7 @@ class _KurirPembeliChatPageState extends State<KurirPembeliChatPage> {
                         chatBubbleKurirPembeli(
                           text: message['message'],
                           isReceiverPembeli: isReceiverPembeli,
-                          sentAt: message['sent_at'] != null
-                              ? DateFormat('HH:mm').format(
-                                  DateFormat("HH:mm:ss.SSSSSS")
-                                      .parse(message['sent_at']))
-                              : 'Unknown time',
+                          sentAt: sentAt,
                         ),
                         if (isReceiverPembeli) const SizedBox(width: 8),
                         if (isReceiverPembeli)
@@ -297,58 +410,62 @@ class _KurirPembeliChatPageState extends State<KurirPembeliChatPage> {
                   },
                 ),
               ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                margin: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(30), // Rounded corners
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _messageController,
-                        decoration: const InputDecoration(
-                          hintText: 'Type a message',
-                          border: InputBorder.none,
-                        ),
-                        onSubmitted: (value) async {
-                          if (value.trim().isNotEmpty) {
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
-                            await sendMessageKurirkePembeli(
-                                value.trim(), 'Pembeli', widget.id_pembeli);
-                            setState(() {});
-                            _messageController.clear();
-                          }
-                        },
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.send),
-                      onPressed: () async {
-                        if (_messageController.text.trim().isNotEmpty) {
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
-                          await sendMessageKurirkePembeli(
-                              _messageController.text.trim(), 'Pembeli', widget.id_pembeli);
-                          setState(() {});
-                          _messageController.clear();
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
+              _buildMessageInput(),
             ],
           );
         },
       ),
     );
+  }
+
+  Widget _buildMessageInput() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _messageController,
+              decoration: const InputDecoration(
+                hintText: 'Type a message',
+                border: InputBorder.none,
+              ),
+              onSubmitted: (value) async {
+                if (value.trim().isNotEmpty) {
+                  await sendMessageKurirkePembeli(
+                      value.trim(), 'Pembeli', widget.id_pembeli);
+                  _messageController.clear();
+                  _scrollToBottom();
+                }
+              },
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.send),
+            onPressed: () async {
+              if (_messageController.text.trim().isNotEmpty) {
+                await sendMessageKurirkePembeli(_messageController.text.trim(),
+                    'Pembeli', widget.id_pembeli);
+                _messageController.clear();
+                _scrollToBottom();
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _messageController.dispose();
+    super.dispose();
   }
 }
 
