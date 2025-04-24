@@ -163,7 +163,7 @@ class OrderItemData {
   final int idPesanan;
   final String statusPesanan;
   final String namaBarang;
-  final int kuantitasBarang;
+  final String kuantitasBarang;
   final String totalBelanja;
   final String alamatPembeli;
 
