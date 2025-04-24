@@ -60,7 +60,7 @@ Future<bool> registerKurir(
 
 Future<List<dynamic>> fetchUMKM() async {
   final response = await http
-      .get(Uri.parse('http://https://umkmapi-production.up.railway.app/umkm'));
+      .get(Uri.parse('https://umkmapi-production.up.railway.app/umkm'));
   if (response.statusCode == 200) {
     return jsonDecode(response.body);
   } else {
