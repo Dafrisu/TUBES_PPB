@@ -48,29 +48,13 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
   Stream<List<Map<String, dynamic>>> get kurirStream =>
       _kurirStreamController.stream;
 
-  // Track latest message ID
-  int _latestProcessedMessageId = 0;
-  final FlutterLocalNotificationsPlugin _notificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-
   // Timer for periodic updates
   Timer? _pollingTimer;
 
   @override
   void initState() {
     super.initState();
-    _initializeNotifications();
     _startMessageStreaming();
-  }
-
-  void _initializeNotifications() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    final InitializationSettings initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid);
-
-    await _notificationsPlugin.initialize(initializationSettings);
   }
 
   void _startMessageStreaming() {
@@ -99,9 +83,6 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
         _pembeliStreamController.add(pembeliMessages);
         _kurirStreamController.add(kurirMessages);
       }
-
-      // Process for notifications
-      _processLatestMessage(pembeliMessages, kurirMessages);
     } catch (e) {
       print('Error fetching messages: $e');
       // Add empty lists on error to prevent stream errors
@@ -110,72 +91,6 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
         _kurirStreamController.add([]);
       }
     }
-  }
-
-  void _processLatestMessage(List<Map<String, dynamic>> pembeliMessages,
-      List<Map<String, dynamic>> kurirMessages) {
-    // Combine and process messages
-    final List<Map<String, dynamic>> inboxMessages = [
-      ...pembeliMessages.map((msg) => {...msg, 'isKurir': false}),
-      ...kurirMessages.map((msg) => {...msg, 'isKurir': true}),
-    ];
-
-    // Filter valid messages
-    final filteredMessages = inboxMessages.where((msg) {
-      if (msg['isKurir']) {
-        return msg['nama_kurir'] != null &&
-            msg['nama_kurir'] != 'Unknown Kurir';
-      } else {
-        return msg['username'] != null && msg['username'] != 'Unknown User';
-      }
-    }).toList();
-
-    // Sort by ID in descending order
-    filteredMessages.sort((a, b) => b['id_chat'].compareTo(a['id_chat']));
-
-    // Check for new messages
-    if (filteredMessages.isNotEmpty) {
-      // Get latest message
-      final latestMessage = filteredMessages.first;
-      final latestMessageId = latestMessage['id_chat'];
-
-      // Check if this is a new message
-      if (latestMessageId > _latestProcessedMessageId) {
-        // Skip notification on first load
-        if (_latestProcessedMessageId > 0) {
-          String sender = latestMessage['isKurir']
-              ? latestMessage['nama_kurir'] ?? 'Unknown Kurir'
-              : latestMessage['username'] ?? 'Unknown User';
-
-          _showNotification(sender, latestMessage['message'] ?? 'New message');
-        }
-
-        // Update latest message ID
-        _latestProcessedMessageId = latestMessageId;
-      }
-    }
-  }
-
-  Future<void> _showNotification(String sender, String message) async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      'inbox_channel_id',
-      'Inbox Notifications',
-      channelDescription: 'Notifications for new messages in inbox',
-      importance: Importance.high,
-      priority: Priority.high,
-      showWhen: true,
-    );
-
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
-
-    await _notificationsPlugin.show(
-      DateTime.now().millisecond, // Unique ID based on current time
-      sender,
-      message,
-      platformChannelSpecifics,
-    );
   }
 
   @override
@@ -274,11 +189,6 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
           }).toList();
 
           filteredMessages.sort((a, b) => b['id_chat'].compareTo(a['id_chat']));
-
-          // Initialize latestProcessedMessageId on first load if not already set
-          if (_latestProcessedMessageId == 0 && filteredMessages.isNotEmpty) {
-            _latestProcessedMessageId = filteredMessages.first['id_chat'];
-          }
 
           return ListView.builder(
             itemCount: filteredMessages.length,
