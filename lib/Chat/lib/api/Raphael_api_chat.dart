@@ -36,14 +36,13 @@ Future<List<Map<String, dynamic>>> fetchMessagesByPembeliAndUMKM(
   }
 }
 
-Future<List<Map<String, dynamic>>> fetchMessagesByPembeliAndKurir() async {
+Future<List<Map<String, dynamic>>> fetchMessagesByPembeliAndKurir(int id_kurir) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   int id_pembeli = prefs.getInt('sessionId') ?? 0;
-  int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
 
   try {
     final response = await http.get(Uri.parse(
-        'https://umkmapi-production.up.railway.app/getmsgPembeliKurir/$sessionId/$kurirSessionId'));
+        'https://umkmapi-production.up.railway.app/getmsgPembeliKurir/$sessionId/$id_kurir'));
 
     final List<dynamic> data = jsonDecode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -68,17 +67,34 @@ Future<List<Map<String, dynamic>>> fetchchatkurir() async {
   }
 }
 
-Future<List<Map<String, dynamic>>> fetchMessagesByKurirAndPembeli() async {
+Future<List<Map<String, dynamic>>> fetchchatpembelikurir() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  int id_pembeli = prefs.getInt('sessionId') ?? 0;
+  try {
+    final response = await http.get(Uri.parse(
+        'https://umkmapi-production.up.railway.app/message/msgPembeli/$id_pembeli'));
+
+        print('Kurir API status: ${response.statusCode}');
+    print('Kurir API body: ${response.body}');
+
+    final List<dynamic> data = jsonDecode(response.body);
+    return data.cast<Map<String, dynamic>>();
+  } catch (error) {
+    print(error);
+    return [];
+  }
+}
+
+Future<List<Map<String, dynamic>>> fetchMessagesByKurirAndPembeli(int id_pembeli) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
-  int id_pembeli = prefs.getInt('sessionId') ?? 0;
 
   // Log nilai ID
   print('Debug: id_kurir = $kurirSessionId, id_pembeli = $sessionId');
 
   try {
     final response = await http.get(Uri.parse(
-        'https://umkmapi-production.up.railway.app/getmsgKurirPembeli/$kurirSessionId/$sessionId'));
+        'https://umkmapi-production.up.railway.app/getmsgKurirPembeli/$kurirSessionId/$id_pembeli'));
 
     final List<dynamic> data = jsonDecode(response.body);
     return data.cast<Map<String, dynamic>>();
@@ -129,12 +145,11 @@ Future<Map<String, dynamic>> sendMessagePembeliKeKurir(
     String text, int id_kurir, String data) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   int id_pembeli = prefs.getInt('sessionId') ?? 0;
-  int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
 
   try {
     final response = await http.post(
       Uri.parse(
-          'https://umkmapi-production.up.railway.app/sendchat/pembelikekurir/$sessionId/$kurirSessionId'),
+          'https://umkmapi-production.up.railway.app/sendchat/pembelikekurir/$sessionId/$id_kurir'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -163,20 +178,19 @@ Future<Map<String, dynamic>> sendMessagePembeliKeKurir(
 }
 
 Future<Map<String, dynamic>> sendMessageKurirkePembeli(
-    String text, String data) async {
+    String text, String data, int id_pembeli) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  int id_pembeli = prefs.getInt('sessionId') ?? 0;
   int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
   try {
     final response = await http.post(
       Uri.parse(
-          'https://umkmapi-production.up.railway.app/sendchat/kurirkepembeli/$kurirSessionId/$sessionId'),
+          'https://umkmapi-production.up.railway.app/sendchat/kurirkepembeli/$kurirSessionId/$id_pembeli'),
       headers: {
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
-        'id_pembeli': sessionId,
-        'id_kurir': id_kurir,
+        'id_pembeli': id_pembeli,
+        'id_kurir': kurirSessionId,
         'message': text,
         'sent_at': DateTime.now().toIso8601String(),
         'is_read': false,

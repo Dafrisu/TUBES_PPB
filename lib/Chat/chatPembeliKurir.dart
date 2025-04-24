@@ -9,10 +9,10 @@ import 'package:intl/intl.dart';
 
 class PembeliKurirChatPage extends StatefulWidget {
   final String sender;
-  final int kurirSessionId;
+  final int id_kurir;
 
   const PembeliKurirChatPage(
-      {super.key, required this.sender, required this.kurirSessionId});
+      {super.key, required this.sender, required this.id_kurir});
 
   @override
   _PembeliKurirChatPageState createState() => _PembeliKurirChatPageState();
@@ -35,7 +35,7 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
         backgroundColor: const Color(0xFF658864),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchMessagesByPembeliAndKurir(),
+        future: fetchMessagesByPembeliAndKurir(widget.id_kurir),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -116,9 +116,8 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
                             int id_pembeli = prefs.getInt('id_pembeli') ?? 0;
-                            int kurirSessionId = prefs.getInt('id_kurir') ?? 0;
                             await sendMessagePembeliKeKurir(
-                                value.trim(), widget.kurirSessionId, 'Kurir');
+                                value.trim(), widget.id_kurir, 'Kurir');
                             setState(() {});
                             _messageController.clear();
                           }
@@ -132,10 +131,9 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                           SharedPreferences prefs =
                               await SharedPreferences.getInstance();
                           int id_pembeli = prefs.getInt('id_pembeli') ?? 0;
-                          int id_kurir = prefs.getInt('id_kurir') ?? 0;
                           await sendMessagePembeliKeKurir(
                               _messageController.text.trim(),
-                              widget.kurirSessionId,
+                              widget.id_kurir,
                               'Kurir');
                           setState(() {});
                           _messageController.clear();

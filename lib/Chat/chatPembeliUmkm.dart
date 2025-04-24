@@ -12,6 +12,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:async/async.dart'; // For StreamGroup and CombineLatestStream
 import 'dart:async'; // For Stream functionality
 import 'package:rxdart/rxdart.dart'; // For CombineLatestStream
+import 'package:tubes_ppb/Chat/chatPembeliKurir.dart';
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -76,7 +78,7 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
       // Fetch latest messages
       final List<Map<String, dynamic>> pembeliMessages =
           await fetchchatpembeli();
-      final List<Map<String, dynamic>> kurirMessages = await fetchchatkurir();
+      final List<Map<String, dynamic>> kurirMessages = await fetchchatpembelikurir();
 
       // Add to stream controllers
       if (mounted) {
@@ -140,9 +142,9 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
                       MaterialPageRoute(
                         builder: (context) => selectedMessage['isKurir']
                             ? PembeliKurirChatPage(
-                                sender: selectedMessage['nama_kurir'] ??
+                                sender: selectedMessage['nama_lengkap'] ??
                                     'Unknown Kurir',
-                                kurirSessionId:
+                                id_kurir:
                                     selectedMessage['id_kurir'] ?? 0)
                             : PembeliUmkmChatPage(
                                 sender: selectedMessage['username'] ??
@@ -180,8 +182,8 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
 
           final filteredMessages = inboxMessages.where((msg) {
             if (msg['isKurir']) {
-              return msg['nama_kurir'] != null &&
-                  msg['nama_kurir'] != 'Unknown Kurir';
+              return msg['nama_lengkap'] != null &&
+                  msg['nama_lengkap'] != 'Unknown Kurir';
             } else {
               return msg['username'] != null &&
                   msg['username'] != 'Unknown User';
@@ -199,8 +201,8 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
                   backgroundColor: Colors.grey,
                   child: Icon(Icons.person),
                 ),
-                title: Text(item['isKurir']
-                    ? item['nama_kurir'] ?? 'Unknown Kurir'
+                title: Text(item['id_kurir'] != null
+                    ? item['nama_lengkap'] ?? 'Unknown Kurir'
                     : item['username'] ?? 'Unknown User'),
                 subtitle: Text(item['message'] ?? ''),
                 trailing: Text(item['sent_at'] != null
@@ -213,11 +215,12 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
                     MaterialPageRoute(
                       builder: (context) => item['isKurir']
                           ? PembeliKurirChatPage(
-                              sender: item['nama_kurir'] ?? 'Unknown Kurir',
-                              kurirSessionId: item['id_kurir'] ?? 0)
+                              sender: item['nama_lengkap'] ?? 'Unknown Kurir',
+                              id_kurir: item['id_kurir'] ?? 0)
                           : PembeliUmkmChatPage(
                               sender: item['username'] ?? 'Unknown User',
-                              id_umkm: item['id_umkm'] ?? 0),
+                              id_umkm: item['id_umkm'] ?? 0,),
+                              
                     ),
                   );
                 },
@@ -300,7 +303,7 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
 
         final filteredMessages = inboxMessages.where((msg) {
           final searchField =
-              msg['isKurir'] ? msg['nama_kurir'] ?? '' : msg['username'] ?? '';
+              msg['isKurir'] ? msg['nama_lengkap'] ?? '' : msg['username'] ?? '';
           final messageContent = msg['message'] ?? '';
 
           return searchField.toLowerCase().contains(lowerCaseQuery) ||
@@ -319,8 +322,8 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
                 backgroundColor: Colors.grey,
                 child: Icon(Icons.person),
               ),
-              title: Text(item['isKurir']
-                  ? item['nama_kurir'] ?? 'Unknown Kurir'
+              title: Text(item['id_kurir'] != null
+                  ? item['nama_lengkap'] ?? 'Unknown Kurir'
                   : item['username'] ?? 'Unknown User'),
               subtitle: Text(item['message'] ?? ''),
               trailing: Text(item['sent_at'] != null

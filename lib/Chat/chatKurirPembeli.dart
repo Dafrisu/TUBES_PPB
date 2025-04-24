@@ -66,7 +66,7 @@ class _InboxPageKurirPembeliState extends State<InboxPageKurirPembeli> {
                       MaterialPageRoute(
                         builder: (context) => KurirPembeliChatPage(
                           sender: selectedMessage['nama_lengkap'],
-                          sessionId: selectedMessage['id_pembeli'],
+                          id_pembeli: selectedMessage['id_pembeli'],
                         ),
                       ),
                     );
@@ -114,7 +114,7 @@ class _InboxPageKurirPembeliState extends State<InboxPageKurirPembeli> {
                     MaterialPageRoute(
                       builder: (context) => KurirPembeliChatPage(
                           sender: item['nama_lengkap'],
-                          sessionId: item['id_pembeli']),
+                          id_pembeli: item['id_pembeli']),
                     ),
                   );
                 },
@@ -210,10 +210,10 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
 
 class KurirPembeliChatPage extends StatefulWidget {
   final String sender;
-  final int sessionId;
+  final int id_pembeli;
 
   const KurirPembeliChatPage(
-      {super.key, required this.sender, required this.sessionId});
+      {super.key, required this.sender, required this.id_pembeli});
 
   @override
   _KurirPembeliChatPageState createState() => _KurirPembeliChatPageState();
@@ -236,7 +236,7 @@ class _KurirPembeliChatPageState extends State<KurirPembeliChatPage> {
         backgroundColor: const Color(0xFF658864),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchMessagesByKurirAndPembeli(),
+        future: fetchMessagesByKurirAndPembeli(widget.id_pembeli),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -318,10 +318,9 @@ class _KurirPembeliChatPageState extends State<KurirPembeliChatPage> {
                           if (value.trim().isNotEmpty) {
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
-                            int id_pembeli = prefs.getInt('sessionId') ?? 0;
                             int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
                             await sendMessageKurirkePembeli(
-                                value.trim(), 'Pembeli');
+                                value.trim(), 'Pembeli', widget.id_pembeli);
                             setState(() {});
                             _messageController.clear();
                           }
@@ -334,10 +333,9 @@ class _KurirPembeliChatPageState extends State<KurirPembeliChatPage> {
                         if (_messageController.text.trim().isNotEmpty) {
                           SharedPreferences prefs =
                               await SharedPreferences.getInstance();
-                          int id_pembeli = prefs.getInt('sessionId') ?? 0;
                           int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
                           await sendMessageKurirkePembeli(
-                              _messageController.text.trim(), 'Pembeli');
+                              _messageController.text.trim(), 'Pembeli', widget.id_pembeli);
                           setState(() {});
                           _messageController.clear();
                         }
