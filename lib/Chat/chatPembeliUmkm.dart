@@ -12,8 +12,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:async/async.dart'; // For StreamGroup and CombineLatestStream
 import 'dart:async'; // For Stream functionality
 import 'package:rxdart/rxdart.dart'; // For CombineLatestStream
-import 'package:tubes_ppb/Chat/chatPembeliKurir.dart';
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -78,7 +76,8 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
       // Fetch latest messages
       final List<Map<String, dynamic>> pembeliMessages =
           await fetchchatpembeli();
-      final List<Map<String, dynamic>> kurirMessages = await fetchchatpembelikurir();
+      final List<Map<String, dynamic>> kurirMessages =
+          await fetchchatpembelikurir();
 
       // Add to stream controllers
       if (mounted) {
@@ -140,17 +139,17 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => selectedMessage['isKurir']
-                            ? PembeliKurirChatPage(
-                                sender: selectedMessage['nama_lengkap'] ??
-                                    'Unknown Kurir',
-                                id_kurir:
-                                    selectedMessage['id_kurir'] ?? 0)
-                            : PembeliUmkmChatPage(
-                                sender: selectedMessage['username'] ??
-                                    'Unknown User',
-                                id_umkm: selectedMessage['id_umkm'] ?? 0,
-                              ),
+                        builder: (context) =>
+                            selectedMessage['id_kurir'] != null
+                                ? PembeliKurirChatPage(
+                                    sender: selectedMessage['nama_kurir'] ??
+                                        'Unknown Kurir',
+                                    id_kurir: selectedMessage['id_kurir'] ?? 0)
+                                : PembeliUmkmChatPage(
+                                    sender: selectedMessage['username'] ??
+                                        'Unknown User',
+                                    id_umkm: selectedMessage['id_umkm'] ?? 0,
+                                  ),
                       ),
                     );
                   },
@@ -173,17 +172,27 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
             return const Center(child: Text('Tidak ada pesan.'));
           }
 
-          final inboxMessages = [
-            ...List<Map<String, dynamic>>.from(snapshot.data![0])
-                .map((msg) => {...msg, 'isKurir': false}),
-            ...List<Map<String, dynamic>>.from(snapshot.data![1])
-                .map((msg) => {...msg, 'isKurir': true}),
-          ];
+          final List<Map<String, dynamic>> pembeliMessages = snapshot.data![0];
+          final List<Map<String, dynamic>> kurirMessages = snapshot.data![1];
+
+          // Mark pembeli messages with id_kurir: null
+          final pembeliWithMarker = pembeliMessages
+              .map((msg) => {
+                    ...msg,
+                    'id_kurir': null,
+                  })
+              .toList();
+
+          // Ensure kurir messages have the id_kurir field preserved
+          final kurirWithMarker = kurirMessages.map((msg) => msg).toList();
+
+          // Combine both message types
+          final inboxMessages = [...pembeliWithMarker, ...kurirWithMarker];
 
           final filteredMessages = inboxMessages.where((msg) {
-            if (msg['isKurir']) {
-              return msg['nama_lengkap'] != null &&
-                  msg['nama_lengkap'] != 'Unknown Kurir';
+            if (msg['id_kurir'] != null) {
+              return msg['nama_kurir'] != null &&
+                  msg['nama_kurir'] != 'Unknown Kurir';
             } else {
               return msg['username'] != null &&
                   msg['username'] != 'Unknown User';
@@ -202,7 +211,7 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
                   child: Icon(Icons.person),
                 ),
                 title: Text(item['id_kurir'] != null
-                    ? item['nama_lengkap'] ?? 'Unknown Kurir'
+                    ? item['nama_kurir'] ?? 'Unknown Kurir'
                     : item['username'] ?? 'Unknown User'),
                 subtitle: Text(item['message'] ?? ''),
                 trailing: Text(item['sent_at'] != null
@@ -213,14 +222,14 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => item['isKurir']
+                      builder: (context) => item['id_kurir'] != null
                           ? PembeliKurirChatPage(
-                              sender: item['nama_lengkap'] ?? 'Unknown Kurir',
+                              sender: item['nama_kurir'] ?? 'Unknown Kurir',
                               id_kurir: item['id_kurir'] ?? 0)
                           : PembeliUmkmChatPage(
                               sender: item['username'] ?? 'Unknown User',
-                              id_umkm: item['id_umkm'] ?? 0,),
-                              
+                              id_umkm: item['id_umkm'] ?? 0,
+                            ),
                     ),
                   );
                 },
@@ -293,17 +302,25 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
 
         final lowerCaseQuery = query.toLowerCase();
 
-        // Combine and filter messages
-        final inboxMessages = [
-          ...List<Map<String, dynamic>>.from(snapshot.data![0])
-              .map((msg) => {...msg, 'isKurir': false}),
-          ...List<Map<String, dynamic>>.from(snapshot.data![1])
-              .map((msg) => {...msg, 'isKurir': true}),
-        ];
+        // Get both message lists
+        final List<Map<String, dynamic>> pembeliMessages = snapshot.data![0];
+        final List<Map<String, dynamic>> kurirMessages = snapshot.data![1];
+
+        // Mark pembeli messages with id_kurir: null
+        final pembeliWithMarker = pembeliMessages
+            .map((msg) => {
+                  ...msg,
+                  'id_kurir': null,
+                })
+            .toList();
+
+        // Combine both message types
+        final inboxMessages = [...pembeliWithMarker, ...kurirMessages];
 
         final filteredMessages = inboxMessages.where((msg) {
-          final searchField =
-              msg['isKurir'] ? msg['nama_lengkap'] ?? '' : msg['username'] ?? '';
+          final searchField = msg['id_kurir'] != null
+              ? msg['nama_kurir'] ?? ''
+              : msg['username'] ?? '';
           final messageContent = msg['message'] ?? '';
 
           return searchField.toLowerCase().contains(lowerCaseQuery) ||
@@ -323,7 +340,7 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
                 child: Icon(Icons.person),
               ),
               title: Text(item['id_kurir'] != null
-                  ? item['nama_lengkap'] ?? 'Unknown Kurir'
+                  ? item['nama_kurir'] ?? 'Unknown Kurir'
                   : item['username'] ?? 'Unknown User'),
               subtitle: Text(item['message'] ?? ''),
               trailing: Text(item['sent_at'] != null
@@ -556,7 +573,6 @@ class _PembeliUmkmChatPageState extends State<PembeliUmkmChatPage> {
     );
   }
 }
-
 
 class chatBubblePembeliUmkm extends StatelessWidget {
   final String text;
