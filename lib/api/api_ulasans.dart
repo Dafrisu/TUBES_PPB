@@ -4,7 +4,7 @@ import 'dart:convert';
 Future<List<Map<String, dynamic>>> fetchAllUlasans() async {
   // Construct the URL with the query parameter
   final response = await http.get(
-    Uri.parse('http://10.0.2.2/ulasans'),
+    Uri.parse('https://umkmapi-production.up.railway.app/ulasans'),
   );
 
   if (response.statusCode == 200) {
@@ -27,7 +27,7 @@ Future<List<Map<String, dynamic>>> fetchAllUlasans() async {
 Future<List<Map<String, dynamic>>> fetchUlasansUMKM(int id) async {
   // Construct the URL with the query parameter
   final response = await http.get(
-    Uri.parse('http://10.0.2.2/ulasans/umkm/$id'),
+    Uri.parse('https://umkmapi-production.up.railway.app/ulasans/umkm/$id'),
   );
   print(response.body);
 
