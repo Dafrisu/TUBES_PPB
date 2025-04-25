@@ -6,6 +6,7 @@ import 'lib/api/Raphael_api_chat.dart';
 import 'package:http/http.dart' as http;
 import 'chatPembeliUmkm.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class PembeliKurirChatPage extends StatefulWidget {
   final String sender;
@@ -20,6 +21,79 @@ class PembeliKurirChatPage extends StatefulWidget {
 
 class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
   final TextEditingController _messageController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  List<Map<String, dynamic>> _previousMessages = [];
+
+  final FlutterLocalNotificationsPlugin _notificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeNotifications();
+  }
+
+  void _initializeNotifications() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+
+    await _notificationsPlugin.initialize(initializationSettings);
+  }
+
+  Future<void> _showNotification(String message) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'kurir_message_channel_id',
+      'New Kurir Message Notifications',
+      channelDescription: 'Notifications for new chat messages from couriers',
+      importance: Importance.high,
+      priority: Priority.high,
+      showWhen: true,
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await _notificationsPlugin.show(
+      1, // Different ID from UMKM notifications
+      widget.sender,
+      message,
+      platformChannelSpecifics,
+    );
+  }
+
+  Stream<List<Map<String, dynamic>>> getMessagesStream() async* {
+    while (true) {
+      await Future.delayed(const Duration(seconds: 2));
+      final newMessages = await fetchMessagesByPembeliAndKurir(widget.id_kurir);
+
+      if (_previousMessages.isNotEmpty &&
+          newMessages.length > _previousMessages.length) {
+        final latestMessage = newMessages.last;
+
+        // Check if the message is from Kurir (not sent by Pembeli)
+        if (latestMessage['receiver_type'] != "Kurir") {
+          _showNotification(latestMessage['message']);
+        }
+      }
+
+      _previousMessages = List.from(newMessages);
+      yield newMessages;
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollToBottom();
+      });
+    }
+  }
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +108,11 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
         ),
         backgroundColor: const Color(0xFF658864),
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchMessagesByPembeliAndKurir(widget.id_kurir),
+      body: StreamBuilder<List<Map<String, dynamic>>>(
+        stream: getMessagesStream(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.connectionState == ConnectionState.waiting &&
+              !snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
@@ -47,10 +122,15 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
 
           final messages = snapshot.data!;
 
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _scrollToBottom();
+          });
+
           return Column(
             children: [
               Expanded(
                 child: ListView.builder(
+                  controller: _scrollController,
                   padding: const EdgeInsets.all(16),
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
@@ -76,11 +156,7 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                         chatBubblePembeliKurir(
                           text: message['message'],
                           isReceiverKurir: isReceiverKurir,
-                          sentAt: message['sent_at'] != null
-                              ? DateFormat('HH:mm').format(
-                                  DateFormat("HH:mm:ss.SSSSSS")
-                                      .parse(message['sent_at']))
-                              : 'Unknown time',
+                          sentAt: sentAt,
                         ),
                         if (isReceiverKurir) const SizedBox(width: 8),
                         if (isReceiverKurir)
@@ -94,60 +170,62 @@ class _PembeliKurirChatPageState extends State<PembeliKurirChatPage> {
                   },
                 ),
               ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                margin: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(30), // Rounded corners
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _messageController,
-                        decoration: const InputDecoration(
-                          hintText: 'Type a message',
-                          border: InputBorder.none,
-                        ),
-                        onSubmitted: (value) async {
-                          if (value.trim().isNotEmpty) {
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            int id_pembeli = prefs.getInt('id_pembeli') ?? 0;
-                            await sendMessagePembeliKeKurir(
-                                value.trim(), widget.id_kurir, 'Kurir');
-                            setState(() {});
-                            _messageController.clear();
-                          }
-                        },
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.send),
-                      onPressed: () async {
-                        if (_messageController.text.trim().isNotEmpty) {
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          int id_pembeli = prefs.getInt('id_pembeli') ?? 0;
-                          await sendMessagePembeliKeKurir(
-                              _messageController.text.trim(),
-                              widget.id_kurir,
-                              'Kurir');
-                          setState(() {});
-                          _messageController.clear();
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
+              _buildMessageInput(),
             ],
           );
         },
       ),
     );
+  }
+
+  Widget _buildMessageInput() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _messageController,
+              decoration: const InputDecoration(
+                hintText: 'Type a message',
+                border: InputBorder.none,
+              ),
+              onSubmitted: (value) async {
+                if (value.trim().isNotEmpty) {
+                  await sendMessagePembeliKeKurir(
+                      value.trim(), widget.id_kurir, 'Kurir');
+                  _messageController.clear();
+                  _scrollToBottom();
+                }
+              },
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.send),
+            onPressed: () async {
+              if (_messageController.text.trim().isNotEmpty) {
+                await sendMessagePembeliKeKurir(
+                    _messageController.text.trim(), widget.id_kurir, 'Kurir');
+                _messageController.clear();
+                _scrollToBottom();
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _messageController.dispose();
+    super.dispose();
   }
 }
 

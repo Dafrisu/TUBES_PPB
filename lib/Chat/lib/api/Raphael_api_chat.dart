@@ -74,8 +74,6 @@ Future<List<Map<String, dynamic>>> fetchchatpembelikurir() async {
     final response = await http.get(Uri.parse(
         'https://umkmapi-production.up.railway.app/message/msgPembeli/$id_pembeli'));
 
-        print('Kurir API status: ${response.statusCode}');
-    print('Kurir API body: ${response.body}');
 
     final List<dynamic> data = jsonDecode(response.body);
     return data.cast<Map<String, dynamic>>();
