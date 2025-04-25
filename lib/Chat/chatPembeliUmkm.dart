@@ -189,6 +189,8 @@ class _CombinedInboxPageState extends State<CombinedInboxPage> {
           // Combine both message types
           final inboxMessages = [...pembeliWithMarker, ...kurirWithMarker];
 
+          
+
           final filteredMessages = inboxMessages.where((msg) {
             if (msg['id_kurir'] != null) {
               return msg['nama_kurir'] != null &&
@@ -314,21 +316,36 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
                 })
             .toList();
 
+        final kurirWithMarker = kurirMessages.map((msg) => msg).toList();
+
         // Combine both message types
-        final inboxMessages = [...pembeliWithMarker, ...kurirMessages];
+        final inboxMessages = [...pembeliWithMarker, ...kurirWithMarker];
 
-        final filteredMessages = inboxMessages.where((msg) {
+        // Remove duplicates by username or nama_kurir
+        final uniqueMessages = <String, Map<String, dynamic>>{};
+        for (var msg in inboxMessages) {
+          final key = msg['id_kurir'] != null
+              ? (msg['nama_kurir'] ?? '')
+              : (msg['username'] ?? '');
+          if (key.isNotEmpty &&
+              key != 'Unknown User' &&
+              key != 'Unknown Kurir') {
+            uniqueMessages[key] = msg;
+          }
+        }
+
+        final filteredMessages = uniqueMessages.values.where((msg) {
           final searchField = msg['id_kurir'] != null
-              ? msg['nama_kurir'] ?? ''
-              : msg['username'] ?? '';
-          final messageContent = msg['message'] ?? '';
-
-          return searchField.toLowerCase().contains(lowerCaseQuery) ||
-              messageContent.toLowerCase().contains(lowerCaseQuery);
+              ? (msg['nama_kurir'] ?? '')
+              : (msg['username'] ?? '');
+          return searchField.toLowerCase().contains(lowerCaseQuery);
         }).toList();
 
-        // Sort messages by ID in descending order
         filteredMessages.sort((a, b) => b['id_chat'].compareTo(a['id_chat']));
+
+        if (filteredMessages.isEmpty) {
+          return const Center(child: Text('Tidak ditemukan.'));
+        }
 
         return ListView.builder(
           itemCount: filteredMessages.length,
@@ -344,10 +361,11 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
                   : item['username'] ?? 'Unknown User'),
               subtitle: Text(item['message'] ?? ''),
               trailing: Text(item['sent_at'] != null
-                  ? DateFormat('HH:mm').format(
-                      DateFormat("HH:mm:ss.SSSSSS").parse(item['sent_at']))
+                  ? DateFormat('HH:mm')
+                      .format(DateFormat("HH:mm").parse(item['sent_at']))
                   : 'Unknown time'),
               onTap: () {
+                close(context, item);
                 onSelected(item);
               },
             );
@@ -356,6 +374,7 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
       },
     );
   }
+
 
   @override
   Widget buildSuggestions(BuildContext context) {
