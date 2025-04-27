@@ -41,10 +41,15 @@ class ProductCardURL extends StatelessWidget {
     return Card(
       child: Column(
         children: <Widget>[
-          Image.network(imageUrl,
+          AspectRatio(
+            aspectRatio: 4 / 3,
+            child: Image.network(
+              imageUrl,
               fit: BoxFit.cover,
-              height: 250,
-              width: 250), // nanti sesuaikan height sama width
+              errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.broken_image),
+            ),
+          ), // nanti sesuaikan height sama width
           Padding(
               padding: const EdgeInsets.all(8.0),
               child: Align(
