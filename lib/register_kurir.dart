@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/Dafa_register.dart';
+import 'package:tubes_ppb/api/api_loginKurir.dart';
+import 'package:tubes_ppb/login.dart';
 import 'package:tubes_ppb/api/api_registerPembeli.dart';
 import 'package:tubes_ppb/landing.dart';
 import 'api/api_registerKurir.dart';
@@ -272,7 +274,7 @@ class _RegisterKurirState extends State<RegisterKurir> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => landingPage(),
+                            builder: (context) => login(),
                           ),
                         );
                       } else {
