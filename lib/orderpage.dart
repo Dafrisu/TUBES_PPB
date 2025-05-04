@@ -84,18 +84,15 @@ class _OrderPageState extends State<OrderPage> {
 
   Future<void> authenticate() async {
     try {
-      bool authenticated = await auth.authenticate(
-        localizedReason: 'Scan Fingerprintmu untuk Pesan ya',
-        options: const AuthenticationOptions(
-          useErrorDialogs: true,
-          stickyAuth: false,
-        ),
-      );
-      if (authenticated) {
+      bool canCheckBiometrics = await auth.canCheckBiometrics;
+      bool isDeviceSupported = await auth.isDeviceSupported();
+
+      if (!canCheckBiometrics || !isDeviceSupported) {
+        // Fingerprint tidak tersedia → langsung pesan
         sendallpesanan();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Pesanan Berhasil Masuk'),
+            content: Text('Pesanan Berhasil Masuk (tanpa fingerprint)'),
             duration: Duration(seconds: 3),
           ),
         );
@@ -107,13 +104,39 @@ class _OrderPageState extends State<OrderPage> {
             builder: (context) => Homepage(),
           ),
         );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('UMKM kecewa 😭'),
-            duration: Duration(seconds: 3),
+        return;
+      } else if (canCheckBiometrics || isDeviceSupported) {
+        bool authenticated = await auth.authenticate(
+          localizedReason: 'Scan Fingerprintmu untuk Pesan ya',
+          options: const AuthenticationOptions(
+            useErrorDialogs: true,
+            stickyAuth: false,
           ),
         );
+        if (authenticated) {
+          sendallpesanan();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Pesanan Berhasil Masuk'),
+              duration: Duration(seconds: 3),
+            ),
+          );
+          lastbatch = lastbatch + 1;
+          addbatch(sessionId, lastbatch);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Homepage(),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('UMKM kecewa 😭'),
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
       }
     } catch (e) {
       print(e);
