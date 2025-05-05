@@ -47,7 +47,6 @@ class _DeliveryPageState extends State<DeliveryPage> {
       namaKurir = kurirData['nama_kurir'];
       idUmkm = kurirData['id_umkm'];
       statusKurir = kurirData['status'] ?? 'Tidak diketahui';
-
     });
   }
 
@@ -140,34 +139,42 @@ class _DeliveryPageState extends State<DeliveryPage> {
               'Pesanan yang harus diantar',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: FutureBuilder<List<Map<String, dynamic>>>(
-                // Panggil getPesananDiterima dengan id_umkm yang diperoleh
-                future: getPesananDiterima(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text('No orders available.'));
-                  }
-
-                  final orders = snapshot.data!.map((order) {
-                    return OrderItemData.fromJson(order);
-                  }).toList();
-
-                  return ListView.builder(
-                    itemCount: orders.length,
-                    itemBuilder: (context, index) {
-                      final order = orders[index];
-                      return OrderCard(order: order);
-                    },
-                  );
-                },
+            if (statusKurir == 'Belum terdaftar')
+              Center(
+                child: Text('Silahkan tunggu konfirmasi dari UMKM'),
               ),
-            ),
+            if (statusKurir == 'Dipecat')
+              Center(
+                child: Text('Silahkan ajukan lamaran ke UMKM'),
+              ),
+            if (statusKurir == 'Terdaftar')
+              Expanded(
+                child: FutureBuilder<List<Map<String, dynamic>>>(
+                  // Panggil getPesananDiterima dengan id_umkm yang diperoleh
+                  future: getPesananDiterima(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(child: Text('No orders available.'));
+                    }
+
+                    final orders = snapshot.data!.map((order) {
+                      return OrderItemData.fromJson(order);
+                    }).toList();
+
+                    return ListView.builder(
+                      itemCount: orders.length,
+                      itemBuilder: (context, index) {
+                        final order = orders[index];
+                        return OrderCard(order: order);
+                      },
+                    );
+                  },
+                ),
+              ),
           ],
         ),
       ),

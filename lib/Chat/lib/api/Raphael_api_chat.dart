@@ -36,7 +36,8 @@ Future<List<Map<String, dynamic>>> fetchMessagesByPembeliAndUMKM(
   }
 }
 
-Future<List<Map<String, dynamic>>> fetchMessagesByPembeliAndKurir(int id_kurir) async {
+Future<List<Map<String, dynamic>>> fetchMessagesByPembeliAndKurir(
+    int id_kurir) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   int id_pembeli = prefs.getInt('sessionId') ?? 0;
 
@@ -74,7 +75,6 @@ Future<List<Map<String, dynamic>>> fetchchatpembelikurir() async {
     final response = await http.get(Uri.parse(
         'https://umkmapi-production.up.railway.app/message/msgPembeli/$id_pembeli'));
 
-
     final List<dynamic> data = jsonDecode(response.body);
     return data.cast<Map<String, dynamic>>();
   } catch (error) {
@@ -83,7 +83,8 @@ Future<List<Map<String, dynamic>>> fetchchatpembelikurir() async {
   }
 }
 
-Future<List<Map<String, dynamic>>> fetchMessagesByKurirAndPembeli(int id_pembeli) async {
+Future<List<Map<String, dynamic>>> fetchMessagesByKurirAndPembeli(
+    int id_pembeli) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
 
