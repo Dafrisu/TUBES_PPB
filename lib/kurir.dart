@@ -32,6 +32,7 @@ class DeliveryPage extends StatefulWidget {
 class _DeliveryPageState extends State<DeliveryPage> {
   String namaKurir = 'Kurir';
   int idUmkm = 0;
+  String statusKurir = '';
 
   @override
   void initState() {
@@ -45,6 +46,8 @@ class _DeliveryPageState extends State<DeliveryPage> {
     setState(() {
       namaKurir = kurirData['nama_kurir'];
       idUmkm = kurirData['id_umkm'];
+      statusKurir = kurirData['status'] ?? 'Tidak diketahui';
+
     });
   }
 
@@ -52,12 +55,25 @@ class _DeliveryPageState extends State<DeliveryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Halo, $namaKurir.',
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Halo, $namaKurir.',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 20,
+              ),
+            ),
+            Text(
+              'Status: $statusKurir',
+              style: const TextStyle(
+                color: Colors.white70,
+                fontSize: 14,
+              ),
+            ),
+          ],
         ),
         backgroundColor: const Color.fromARGB(255, 101, 136, 100),
         elevation: 0,

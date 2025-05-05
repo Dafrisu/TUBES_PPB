@@ -1,13 +1,17 @@
-// chatPembeliKurir
+// chatKurirPembeli
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:tubes_ppb/homepage.dart';
 import 'lib/api/Raphael_api_chat.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:tubes_ppb/api/api_loginKurir.dart';
 import 'package:tubes_ppb/api/api_loginPembeli.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:async/async.dart';
+import 'dart:async';
+import 'package:rxdart/rxdart.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -32,29 +36,61 @@ class InboxPageKurirPembeli extends StatefulWidget {
 }
 
 class _InboxPageKurirPembeliState extends State<InboxPageKurirPembeli> {
-  // Use a StreamController to manage message updates
-  late Stream<List<Map<String, dynamic>>> _kurirMessages;
+  // Create stream controller for message updates
+  final StreamController<List<Map<String, dynamic>>> _kurirStreamController =
+      StreamController<List<Map<String, dynamic>>>.broadcast();
+
+  // Expose stream
+  Stream<List<Map<String, dynamic>>> get kurirStream =>
+      _kurirStreamController.stream;
+
+  // Timer for periodic updates
+  Timer? _pollingTimer;
 
   @override
   void initState() {
     super.initState();
-    // Initialize the message stream
-    _kurirMessages = _getKurirMessagesStream();
+    _startMessageStreaming();
   }
 
-  Stream<List<Map<String, dynamic>>> _getKurirMessagesStream() async* {
-    while (true) {
-      try {
-        // Fetch latest messages from the API
-        final messages = await fetchchatkurir();
-        yield messages;
-      } catch (e) {
-        print('Error fetching courier messages: $e');
-        yield [];
+  void _startMessageStreaming() {
+    // Initial load of messages
+    _fetchAndStreamMessages();
+
+    // Set up periodic polling with a timer
+    _pollingTimer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      if (mounted) {
+        _fetchAndStreamMessages();
+      } else {
+        timer.cancel();
       }
-      // Wait before next update
-      await Future.delayed(const Duration(seconds: 2));
+    });
+  }
+
+  Future<void> _fetchAndStreamMessages() async {
+    try {
+      // Fetch latest messages
+      final List<Map<String, dynamic>> kurirMessages = await fetchchatkurir();
+
+      // Add to stream controller
+      if (mounted) {
+        _kurirStreamController.add(kurirMessages);
+      }
+    } catch (e) {
+      print('Error fetching messages: $e');
+      // Add empty list on error to prevent stream errors
+      if (mounted) {
+        _kurirStreamController.add([]);
+      }
     }
+  }
+
+  @override
+  void dispose() {
+    // Clean up resources
+    _pollingTimer?.cancel();
+    _kurirStreamController.close();
+    super.dispose();
   }
 
   @override
@@ -73,7 +109,10 @@ class _InboxPageKurirPembeliState extends State<InboxPageKurirPembeli> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Homepage()),
+            );
           },
         ),
         actions: [
@@ -83,14 +122,15 @@ class _InboxPageKurirPembeliState extends State<InboxPageKurirPembeli> {
               showSearch(
                 context: context,
                 delegate: MessageSearchDelegate(
-                  messagesStream: _kurirMessages,
+                  messagesStream: kurirStream,
                   onSelected: (selectedMessage) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => KurirPembeliChatPage(
-                          sender: selectedMessage['nama_lengkap'],
-                          id_pembeli: selectedMessage['id_pembeli'],
+                          sender:
+                              selectedMessage['nama_lengkap'] ?? 'Unknown User',
+                          id_pembeli: selectedMessage['id_pembeli'] ?? 0,
                         ),
                       ),
                     );
@@ -102,7 +142,7 @@ class _InboxPageKurirPembeliState extends State<InboxPageKurirPembeli> {
         ],
       ),
       body: StreamBuilder<List<Map<String, dynamic>>>(
-        stream: _kurirMessages,
+        stream: kurirStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting &&
               !snapshot.hasData) {
@@ -116,19 +156,27 @@ class _InboxPageKurirPembeliState extends State<InboxPageKurirPembeli> {
           }
 
           final inboxMessages = snapshot.data!;
-          inboxMessages.sort((a, b) => b['id_chat'].compareTo(a['id_chat']));
+
+          // Filter out messages with invalid data
+          final filteredMessages = inboxMessages.where((msg) {
+            return msg['nama_lengkap'] != null &&
+                msg['nama_lengkap'] != 'Unknown User';
+          }).toList();
+
+          // Sort messages by id_chat in descending order
+          filteredMessages.sort((a, b) => b['id_chat'].compareTo(a['id_chat']));
 
           return ListView.builder(
-            itemCount: inboxMessages.length,
+            itemCount: filteredMessages.length,
             itemBuilder: (context, index) {
-              final item = inboxMessages[index];
+              final item = filteredMessages[index];
               return ListTile(
                 leading: const CircleAvatar(
                   backgroundColor: Colors.grey,
                   child: Icon(Icons.person),
                 ),
-                title: Text(item['nama_lengkap']),
-                subtitle: Text(item['message']),
+                title: Text(item['nama_lengkap'] ?? 'Unknown User'),
+                subtitle: Text(item['message'] ?? ''),
                 trailing: Text(item['sent_at'] != null
                     ? DateFormat('HH:mm').format(
                         DateFormat("HH:mm:ss.SSSSSS").parse(item['sent_at']))
@@ -138,8 +186,8 @@ class _InboxPageKurirPembeliState extends State<InboxPageKurirPembeli> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => KurirPembeliChatPage(
-                          sender: item['nama_lengkap'],
-                          id_pembeli: item['id_pembeli']),
+                          sender: item['nama_lengkap'] ?? 'Unknown User',
+                          id_pembeli: item['id_pembeli'] ?? 0),
                     ),
                   );
                 },
@@ -154,7 +202,7 @@ class _InboxPageKurirPembeliState extends State<InboxPageKurirPembeli> {
 
 class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
   final Stream<List<Map<String, dynamic>>> messagesStream;
-  final ValueChanged<Map<String, dynamic>> onSelected;
+  final Function(Map<String, dynamic>) onSelected;
   List<Map<String, dynamic>> _cachedMessages = [];
 
   MessageSearchDelegate({
@@ -210,27 +258,54 @@ class MessageSearchDelegate extends SearchDelegate<Map<String, dynamic>?> {
           return const Center(child: Text('Tidak ada pesan.'));
         }
 
+        final lowerCaseQuery = query.toLowerCase();
+
+        // Filter messages based on search query
         final results = messages.where((message) {
-          final nameMatches = message['nama_lengkap']
-              .toLowerCase()
-              .contains(query.toLowerCase());
-          final messageMatches =
-              message['message'].toLowerCase().contains(query.toLowerCase());
-          return nameMatches || messageMatches;
+          final name = message['nama_lengkap'] ?? '';
+          final messageText = message['message'] ?? '';
+          return name.toLowerCase().contains(lowerCaseQuery) ||
+              messageText.toLowerCase().contains(lowerCaseQuery);
         }).toList();
 
-        results.sort((a, b) => b['id_chat'].compareTo(a['id_chat']));
+        // Remove duplicates by nama_lengkap
+        final uniqueMessages = <String, Map<String, dynamic>>{};
+        for (var msg in results) {
+          final key = msg['id_pembeli'] != null
+              ? msg['nama_lengkap'].toString()
+              : 'Unknown User';
+          if (key.isNotEmpty && key != 'Unknown User') {
+            uniqueMessages[key] = msg;
+          }
+        }
+
+        final filteredResults = uniqueMessages.values.toList();
+        filteredResults.sort((a, b) => b['id_chat'].compareTo(a['id_chat']));
+
+        if (filteredResults.isEmpty) {
+          return const Center(child: Text('Tidak ditemukan.'));
+        }
 
         return ListView.builder(
-          itemCount: results.length,
+          itemCount: filteredResults.length,
           itemBuilder: (context, index) {
-            final result = results[index];
+            final result = filteredResults[index];
             return ListTile(
-              title: Text(result['nama_lengkap']),
-              subtitle: Text(result['message']),
+              leading: const CircleAvatar(
+                backgroundColor: Colors.grey,
+                child: Icon(Icons.person),
+              ),
+              title: Text(result['id_pembeli'] != null
+                  ? result['nama_lengkap'] ?? 'Unknown user'
+                  : result['nama_lengkap'] ?? 'Unknown User'),
+              subtitle: Text(result['message'] ?? ''),
+              trailing: Text(result['sent_at'] != null
+                  ? DateFormat('HH:mm')
+                      .format(DateFormat("HH:mm").parse(result['sent_at']))
+                  : 'Unknown time'),
               onTap: () {
-                onSelected(result);
                 close(context, result);
+                onSelected(result);
               },
             );
           },
