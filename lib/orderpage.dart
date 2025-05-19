@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'oderpage_fingerprintTest.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:tubes_ppb/api/api_loginPembeli.dart';
@@ -84,11 +84,15 @@ class _OrderPageState extends State<OrderPage> {
 
   Future<void> authenticate() async {
     try {
-      bool canCheckBiometrics = await auth.canCheckBiometrics;
-      bool isDeviceSupported = await auth.isDeviceSupported();
+      bool canCheckBiometrics = FingerprintTestHelper.testMode
+          ? FingerprintTestHelper.mockBiometricAvailable
+          : await auth.canCheckBiometrics;
+
+      bool isDeviceSupported = FingerprintTestHelper.testMode
+          ? FingerprintTestHelper.mockBiometricAvailable
+          : await auth.isDeviceSupported();
 
       if (!canCheckBiometrics || !isDeviceSupported) {
-        // Fingerprint tidak tersedia → langsung pesan
         sendallpesanan();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -105,14 +109,17 @@ class _OrderPageState extends State<OrderPage> {
           ),
         );
         return;
-      } else if (canCheckBiometrics || isDeviceSupported) {
-        bool authenticated = await auth.authenticate(
-          localizedReason: 'Scan Fingerprintmu untuk Pesan ya',
-          options: const AuthenticationOptions(
-            useErrorDialogs: true,
-            stickyAuth: false,
-          ),
-        );
+      } else {
+        bool authenticated = FingerprintTestHelper.testMode
+            ? FingerprintTestHelper.mockAuthenticated
+            : await auth.authenticate(
+                localizedReason: 'Scan Fingerprintmu untuk Pesan ya',
+                options: const AuthenticationOptions(
+                  useErrorDialogs: true,
+                  stickyAuth: false,
+                ),
+              );
+
         if (authenticated) {
           sendallpesanan();
           ScaffoldMessenger.of(context).showSnackBar(
@@ -385,9 +392,15 @@ class _OrderPageState extends State<OrderPage> {
           ),
           Container(
             margin: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-            child: Row(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Text('TOTAL'), Text('Rp. $totalsemuanya')],
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [Text('TOTAL'), Text('Rp. $totalsemuanya')],
+                ),
+                FingerprintTestWidget(),
+              ],
             ),
           ),
         ],
