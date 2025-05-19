@@ -45,7 +45,7 @@ class _RiwayatPembelianState extends State<RiwayatPembelian> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Riwayat Pembelian'),
+          title: Text('Lihat Riwayat'),
           automaticallyImplyLeading: false,
           actions: [
             IconButton(
