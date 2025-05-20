@@ -1,10 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/login.dart';
+import 'package:tubes_ppb/kurir_pengantaran.dart';
+import 'package:tubes_ppb/profile_kurir.dart';
 import 'Chat/chatKurirPembeli.dart';
 import 'Chat/lib/api/Raphael_api_chat.dart';
-import 'package:http/http.dart' as http;
-import 'login.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -128,6 +127,20 @@ class _DeliveryPageState extends State<DeliveryPage> {
               );
             },
           ),
+          IconButton(
+            icon: const Icon(
+              Icons.person,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const KurirProfilePage(),
+                ),
+              );
+            },
+          ),
         ],
       ),
       body: Padding(
@@ -228,8 +241,7 @@ class _OrderCardState extends State<OrderCard> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text("Konfirmasi"),
-          content: const Text(
-              "Apakah Anda yakin ingin menandai pesanan ini sebagai selesai?"),
+          content: const Text("Apakah Anda yakin ingin mengambil pesanan ini?"),
           actions: [
             TextButton(
               child: const Text("Batal"),
@@ -240,13 +252,12 @@ class _OrderCardState extends State<OrderCard> {
             TextButton(
               child: const Text("Ya"),
               onPressed: () async {
-                Navigator.of(context).pop();
-
-                await updateStatusPesananSelesai(widget.order.idPesanan);
-
-                setState(() {
-                  isPressed = true;
-                });
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const kurir_pengantaran(),
+                  ),
+                );
               },
             ),
           ],
