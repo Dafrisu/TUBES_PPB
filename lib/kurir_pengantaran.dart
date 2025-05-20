@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/kurir.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const kurir_pengantaran());
 }
 
 class OrderItem {
@@ -13,13 +14,13 @@ class OrderItem {
 }
 
 // ---------- APP ----------
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class kurir_pengantaran extends StatelessWidget {
+  const kurir_pengantaran({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Kurir Tracking Demo',
+      title: 'Pengantaran',
       theme: ThemeData(primarySwatch: Colors.green, useMaterial3: true),
       debugShowCheckedModeBanner: false,
       home: DeliveryTrackingPage(
@@ -61,8 +62,56 @@ class DeliveryTrackingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pesanan #$orderId'),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Pesanan #$orderId',
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
         backgroundColor: Colors.green[700],
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.cancel, color: Colors.red),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext dialogContext) {
+                  return AlertDialog(
+                    title: const Text('Konfirmasi'),
+                    content: const Text(
+                        'Apakah Anda yakin ingin membatalkan pengantaran?'),
+                    actions: [
+                      TextButton(
+                        child: const Text('Tidak'),
+                        onPressed: () {
+                          Navigator.of(dialogContext).pop(); // tutup dialog
+                        },
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red),
+                        child: const Text('Ya',
+                            style: TextStyle(color: Colors.white)),
+                        onPressed: () {
+                          Navigator.of(dialogContext).pop(); // tutup dialog
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const MyApp()),
+                          );
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
