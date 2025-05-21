@@ -429,8 +429,6 @@ class _KurirPembeliChatPageState extends State<KurirPembeliChatPage> {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No messages available.'));
           }
 
           final messages = snapshot.data!;
