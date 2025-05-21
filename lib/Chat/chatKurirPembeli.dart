@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:tubes_ppb/homepage.dart';
+import 'package:tubes_ppb/kurir.dart';
 import 'lib/api/Raphael_api_chat.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -111,7 +112,7 @@ class _InboxPageKurirPembeliState extends State<InboxPageKurirPembeli> {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => Homepage()),
+              MaterialPageRoute(builder: (context) => Kurir()),
             );
           },
         ),
