@@ -134,16 +134,16 @@ class _DeliveryPageState extends State<DeliveryPage> {
               color: Colors.white,
             ),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => KurirProfilePage(
-                    nama: namaKurir,
-                    noTelp: '0',
-                    namaMitra: '0',
-                  ),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => KurirProfilePage(
+              //       nama: namaKurir,
+              //       noTelp: '0',
+              //       namaMitra: '0',
+              //     ),
+              //   ),
+              // );
             },
           ),
         ],

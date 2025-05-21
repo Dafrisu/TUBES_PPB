@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/kurir.dart';
-import 'Chat/chatKurirPembeli.dart';
+import 'Chat/chatKurirPembeli.dart'; // Import chat class
+import 'Chat/lib/api/Raphael_api_chat.dart'; // Import API for chat
 
 void main() {
   runApp(const kurir_pengantaran(
@@ -62,7 +63,7 @@ class kurir_pengantaran extends StatelessWidget {
 }
 
 // ---------- PAGE ----------
-class DeliveryTrackingPage extends StatelessWidget {
+class DeliveryTrackingPage extends StatefulWidget {
   final int id_pesanan;
   final String nama_pembeli;
   final String alamat_pembeli;
@@ -83,6 +84,62 @@ class DeliveryTrackingPage extends StatelessWidget {
   });
 
   @override
+  _DeliveryTrackingPageState createState() => _DeliveryTrackingPageState();
+}
+
+class _DeliveryTrackingPageState extends State<DeliveryTrackingPage> {
+  // Variable to store the pembeli ID
+  int? id_pembeli;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchPembeliIdFromOrderInfo();
+  }
+
+  // Method to fetch pembeli ID from order information
+  Future<void> _fetchPembeliIdFromOrderInfo() async {
+    try {
+      // First attempt: Try to find the pembeli ID directly from chat history
+      final chatMessages = await fetchchatkurir();
+
+      // Look for a match by nama_lengkap
+      final matchedMessage = chatMessages.firstWhere(
+        (message) => message['nama_lengkap'] == widget.nama_pembeli,
+        orElse: () => {},
+      );
+
+      if (matchedMessage.containsKey('id_pembeli') &&
+          matchedMessage['id_pembeli'] != null) {
+        setState(() {
+          id_pembeli = matchedMessage['id_pembeli'];
+          isLoading = false;
+        });
+        return;
+      }
+
+      // If we can't find it in chat history, fall back to a direct API call
+      // Note: You'll need to implement this API endpoint or method
+      // This is a placeholder for demonstration
+      // In a real app, you would make an API call to get the pembeli ID based on nomor_telepon or nama_pembeli
+
+      // For now, as a fallback, use the order ID (this is just a placeholder)
+      setState(() {
+        id_pembeli = widget.id_pesanan;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching pembeli ID: $e');
+      setState(() {
+        // Fallback to order ID as a last resort
+        id_pembeli = widget.id_pesanan;
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -90,7 +147,7 @@ class DeliveryTrackingPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Pesanan #$id_pesanan',
+              'Pesanan #${widget.id_pesanan}',
               style: TextStyle(color: Colors.white),
             ),
           ],
@@ -176,10 +233,10 @@ class DeliveryTrackingPage extends StatelessWidget {
                       const SizedBox(height: 8),
                       Expanded(
                         child: ListView.separated(
-                          itemCount: namaBarang.length,
+                          itemCount: widget.namaBarang.length,
                           separatorBuilder: (_, __) => const Divider(height: 1),
                           itemBuilder: (context, index) {
-                            final item = namaBarang[index];
+                            final item = widget.namaBarang[index];
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -201,10 +258,10 @@ class DeliveryTrackingPage extends StatelessWidget {
                         children: [
                           const Text('Total',
                               style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text('Rp $total_belanja',
+                          Text('Rp ${widget.total_belanja}',
                               style:
                                   const TextStyle(fontWeight: FontWeight.bold)),
-                          Text('Total Kuantitas $kuantitas')
+                          Text('Total Kuantitas ${widget.kuantitas}')
                         ],
                       ),
                     ],
@@ -236,7 +293,7 @@ class DeliveryTrackingPage extends StatelessWidget {
                         const Icon(Icons.person, size: 18),
                         const SizedBox(width: 4),
                         Expanded(
-                          child: Text(nama_pembeli),
+                          child: Text(widget.nama_pembeli),
                         ),
                       ],
                     ),
@@ -246,7 +303,7 @@ class DeliveryTrackingPage extends StatelessWidget {
                       children: [
                         const Icon(Icons.location_on, size: 18),
                         const SizedBox(width: 4),
-                        Expanded(child: Text(alamat_pembeli)),
+                        Expanded(child: Text(widget.alamat_pembeli)),
                       ],
                     ),
                     const SizedBox(height: 4),
@@ -254,7 +311,7 @@ class DeliveryTrackingPage extends StatelessWidget {
                       children: [
                         const Icon(Icons.phone, size: 18),
                         const SizedBox(width: 4),
-                        Text(nomor_telepon),
+                        Text(widget.nomor_telepon),
                       ],
                     ),
                   ],
@@ -271,20 +328,45 @@ class DeliveryTrackingPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //       builder: (context) => KurirPembeliChatPage(
-                      //             sender: nama_pembeli,
-                      //             id_pembeli: 0,
-                      //           )),
-                      // );
-                    },
-                    icon: const Icon(Icons.call, color: Colors.black),
-                    label: const Text(
-                      'Chat pelanggan',
-                      style: TextStyle(color: Colors.black),
+                    onPressed: isLoading
+                        ? null // Disable the button while loading
+                        : () {
+                            // Navigate to the chat page with the customer
+                            if (id_pembeli != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => KurirPembeliChatPage(
+                                    sender: widget.nama_pembeli,
+                                    id_pembeli: id_pembeli!,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              // Show an error message if pembeli ID is not available
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                      'Tidak dapat memulai chat, ID pembeli tidak ditemukan'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          },
+                    icon: isLoading
+                        ? Container(
+                            width: 24,
+                            height: 24,
+                            padding: const EdgeInsets.all(2.0),
+                            child: const CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.black54,
+                            ),
+                          )
+                        : const Icon(Icons.chat, color: Colors.black),
+                    label: Text(
+                      isLoading ? 'Memuat...' : 'Chat pelanggan',
+                      style: const TextStyle(color: Colors.black),
                     ),
                   ),
                 ),
