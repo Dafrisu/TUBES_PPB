@@ -33,6 +33,8 @@ class _DeliveryPageState extends State<DeliveryPage> {
   int idUmkm = 0;
   String statusKurir = '';
   String namaUmkm = '';
+  String nomor_telepon = '';
+  int id_pembeli = 0;
   @override
   void initState() {
     super.initState();
@@ -46,6 +48,8 @@ class _DeliveryPageState extends State<DeliveryPage> {
       namaKurir = kurirData['nama_kurir'];
       idUmkm = kurirData['id_umkm'];
       statusKurir = kurirData['status'] ?? 'Tidak diketahui';
+      nomor_telepon = kurirData['nomor_telepon'] ?? 'Tidak diketahui';
+      id_pembeli = kurirData['id_pembeli'] ?? 0;
       namaUmkm = kurirData['nama_usaha'] ?? 'Tidak diketahui';
     });
   }
@@ -134,16 +138,16 @@ class _DeliveryPageState extends State<DeliveryPage> {
               color: Colors.white,
             ),
             onPressed: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => KurirProfilePage(
-              //       nama: namaKurir,
-              //       noTelp: '0',
-              //       namaMitra: '0',
-              //     ),
-              //   ),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => KurirProfilePage(
+                    nama: namaKurir,
+                    noTelp: nomor_telepon,
+                    namaMitra: namaUmkm,
+                  ),
+                ),
+              );
             },
           ),
         ],
@@ -210,6 +214,7 @@ class OrderItemData {
   final String nomor_telepon;
   final String nama_lengkap;
   final List<String> listBarang;
+  final int id_pembeli;
 
   OrderItemData({
     required this.idPesanan,
@@ -221,6 +226,7 @@ class OrderItemData {
     required this.nomor_telepon,
     required this.nama_lengkap,
     required this.listBarang,
+    required this.id_pembeli,
   });
 
   factory OrderItemData.fromJson(Map<String, dynamic> json) {
@@ -234,6 +240,7 @@ class OrderItemData {
       nomor_telepon: json['nomor_telepon'],
       nama_lengkap: json['nama_lengkap'],
       listBarang: json['nama_barang'].split(','),
+      id_pembeli: json['id_pembeli'],
     );
   }
 }
@@ -277,6 +284,7 @@ class _OrderCardState extends State<OrderCard> {
                       id_pesanan: widget.order.idPesanan,
                       nomor_telepon: widget.order.nomor_telepon,
                       kuantitas: widget.order.kuantitasBarang,
+                      id_pembeli: widget.order.id_pembeli,
                     ),
                   ),
                 );

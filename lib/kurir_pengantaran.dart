@@ -12,6 +12,7 @@ void main() {
     id_pesanan: 1,
     nomor_telepon: '1234567890',
     kuantitas: '',
+    id_pembeli: 1,
   ));
 }
 
@@ -32,16 +33,19 @@ class kurir_pengantaran extends StatelessWidget {
   final List<String> namaBarang;
   final String nomor_telepon;
   final String kuantitas;
+  final int id_pembeli;
 
-  const kurir_pengantaran(
-      {super.key,
-      required this.nama_pembeli,
-      required this.alamat_pembeli,
-      required this.total_belanja,
-      required this.namaBarang,
-      required this.id_pesanan,
-      required this.nomor_telepon,
-      required this.kuantitas});
+  const kurir_pengantaran({
+    super.key,
+    required this.nama_pembeli,
+    required this.alamat_pembeli,
+    required this.total_belanja,
+    required this.namaBarang,
+    required this.id_pesanan,
+    required this.nomor_telepon,
+    required this.kuantitas,
+    required this.id_pembeli,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +61,7 @@ class kurir_pengantaran extends StatelessWidget {
         namaBarang: namaBarang,
         nomor_telepon: nomor_telepon,
         kuantitas: kuantitas,
+        id_pembeli: id_pembeli,
       ),
     );
   }
@@ -71,6 +76,7 @@ class DeliveryTrackingPage extends StatefulWidget {
   final List<String> namaBarang;
   final String nomor_telepon;
   final String kuantitas;
+  final int id_pembeli;
 
   const DeliveryTrackingPage({
     super.key,
@@ -81,6 +87,7 @@ class DeliveryTrackingPage extends StatefulWidget {
     required this.namaBarang,
     required this.nomor_telepon,
     required this.kuantitas,
+    required this.id_pembeli,
   });
 
   @override
@@ -338,7 +345,7 @@ class _DeliveryTrackingPageState extends State<DeliveryTrackingPage> {
                                 MaterialPageRoute(
                                   builder: (context) => KurirPembeliChatPage(
                                     sender: widget.nama_pembeli,
-                                    id_pembeli: id_pembeli!,
+                                    id_pembeli: widget.id_pembeli,
                                   ),
                                 ),
                               );

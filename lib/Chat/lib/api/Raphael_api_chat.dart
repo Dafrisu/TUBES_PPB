@@ -224,6 +224,7 @@ Future<Map<String, dynamic>> fetchKurirData() async {
       'status': kurir['status'] ?? 'Tidak diketahui',
       'nomor_telepon': kurir['nomor_telepon'] ?? 'Tidak diketahui',
       'nama_usaha': kurir['UMKM']['nama_usaha'] ?? 'Tidak diketahui',
+      'id_pembeli': kurir['id_pembeli'] ?? 0,
     };
   } else {
     print('Failed to load kurir data');
