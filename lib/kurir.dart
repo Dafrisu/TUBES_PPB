@@ -33,6 +33,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
   int idUmkm = 0;
   String statusKurir = '';
   String namaUmkm = '';
+  String nomor_telepon = '';
   @override
   void initState() {
     super.initState();
@@ -47,6 +48,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
       idUmkm = kurirData['id_umkm'];
       statusKurir = kurirData['status'] ?? 'Tidak diketahui';
       namaUmkm = kurirData['UMKM']['nama_usaha'] ?? 'Tidak diketahui';
+      nomor_telepon = kurirData['nomor_telepon'] ?? 'Tidak diketahui';
     });
   }
 
@@ -134,16 +136,16 @@ class _DeliveryPageState extends State<DeliveryPage> {
               color: Colors.white,
             ),
             onPressed: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => KurirProfilePage(
-              //       nama: namaKurir,
-              //       noTelp: '0',
-              //       namaMitra: '0',
-              //     ),
-              //   ),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => KurirProfilePage(
+                    nama: namaKurir,
+                    noTelp: nomor_telepon,
+                    namaMitra: namaUmkm,
+                  ),
+                ),
+              );
             },
           ),
         ],
