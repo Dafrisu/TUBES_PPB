@@ -46,7 +46,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
       namaKurir = kurirData['nama_kurir'];
       idUmkm = kurirData['id_umkm'];
       statusKurir = kurirData['status'] ?? 'Tidak diketahui';
-      namaUmkm = kurirData['UMKM']['nama_usaha'] ?? 'Tidak diketahui';
+      namaUmkm = kurirData['nama_usaha'] ?? 'Tidak diketahui';
     });
   }
 
