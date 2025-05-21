@@ -9,24 +9,17 @@ void main() {
     alamat_pembeli: '123 Main St',
     total_belanja: '0',
     namaBarang: ['Gurame Bakar'],
-    id_pesanan: 1,
+    id_pesanan: ['1'],
     nomor_telepon: '1234567890',
     kuantitas: '',
     id_pembeli: 1,
+    id_batch: 0,
   ));
-}
-
-class OrderItem {
-  final String name;
-  final int qty;
-  final int price;
-
-  OrderItem(this.name, this.qty, this.price);
 }
 
 // ---------- APP ----------
 class kurir_pengantaran extends StatelessWidget {
-  final int id_pesanan;
+  final List<String> id_pesanan;
   final String nama_pembeli;
   final String alamat_pembeli;
   final String total_belanja;
@@ -34,6 +27,7 @@ class kurir_pengantaran extends StatelessWidget {
   final String nomor_telepon;
   final String kuantitas;
   final int id_pembeli;
+  final int id_batch;
 
   const kurir_pengantaran({
     super.key,
@@ -45,6 +39,7 @@ class kurir_pengantaran extends StatelessWidget {
     required this.nomor_telepon,
     required this.kuantitas,
     required this.id_pembeli,
+    required this.id_batch,
   });
 
   @override
@@ -62,6 +57,7 @@ class kurir_pengantaran extends StatelessWidget {
         nomor_telepon: nomor_telepon,
         kuantitas: kuantitas,
         id_pembeli: id_pembeli,
+        id_batch: id_batch,
       ),
     );
   }
@@ -69,7 +65,7 @@ class kurir_pengantaran extends StatelessWidget {
 
 // ---------- PAGE ----------
 class DeliveryTrackingPage extends StatefulWidget {
-  final int id_pesanan;
+  final List<String> id_pesanan;
   final String nama_pembeli;
   final String alamat_pembeli;
   final String total_belanja;
@@ -77,6 +73,7 @@ class DeliveryTrackingPage extends StatefulWidget {
   final String nomor_telepon;
   final String kuantitas;
   final int id_pembeli;
+  final int id_batch;
 
   const DeliveryTrackingPage({
     super.key,
@@ -88,6 +85,7 @@ class DeliveryTrackingPage extends StatefulWidget {
     required this.nomor_telepon,
     required this.kuantitas,
     required this.id_pembeli,
+    required this.id_batch,
   });
 
   @override
@@ -102,49 +100,49 @@ class _DeliveryTrackingPageState extends State<DeliveryTrackingPage> {
   @override
   void initState() {
     super.initState();
-    _fetchPembeliIdFromOrderInfo();
+    // _fetchPembeliIdFromOrderInfo();
   }
 
-  // Method to fetch pembeli ID from order information
-  Future<void> _fetchPembeliIdFromOrderInfo() async {
-    try {
-      // First attempt: Try to find the pembeli ID directly from chat history
-      final chatMessages = await fetchchatkurir();
+  // // Method to fetch pembeli ID from order information
+  // Future<void> _fetchPembeliIdFromOrderInfo() async {
+  //   try {
+  //     // First attempt: Try to find the pembeli ID directly from chat history
+  //     final chatMessages = await fetchchatkurir();
 
-      // Look for a match by nama_lengkap
-      final matchedMessage = chatMessages.firstWhere(
-        (message) => message['nama_lengkap'] == widget.nama_pembeli,
-        orElse: () => {},
-      );
+  //     // Look for a match by nama_lengkap
+  //     final matchedMessage = chatMessages.firstWhere(
+  //       (message) => message['nama_lengkap'] == widget.nama_pembeli,
+  //       orElse: () => {},
+  //     );
 
-      if (matchedMessage.containsKey('id_pembeli') &&
-          matchedMessage['id_pembeli'] != null) {
-        setState(() {
-          id_pembeli = matchedMessage['id_pembeli'];
-          isLoading = false;
-        });
-        return;
-      }
+  //     if (matchedMessage.containsKey('id_pembeli') &&
+  //         matchedMessage['id_pembeli'] != null) {
+  //       setState(() {
+  //         id_pembeli = matchedMessage['id_pembeli'];
+  //         isLoading = false;
+  //       });
+  //       return;
+  //     }
 
-      // If we can't find it in chat history, fall back to a direct API call
-      // Note: You'll need to implement this API endpoint or method
-      // This is a placeholder for demonstration
-      // In a real app, you would make an API call to get the pembeli ID based on nomor_telepon or nama_pembeli
+  //     // If we can't find it in chat history, fall back to a direct API call
+  //     // Note: You'll need to implement this API endpoint or method
+  //     // This is a placeholder for demonstration
+  //     // In a real app, you would make an API call to get the pembeli ID based on nomor_telepon or nama_pembeli
 
-      // For now, as a fallback, use the order ID (this is just a placeholder)
-      setState(() {
-        id_pembeli = widget.id_pesanan;
-        isLoading = false;
-      });
-    } catch (e) {
-      print('Error fetching pembeli ID: $e');
-      setState(() {
-        // Fallback to order ID as a last resort
-        id_pembeli = widget.id_pesanan;
-        isLoading = false;
-      });
-    }
-  }
+  //     // For now, as a fallback, use the order ID (this is just a placeholder)
+  //     setState(() {
+  //       id_pembeli = widget.id_pesanan;
+  //       isLoading = false;
+  //     });
+  //   } catch (e) {
+  //     print('Error fetching pembeli ID: $e');
+  //     setState(() {
+  //       // Fallback to order ID as a last resort
+  //       id_pembeli = widget.id_pesanan;
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -381,9 +379,44 @@ class _DeliveryTrackingPageState extends State<DeliveryTrackingPage> {
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      // TODO: update status
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text('Status diperbarui: Pesanan selesai')));
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext dialogContext) {
+                          return AlertDialog(
+                            title: const Text('Konfirmasi'),
+                            content: const Text(
+                                'Update Status Pesanaan ini sebagai selesai?'),
+                            actions: [
+                              TextButton(
+                                child: const Text('Tidak'),
+                                onPressed: () {
+                                  Navigator.of(dialogContext)
+                                      .pop(); // tutup dialog
+                                },
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.green),
+                                child: const Text('Ya',
+                                    style: TextStyle(color: Colors.white)),
+                                onPressed: () {
+                                  Navigator.of(dialogContext).pop();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const Kurir()),
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text(
+                                              'Status diperbarui: Pesanan selesai')));
+                                  updateStatusPesananSelesai(widget.id_batch);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
                     icon: const Icon(
                       Icons.check_circle_outline,
