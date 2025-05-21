@@ -205,7 +205,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
 }
 
 class OrderItemData {
-  final int idPesanan;
+  final List<String> idPesanan;
   final String statusPesanan;
   final String namaBarang;
   final String kuantitasBarang;
@@ -215,6 +215,7 @@ class OrderItemData {
   final String nama_lengkap;
   final List<String> listBarang;
   final int id_pembeli;
+  final int id_batch;
 
   OrderItemData({
     required this.idPesanan,
@@ -227,11 +228,12 @@ class OrderItemData {
     required this.nama_lengkap,
     required this.listBarang,
     required this.id_pembeli,
+    required this.id_batch,
   });
 
   factory OrderItemData.fromJson(Map<String, dynamic> json) {
     return OrderItemData(
-      idPesanan: json['id_batch'],
+      idPesanan: json['id_pesanan'].split(','),
       statusPesanan: json['status_pesanan'],
       namaBarang: json['nama_barang'],
       kuantitasBarang: json['kuantitas'],
@@ -241,6 +243,7 @@ class OrderItemData {
       nama_lengkap: json['nama_lengkap'],
       listBarang: json['nama_barang'].split(','),
       id_pembeli: json['id_pembeli'],
+      id_batch: json['id_batch'],
     );
   }
 }
@@ -285,6 +288,7 @@ class _OrderCardState extends State<OrderCard> {
                       nomor_telepon: widget.order.nomor_telepon,
                       kuantitas: widget.order.kuantitasBarang,
                       id_pembeli: widget.order.id_pembeli,
+                      id_batch: widget.order.id_batch,
                     ),
                   ),
                 );
