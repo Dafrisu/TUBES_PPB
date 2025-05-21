@@ -149,7 +149,7 @@ class _LoginKurirState extends State<LoginKurir> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MyApp(),
+                              builder: (context) => Kurir(),
                             ),
                           );
                         } else {

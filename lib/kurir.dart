@@ -5,14 +5,14 @@ import 'package:tubes_ppb/profile_kurir.dart';
 import 'Chat/chatKurirPembeli.dart';
 import 'Chat/lib/api/Raphael_api_chat.dart';
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class Kurir extends StatefulWidget {
+  const Kurir({super.key});
 
   @override
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<Kurir> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
