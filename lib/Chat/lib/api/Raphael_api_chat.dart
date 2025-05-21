@@ -217,12 +217,14 @@ Future<Map<String, dynamic>> fetchKurirData() async {
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
+    final kurir = data[0];
     return {
-      'nama_kurir': data['nama_kurir'] ?? 'Kurir',
-      'id_umkm': data['id_umkm'] ?? 0,
-      'status': data['status'] ?? 'Tidak diketahui',
-      'nomor_telepon': data['nomor_telepon'] ?? 'Tidak diketahui',
-      'nama_usaha': data['UMKM']['nama_usaha'] ?? 'Tidak diketahui',
+      'nama_kurir': kurir['nama_kurir'] ?? 'Kurir',
+      'id_umkm': kurir['id_umkm'] ?? 0,
+      'status': kurir['status'] ?? 'Tidak diketahui',
+      'nomor_telepon': kurir['nomor_telepon'] ?? 'Tidak diketahui',
+      'nama_usaha': kurir['UMKM']['nama_usaha'] ?? 'Tidak diketahui',
+      'id_pembeli': kurir['id_pembeli'] ?? 0,
     };
   } else {
     print('Failed to load kurir data');
