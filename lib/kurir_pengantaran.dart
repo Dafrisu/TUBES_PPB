@@ -94,8 +94,7 @@ class DeliveryTrackingPage extends StatefulWidget {
 
 class _DeliveryTrackingPageState extends State<DeliveryTrackingPage> {
   // Variable to store the pembeli ID
-  int? id_pembeli;
-  bool isLoading = true;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -337,7 +336,7 @@ class _DeliveryTrackingPageState extends State<DeliveryTrackingPage> {
                         ? null // Disable the button while loading
                         : () {
                             // Navigate to the chat page with the customer
-                            if (id_pembeli != null) {
+                            if (widget.id_pembeli != 0) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

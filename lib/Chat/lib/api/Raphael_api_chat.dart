@@ -89,7 +89,7 @@ Future<List<Map<String, dynamic>>> fetchMessagesByKurirAndPembeli(
   int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
 
   // Log nilai ID
-  print('Debug: id_kurir = $kurirSessionId, id_pembeli = $sessionId');
+  print('Debug: id_kurir = $kurirSessionId, id_pembeli = $id_pembeli');
 
   try {
     final response = await http.get(Uri.parse(
