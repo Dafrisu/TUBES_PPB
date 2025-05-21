@@ -182,7 +182,7 @@ class _DeliveryTrackingPageState extends State<DeliveryTrackingPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const MyApp()),
+                                builder: (context) => const Kurir()),
                           );
                         },
                       ),

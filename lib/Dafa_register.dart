@@ -28,7 +28,7 @@ class _RegisterState extends State<Register> {
   final emailRegex =
       RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
   final passwordRegex = RegExp(
-      r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
+      r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$');
   final telephoneRegex = RegExp(r'^\+?[\d\s]{10,15}$');
   String? selectedRole = 'pembeli';
 
@@ -297,7 +297,8 @@ class _RegisterState extends State<Register> {
                   },
                   child: Text('Register!',
                       style: GoogleFonts.montserrat(
-                          fontSize: 20, color: Colors.white)),
+                          fontSize: 20, color: Colors.white)
+                          .copyWith(fontWeight: FontWeight.w700)),
                 ),
               ],
             ),

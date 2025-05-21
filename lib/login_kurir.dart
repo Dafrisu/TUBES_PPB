@@ -21,7 +21,7 @@ class _LoginKurirState extends State<LoginKurir> {
     final formKey = GlobalKey<FormState>();
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
-      String? selectedRole = 'kurir';
+    String? selectedRole = 'kurir';
 
     return Scaffold(
       appBar: AppBar(
@@ -59,7 +59,7 @@ class _LoginKurirState extends State<LoginKurir> {
                           fontSize: 24, fontWeight: FontWeight.bold)),
                 ),
                 const SizedBox(height: 20),
-                 Text('Pilih Role',
+                Text('Pilih Role',
                     style: GoogleFonts.montserrat(
                         fontSize: 16, fontWeight: FontWeight.w700)),
                 DropdownButtonFormField<String>(
@@ -103,7 +103,10 @@ class _LoginKurirState extends State<LoginKurir> {
                         fontSize: 16, fontWeight: FontWeight.w700)),
                 TextFormField(
                   controller: emailController,
-                  decoration: InputDecoration(labelText: 'Email', border: OutlineInputBorder(),),
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(),
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Masukkan Email Anda';

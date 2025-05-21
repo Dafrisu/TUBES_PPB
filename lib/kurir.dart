@@ -9,10 +9,10 @@ class Kurir extends StatefulWidget {
   const Kurir({super.key});
 
   @override
-  _MyAppState createState() => _MyAppState();
+  _KurirState createState() => _KurirState();
 }
 
-class _MyAppState extends State<Kurir> {
+class _KurirState extends State<Kurir> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -32,7 +32,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
   String namaKurir = 'Kurir';
   int idUmkm = 0;
   String statusKurir = '';
-
+  String namaUmkm = '';
   @override
   void initState() {
     super.initState();
@@ -46,6 +46,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
       namaKurir = kurirData['nama_kurir'];
       idUmkm = kurirData['id_umkm'];
       statusKurir = kurirData['status'] ?? 'Tidak diketahui';
+      namaUmkm = kurirData['UMKM']['nama_usaha'] ?? 'Tidak diketahui';
     });
   }
 
@@ -133,12 +134,16 @@ class _DeliveryPageState extends State<DeliveryPage> {
               color: Colors.white,
             ),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const KurirProfilePage(),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => KurirProfilePage(
+              //       nama: namaKurir,
+              //       noTelp: '0',
+              //       namaMitra: '0',
+              //     ),
+              //   ),
+              // );
             },
           ),
         ],

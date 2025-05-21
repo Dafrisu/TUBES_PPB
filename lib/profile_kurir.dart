@@ -2,20 +2,23 @@ import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MaterialApp(
-    home: KurirProfilePage(),
+    home: KurirProfilePage(nama: '', noTelp: '', namaMitra: ''),
     debugShowCheckedModeBanner: false,
   ));
 }
 
 class KurirProfilePage extends StatelessWidget {
-  const KurirProfilePage({super.key});
+  final String nama;
+  final String noTelp;
+  final String namaMitra;
+  const KurirProfilePage(
+      {super.key,
+      required this.nama,
+      required this.noTelp,
+      required this.namaMitra});
 
   @override
   Widget build(BuildContext context) {
-    // Dummy data profil kurir
-    final String nama = 'Ahmad Fikri';
-    final String noTelp = '+62 812 3456 7890';
-    final String namaMitra = 'UMKM Kopi Nusantara';
     final String fotoUrl =
         'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541';
 
