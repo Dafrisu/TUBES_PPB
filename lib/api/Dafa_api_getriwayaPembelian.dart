@@ -2,7 +2,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'api_loginPembeli.dart';
 
-//API buat riwayat Pembelian
 Future<List<Map<String, dynamic>>> fetchriwayatpembelian() async {
   try {
     final response = await http.get(Uri.parse(

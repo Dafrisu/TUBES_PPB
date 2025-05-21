@@ -202,6 +202,9 @@ class OrderItemData {
   final String kuantitasBarang;
   final String totalBelanja;
   final String alamatPembeli;
+  final String nomor_telepon;
+  final String nama_lengkap;
+  final List<String> listBarang;
 
   OrderItemData({
     required this.idPesanan,
@@ -210,6 +213,9 @@ class OrderItemData {
     required this.kuantitasBarang,
     required this.totalBelanja,
     required this.alamatPembeli,
+    required this.nomor_telepon,
+    required this.nama_lengkap,
+    required this.listBarang,
   });
 
   factory OrderItemData.fromJson(Map<String, dynamic> json) {
@@ -220,6 +226,9 @@ class OrderItemData {
       kuantitasBarang: json['kuantitas'],
       totalBelanja: json['total_belanja'],
       alamatPembeli: json['alamat_pembeli'],
+      nomor_telepon: json['nomor_telepon'],
+      nama_lengkap: json['nama_lengkap'],
+      listBarang: json['nama_barang'].split(','),
     );
   }
 }
@@ -255,7 +264,15 @@ class _OrderCardState extends State<OrderCard> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const kurir_pengantaran(),
+                    builder: (context) => kurir_pengantaran(
+                      nama_pembeli: widget.order.nama_lengkap,
+                      alamat_pembeli: widget.order.alamatPembeli,
+                      total_belanja: widget.order.totalBelanja,
+                      namaBarang: widget.order.listBarang,
+                      id_pesanan: widget.order.idPesanan,
+                      nomor_telepon: widget.order.nomor_telepon,
+                      kuantitas: widget.order.kuantitasBarang,
+                    ),
                   ),
                 );
               },
