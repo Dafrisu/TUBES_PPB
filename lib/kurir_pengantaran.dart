@@ -2,7 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:tubes_ppb/kurir.dart';
 
 void main() {
-  runApp(const kurir_pengantaran());
+  runApp(const kurir_pengantaran(
+    nama_pembeli: 'ELA TERLALU SPIT ayayay',
+    alamat_pembeli: '123 Main St',
+    total_belanja: '0',
+    namaBarang: ['Gurame Bakar'],
+    id_pesanan: 1,
+    nomor_telepon: '1234567890',
+    kuantitas: '',
+  ));
 }
 
 class OrderItem {
@@ -15,7 +23,23 @@ class OrderItem {
 
 // ---------- APP ----------
 class kurir_pengantaran extends StatelessWidget {
-  const kurir_pengantaran({super.key});
+  final int id_pesanan;
+  final String nama_pembeli;
+  final String alamat_pembeli;
+  final String total_belanja;
+  final List<String> namaBarang;
+  final String nomor_telepon;
+  final String kuantitas;
+
+  const kurir_pengantaran(
+      {super.key,
+      required this.nama_pembeli,
+      required this.alamat_pembeli,
+      required this.total_belanja,
+      required this.namaBarang,
+      required this.id_pesanan,
+      required this.nomor_telepon,
+      required this.kuantitas});
 
   @override
   Widget build(BuildContext context) {
@@ -24,15 +48,13 @@ class kurir_pengantaran extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.green, useMaterial3: true),
       debugShowCheckedModeBanner: false,
       home: DeliveryTrackingPage(
-        orderId: 'INV‑23045',
-        customerName: 'Daffa Pratama',
-        customerAddress: 'Jl. Merdeka No. 10, Bandung',
-        customerPhone: '0812‑3456‑7890',
-        items: [
-          OrderItem('Ayam Geprek Krispi', 2, 23000),
-          OrderItem('Es Kopi Susu', 1, 15000),
-          OrderItem('Tahu Crispy', 3, 10000),
-        ],
+        id_pesanan: id_pesanan,
+        nama_pembeli: nama_pembeli,
+        alamat_pembeli: alamat_pembeli,
+        total_belanja: total_belanja,
+        namaBarang: namaBarang,
+        nomor_telepon: nomor_telepon,
+        kuantitas: kuantitas,
       ),
     );
   }
@@ -40,23 +62,24 @@ class kurir_pengantaran extends StatelessWidget {
 
 // ---------- PAGE ----------
 class DeliveryTrackingPage extends StatelessWidget {
-  final String orderId;
-  final String customerName;
-  final String customerAddress;
-  final String customerPhone;
-  final List<OrderItem> items;
+  final int id_pesanan;
+  final String nama_pembeli;
+  final String alamat_pembeli;
+  final String total_belanja;
+  final List<String> namaBarang;
+  final String nomor_telepon;
+  final String kuantitas;
 
   const DeliveryTrackingPage({
     super.key,
-    required this.orderId,
-    required this.customerName,
-    required this.customerAddress,
-    required this.customerPhone,
-    required this.items,
+    required this.id_pesanan,
+    required this.nama_pembeli,
+    required this.alamat_pembeli,
+    required this.total_belanja,
+    required this.namaBarang,
+    required this.nomor_telepon,
+    required this.kuantitas,
   });
-
-  int get total =>
-      items.fold(0, (sum, e) => sum + e.price * e.qty); // hitung total
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +89,7 @@ class DeliveryTrackingPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Pesanan #$orderId',
+              'Pesanan #$id_pesanan',
               style: TextStyle(color: Colors.white),
             ),
           ],
@@ -152,19 +175,20 @@ class DeliveryTrackingPage extends StatelessWidget {
                       const SizedBox(height: 8),
                       Expanded(
                         child: ListView.separated(
-                          itemCount: items.length,
+                          itemCount: namaBarang.length,
                           separatorBuilder: (_, __) => const Divider(height: 1),
                           itemBuilder: (context, index) {
-                            final item = items[index];
+                            final item = namaBarang[index];
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
-                                    child: Text(item.name,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis)),
-                                Text('x${item.qty}'),
-                                Text('Rp ${item.price * item.qty}'),
+                                  child: Text(
+                                    item,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
                               ],
                             );
                           },
@@ -176,9 +200,10 @@ class DeliveryTrackingPage extends StatelessWidget {
                         children: [
                           const Text('Total',
                               style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text('Rp $total',
+                          Text('Rp $total_belanja',
                               style:
                                   const TextStyle(fontWeight: FontWeight.bold)),
+                          Text('Total Kuantitas $kuantitas')
                         ],
                       ),
                     ],
@@ -210,7 +235,7 @@ class DeliveryTrackingPage extends StatelessWidget {
                         const Icon(Icons.person, size: 18),
                         const SizedBox(width: 4),
                         Expanded(
-                          child: Text(customerName),
+                          child: Text(nama_pembeli),
                         ),
                       ],
                     ),
@@ -220,7 +245,7 @@ class DeliveryTrackingPage extends StatelessWidget {
                       children: [
                         const Icon(Icons.location_on, size: 18),
                         const SizedBox(width: 4),
-                        Expanded(child: Text(customerAddress)),
+                        Expanded(child: Text(alamat_pembeli)),
                       ],
                     ),
                     const SizedBox(height: 4),
@@ -228,7 +253,7 @@ class DeliveryTrackingPage extends StatelessWidget {
                       children: [
                         const Icon(Icons.phone, size: 18),
                         const SizedBox(width: 4),
-                        Text(customerPhone),
+                        Text(nomor_telepon),
                       ],
                     ),
                   ],
