@@ -5,14 +5,14 @@ import 'package:tubes_ppb/profile_kurir.dart';
 import 'Chat/chatKurirPembeli.dart';
 import 'Chat/lib/api/Raphael_api_chat.dart';
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class Kurir extends StatefulWidget {
+  const Kurir({super.key});
 
   @override
-  _MyAppState createState() => _MyAppState();
+  _KurirState createState() => _KurirState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _KurirState extends State<Kurir> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -32,7 +32,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
   String namaKurir = 'Kurir';
   int idUmkm = 0;
   String statusKurir = '';
-
+  String namaUmkm = '';
   @override
   void initState() {
     super.initState();
@@ -46,6 +46,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
       namaKurir = kurirData['nama_kurir'];
       idUmkm = kurirData['id_umkm'];
       statusKurir = kurirData['status'] ?? 'Tidak diketahui';
+      namaUmkm = kurirData['UMKM']['nama_usaha'] ?? 'Tidak diketahui';
     });
   }
 
@@ -136,7 +137,11 @@ class _DeliveryPageState extends State<DeliveryPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const KurirProfilePage(),
+                  builder: (context) => KurirProfilePage(
+                    nama: namaKurir,
+                    noTelp: '0',
+                    namaMitra: '0',
+                  ),
                 ),
               );
             },

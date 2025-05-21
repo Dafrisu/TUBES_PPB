@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_ppb/kurir.dart';
+import 'Chat/chatKurirPembeli.dart';
 
 void main() {
   runApp(const kurir_pengantaran(
@@ -124,7 +125,7 @@ class DeliveryTrackingPage extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const MyApp()),
+                                builder: (context) => const Kurir()),
                           );
                         },
                       ),
@@ -270,7 +271,16 @@ class DeliveryTrackingPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: () => debugPrint('Ke page chat'),
+                    onPressed: () {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //       builder: (context) => KurirPembeliChatPage(
+                      //             sender: nama_pembeli,
+                      //             id_pembeli: 0,
+                      //           )),
+                      // );
+                    },
                     icon: const Icon(Icons.call, color: Colors.black),
                     label: const Text(
                       'Chat pelanggan',
