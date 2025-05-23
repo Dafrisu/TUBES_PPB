@@ -89,7 +89,7 @@ Future<List<Map<String, dynamic>>> fetchMessagesByKurirAndPembeli(
   int id_kurir = prefs.getInt('kurirSessionId') ?? 0;
 
   // Log nilai ID
-  print('Debug: id_kurir = $kurirSessionId, id_pembeli = $id_pembeli');
+  print('Debug: id_kurir = $kurirSessionId, id_pembeli = $sessionId');
 
   try {
     final response = await http.get(Uri.parse(
@@ -282,6 +282,66 @@ Future<void> updateStatusPesananSelesai(int idBatch) async {
     // URL untuk update status pesanan
     final url = Uri.parse(
         'https://umkmapi-production.up.railway.app/updatestatuspesananselesai/$idUmkm/$idBatch');
+
+    // Mengirim request PUT untuk update status
+    final response = await http.put(url);
+
+    if (response.statusCode == 200) {
+      // Status berhasil diperbarui
+      print('Status pesanan selesai berhasil diperbarui');
+    } else {
+      // Gagal memperbarui status pesanan
+      print('Gagal memperbarui status pesanan: ${response.statusCode}');
+    }
+  } catch (error) {
+    print('Error saat memperbarui status pesanan: $error');
+  }
+}
+
+Future<void> updateStatusPesananDiterima(int idBatch) async {
+  try {
+    // Ambil data kurir untuk mendapatkan id_umkm
+    Map<String, dynamic> kurirData = await fetchKurirData();
+    int idUmkm = kurirData['id_umkm'];
+
+    if (idUmkm == 0) {
+      print('ID UMKM tidak ditemukan');
+      return;
+    }
+
+    // URL untuk update status pesanan
+    final url = Uri.parse(
+        'https://umkmapi-production.up.railway.app/updatestatuspesananditerima/$idUmkm/$idBatch');
+
+    // Mengirim request PUT untuk update status
+    final response = await http.put(url);
+
+    if (response.statusCode == 200) {
+      // Status berhasil diperbarui
+      print('Status pesanan selesai berhasil diperbarui');
+    } else {
+      // Gagal memperbarui status pesanan
+      print('Gagal memperbarui status pesanan: ${response.statusCode}');
+    }
+  } catch (error) {
+    print('Error saat memperbarui status pesanan: $error');
+  }
+}
+
+Future<void> updateStatusPesananDiantar(int idBatch) async {
+  try {
+    // Ambil data kurir untuk mendapatkan id_umkm
+    Map<String, dynamic> kurirData = await fetchKurirData();
+    int idUmkm = kurirData['id_umkm'];
+
+    if (idUmkm == 0) {
+      print('ID UMKM tidak ditemukan');
+      return;
+    }
+
+    // URL untuk update status pesanan
+    final url = Uri.parse(
+        'https://umkmapi-production.up.railway.app/updatestatuspesanandiantar/$idUmkm/$idBatch');
 
     // Mengirim request PUT untuk update status
     final response = await http.put(url);
