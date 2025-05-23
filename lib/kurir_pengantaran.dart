@@ -182,7 +182,8 @@ class _DeliveryTrackingPageState extends State<DeliveryTrackingPage> {
                         child: const Text('Ya',
                             style: TextStyle(color: Colors.white)),
                         onPressed: () {
-                          Navigator.of(dialogContext).pop(); // tutup dialog
+                          Navigator.of(dialogContext).pop();
+                          updateStatusPesananDiterima(widget.id_batch);
                           Navigator.push(
                             context,
                             MaterialPageRoute(

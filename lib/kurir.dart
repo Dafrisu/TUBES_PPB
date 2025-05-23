@@ -276,6 +276,7 @@ class _OrderCardState extends State<OrderCard> {
             TextButton(
               child: const Text("Ya"),
               onPressed: () async {
+                updateStatusPesananDiantar(widget.order.id_batch);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
