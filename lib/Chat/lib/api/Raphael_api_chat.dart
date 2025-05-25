@@ -230,7 +230,7 @@ Future<Map<String, dynamic>> fetchKurirData() async {
     print('Failed to load kurir data');
     return {
       'nama_kurir': 'Kurir',
-      'id_umkm': 0, // Nilai default jika gagal
+      'id_umkm': 0,
     };
   }
 }
@@ -261,6 +261,28 @@ Future<List<Map<String, dynamic>>> getPesananDiterima() async {
       return listPesanan;
     } else {
       throw Exception('Gagal mengambil data pesanan diterima');
+    }
+  } catch (error) {
+    print('Error saat mengambil data pesanan diterima: $error');
+    return [];
+  }
+}
+
+Future<List<String>> getUmkm() async {
+  try {
+    final response = await http.get(
+      Uri.parse('https://umkmapi-production.up.railway.app/getallumkm'),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final List<String> namaUsahaList = (data as List)
+          .map((umkm) => umkm['nama_usaha']?.toString() ?? 'Tidak diketahui')
+          .toList();
+      return namaUsahaList;
+    } else {
+      print('Failed to load UMKM data');
+      return [];
     }
   } catch (error) {
     print('Error saat mengambil data pesanan diterima: $error');
@@ -358,8 +380,28 @@ Future<void> updateStatusPesananDiantar(int idBatch) async {
   }
 }
 
-const String baseUrl =
-    "https://umkmapi-production.up.railway.app/"; // Update with your actual backend URL
+Future<void> updateidumkmdanstatuskurir(String nama_usaha, int id_kurir) async {
+  try {
+    // URL untuk update status pesanan
+    final url = Uri.parse(
+        'https://umkmapi-production.up.railway.app/updateStatusDanIdUmkmKurir/$nama_usaha/$id_kurir');
+
+    // Mengirim request PUT untuk update status
+    final response = await http.put(url);
+
+    if (response.statusCode == 200) {
+      // Status berhasil diperbarui
+      print('Status dan id_umkm kurir berhasil diperbarui');
+    } else {
+      // Gagal memperbarui status pesanan
+      print('Gagal memperbarui status dan id_umkm: ${response.statusCode}');
+    }
+  } catch (error) {
+    print('Error saat memperbarui status: $error');
+  }
+}
+
+const String baseUrl = "https://umkmapi-production.up.railway.app/";
 
 Future<Map<String, dynamic>> getLatestMsgPembeliUMKM(int idUmkm) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tubes_ppb/api/api_loginKurir.dart';
+import 'package:tubes_ppb/api/api_loginPembeli.dart';
 import 'package:tubes_ppb/login.dart';
 import 'package:tubes_ppb/kurir_pengantaran.dart';
 import 'package:tubes_ppb/profile_kurir.dart';
@@ -35,6 +37,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
   String namaUmkm = '';
   String nomor_telepon = '';
   int id_pembeli = 0;
+  int id_kurir = 0;
   @override
   void initState() {
     super.initState();
@@ -51,6 +54,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
       nomor_telepon = kurirData['nomor_telepon'] ?? 'Tidak diketahui';
       id_pembeli = kurirData['id_pembeli'] ?? 0;
       namaUmkm = kurirData['nama_usaha'] ?? 'Tidak diketahui';
+      id_kurir = kurirSessionId;
     });
   }
 
@@ -145,6 +149,8 @@ class _DeliveryPageState extends State<DeliveryPage> {
                     nama: namaKurir,
                     noTelp: nomor_telepon,
                     namaMitra: namaUmkm,
+                    status: statusKurir,
+                    idKurir: id_kurir,
                   ),
                 ),
               );
@@ -166,6 +172,10 @@ class _DeliveryPageState extends State<DeliveryPage> {
                 child: Text('Silahkan tunggu konfirmasi dari UMKM'),
               ),
             if (statusKurir == 'Dipecat')
+              Center(
+                child: Text('Silahkan ajukan lamaran ke UMKM'),
+              ),
+            if (statusKurir == 'Ditolak')
               Center(
                 child: Text('Silahkan ajukan lamaran ke UMKM'),
               ),
