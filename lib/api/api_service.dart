@@ -59,31 +59,3 @@ Future<List<Map<String, dynamic>>> fetchDataUMKM() async {
     throw Exception('Failed to load data');
   }
 }
-
-Future<List<Map<String, dynamic>>> fetchUlasansByProdukId(int id) async {
-  // Construct the URL with the query parameter
-  final response = await http.get(
-    Uri.parse('https://umkmapi-production.up.railway.app/ulasans/$id'),
-  );
-  print(response.body);
-
-  if (response.statusCode == 200) {
-    // Decode the response body as a List
-    final List<dynamic> data = jsonDecode(response.body);
-
-    return data.map((review) {
-      return {
-        'id_produk': review['id_produk'],
-        'username': review['username'],
-        'ulasan': review['ulasan'],
-        'rating': review['rating'],
-        'namaProduk': review['Produk']['nama_barang'],
-        'imgSource': review['Produk']['image_url'],
-        'tanggalUlasan': review['createdAt'],
-        'fotoProfil': review['Pembeli']['profileImg'],
-      };
-    }).toList();
-  } else {
-    throw Exception('Failed to load data');
-  }
-}

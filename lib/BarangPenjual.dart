@@ -12,6 +12,7 @@ import 'package:tubes_ppb/api/api_service.dart';
 import 'package:tubes_ppb/component/review_card.dart';
 import 'cart.dart';
 import 'package:tubes_ppb/Chat/chatPembeliUmkm.dart';
+import 'api/api_ulasans.dart';
 
 class PageBarang extends StatefulWidget {
   final Map<String, dynamic> product;
@@ -21,10 +22,93 @@ class PageBarang extends StatefulWidget {
 }
 
 class _PageBarangState extends State<PageBarang> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _ulasanController = TextEditingController();
+  final TextEditingController _ratingController = TextEditingController();
   // This widget is the root of your application./
 
   Future<void> refreshbarang() async {
     setState(() {});
+  }
+
+  void _showAddUlasanDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Tambah Ulasan'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: _usernameController,
+                  decoration: const InputDecoration(labelText: 'Username'),
+                ),
+                TextField(
+                  controller: _ulasanController,
+                  decoration: const InputDecoration(labelText: 'Ulasan'),
+                  maxLines: 3,
+                ),
+                TextField(
+                  controller: _ratingController,
+                  decoration: const InputDecoration(labelText: 'Rating (0-5)'),
+                  keyboardType: TextInputType.number,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Batal'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                if (_usernameController.text.isEmpty ||
+                    _ulasanController.text.isEmpty ||
+                    _ratingController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Semua field harus diisi')),
+                  );
+                  return;
+                }
+                final rating = double.tryParse(_ratingController.text);
+                if (rating == null || rating < 0 || rating > 5) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Rating harus antara 0 dan 5')),
+                  );
+                  return;
+                }
+
+                final result = await postUlasan(
+                  id_pembeli: sessionId,
+                  id_produk: widget.product['id'],
+                  username: _usernameController.text,
+                  ulasan: _ulasanController.text,
+                  rating: rating,
+                );
+
+                if (result['message'] == null) {
+                  // Success
+                  setState(() {}); // Refresh the reviews list
+                  Navigator.of(context).pop(); // Close the dialog
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Ulasan berhasil ditambahkan')),
+                  );
+                } else {
+                  // Error
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(result['message'])),
+                  );
+                }
+              },
+              child: const Text('Kirim'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -290,6 +374,13 @@ class _PageBarangState extends State<PageBarang> {
                       'Ulasan',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton(
+                      onPressed: _showAddUlasanDialog,
+                      child: const Text('Tambah Ulasan'),
                     ),
                   ),
                   FutureBuilder<List<Map<String, dynamic>>>(
