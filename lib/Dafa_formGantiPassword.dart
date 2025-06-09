@@ -1,36 +1,73 @@
+// lib/Dafa_formGantiPassword.dart
+
 import 'package:flutter/material.dart';
-import 'package:tubes_ppb/login.dart';
-import 'package:tubes_ppb/masukkanEmail.dart';
-import 'package:tubes_ppb/api/api_gantiPassword.dart';
-
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tubes_ppb/api/api_gantiPassword.dart';
+import 'package:tubes_ppb/login.dart';
 
-class Formgantipassword extends StatelessWidget {
+// 1. Ubah menjadi StatefulWidget
+class Formgantipassword extends StatefulWidget {
   final String email;
   const Formgantipassword({super.key, required this.email});
 
   @override
-  Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final TextEditingController passwordController = TextEditingController();
-    final TextEditingController confirmPasswordController = TextEditingController();
-    final passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
+  State<Formgantipassword> createState() => _FormgantipasswordState();
+}
 
+class _FormgantipasswordState extends State<Formgantipassword> {
+  final formKey = GlobalKey<FormState>();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+  final passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
+  
+  // Tambahkan state untuk loading
+  bool isLoading = false;
+
+  // Buat fungsi terpisah untuk menangani logika
+  void _handleChangePassword() async {
+    if (formKey.currentState?.validate() != true) return;
+    
+    setState(() => isLoading = true);
+    
+    bool isSuccess = await changePassword(widget.email, passwordController.text);
+    
+    // Pastikan widget masih ada sebelum melanjutkan
+    if (!mounted) return;
+
+    setState(() => isLoading = false);
+
+    if (isSuccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Password berhasil diubah. Silakan login kembali.")),
+      );
+      // 2. Gunakan pushAndRemoveUntil untuk navigasi yang bersih
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const login()), 
+          (route) => false,
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Gagal mengubah password.")),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    // Selalu dispose controller untuk menghindari memory leak
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const Masukkanemail(),
-              ),
-            );
-          },
-          color: Colors.white,
-        ),
+        // Tombol kembali tidak lagi diperlukan jika navigasi dari halaman sebelumnya sudah benar
+        // Namun, bisa dipertahankan jika diperlukan
+        automaticallyImplyLeading: false, 
         centerTitle: true,
         title: Text(
           'Masukkan Password Baru',
@@ -61,7 +98,7 @@ class Formgantipassword extends StatelessWidget {
                   if (value == null || value.isEmpty) {
                     return 'Masukkan Password Baru';
                   } else if (!passwordRegex.hasMatch(value)) {
-                    return 'Password harus terdiri dari minimal 8 karakter, termasuk huruf besar, huruf kecil, angka, dan simbol';
+                    return 'Password minimal 8 karakter, harus mengandung huruf besar, kecil, angka, dan simbol';
                   }
                   return null;
                 },
@@ -83,35 +120,19 @@ class Formgantipassword extends StatelessWidget {
                   return null;
                 },
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                ),
-                onPressed: () async {
-                  if (formKey.currentState?.validate() == true) {
-                    bool success = await changePassword(email, passwordController.text);
-                    if (success) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Password sudah di set ulang')),
-                      );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const login(),
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Gagal mengubah password')),
-                      );
-                    }
-                  }
-                },
-                child: const Text('Ubah Password',
-                    style: TextStyle(fontSize: 16, color: Colors.white)),
-              ),
+              const SizedBox(height: 24),
+              // Tampilkan loading atau tombol
+              isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                    ),
+                    onPressed: _handleChangePassword,
+                    child: const Text('Ubah Password',
+                        style: TextStyle(fontSize: 16, color: Colors.white)),
+                  ),
             ],
           ),
         ),

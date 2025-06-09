@@ -1,16 +1,19 @@
-import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart'; // <-- TAMBAHKAN BARIS INI
 
+import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:crypto/crypto.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tubes_ppb/otp_screen.dart'; 
 
 int sessionId = 0;
 // Future<List<Map<String, dynamic>>> profilePembeli = fetchUserData(sessionId);
 Future<Map<String, dynamic>?> profilePembeli = Future.value(null);
 // List<Map<String, dynamic>> getProfilePembeli = await profilePembeli;
 
-Future<void> fetchLogin(String email, String password) async {
+// KODE BARU - GUNAKAN INI
+Future<void> fetchLogin(BuildContext context, String email, String password) async {
   try {
+    // Pastikan URL ini benar dan bisa diakses dari perangkat/emulator Anda
     final response = await http.post(
       Uri.parse('https://umkmapi-production.up.railway.app/loginpembeli'),
       headers: <String, String>{
@@ -22,22 +25,31 @@ Future<void> fetchLogin(String email, String password) async {
       }),
     );
 
-    print('Request body: ${jsonEncode(<String, String>{
-          'email': email,
-          'password': password
-        })}');
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
-
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      sessionId = data['id_pembeli'];
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setInt('sessionId', sessionId);
+      
+      // Logika baru: Navigasi ke halaman OTP, bukan simpan session
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OTPScreen(
+            email: data['email'],
+            hash: data['hash'],
+            userId: data['id_pembeli'],
+          ),
+        ),
+      );
     } else {
-      throw Exception('Failed to load Pembeli');
+      // Menampilkan pesan error dari server jika ada
+      final body = jsonDecode(response.body);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(body.toString())),
+      );
     }
   } catch (error) {
+    // Menampilkan error jika tidak bisa terhubung ke server
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Gagal terhubung ke server.')));
     print(error);
   }
 }

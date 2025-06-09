@@ -1,29 +1,83 @@
+// lib/masukkanEmail.dart (atau nama file yang sesuai)
+
 import 'package:flutter/material.dart';
-import 'package:tubes_ppb/Dafa_verifikasi.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:tubes_ppb/api/api_gantiPassword.dart';
 import 'package:tubes_ppb/login.dart';
-import 'package:tubes_ppb/models/gantipass_response_model.dart';
-import 'package:tubes_ppb/Dafa_formGantiPassword.dart';
+import 'package:tubes_ppb/verifikasi_otp_ganti_pass.dart'; // Impor halaman verifikasi baru
 
-import 'package:google_fonts/google_fonts.dart';
-
-
-
-class Masukkanemail extends StatelessWidget {
+class Masukkanemail extends StatefulWidget {
   const Masukkanemail({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final TextEditingController emailController = TextEditingController();
+  State<Masukkanemail> createState() => _MasukkanemailState();
+}
 
+class _MasukkanemailState extends State<Masukkanemail> {
+  final formKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
+  bool isLoading = false;
+
+  // Fungsi untuk menangani logika saat tombol ditekan
+  void _handleSendOTP() async {
+    // Validasi form
+    if (formKey.currentState?.validate() != true) return;
+    
+    // Tampilkan loading
+    setState(() => isLoading = true);
+    
+    // Cek apakah email terdaftar di database
+    bool emailExists = await checkPembeliByEmail(emailController.text);
+    
+    // Pastikan widget masih ada di tree sebelum lanjut
+    if (mounted && emailExists) {
+      try {
+        // Panggil API untuk mengirim OTP
+        var response = await sendPasswordResetOTP(emailController.text);
+        String otpHash = (response.data?.hash as String?) ?? '';
+
+        // Jika berhasil, navigasi ke halaman verifikasi OTP
+        if (mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VerifikasiOtpGantiPass(
+                email: emailController.text,
+                otpHash: otpHash,
+              ),
+            ),
+          );
+        }
+      } catch (e) {
+        // Tampilkan pesan error jika gagal mengirim OTP
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Gagal mengirim OTP.')),
+          );
+        }
+      }
+    } else if (mounted) {
+      // Tampilkan pesan error jika email tidak ditemukan
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Email tidak ditemukan')),
+      );
+    }
+    
+    // Sembunyikan loading setelah selesai
+    if (mounted) {
+      setState(() => isLoading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => const login(),
@@ -57,46 +111,30 @@ class Masukkanemail extends StatelessWidget {
                   labelText: 'Email',
                   border: OutlineInputBorder(),
                 ),
+                keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Masukkan email Anda';
+                  }
+                  // Validasi format email sederhana
+                  if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                    return 'Masukkan format email yang valid';
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    shape:
-                        RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                  ),
-                onPressed: () async {
-                  if (formKey.currentState?.validate() == true) {
-                    bool emailExists = await checkPembeliByEmail(emailController.text);
-                    if (emailExists) {
-                      // GantipassResponseModel response = await gantiPassword(emailController.text);
-                      // String otpHash = response.data ?? '';
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   const SnackBar(content: Text('Instruksi reset password telah dikirim')),
-                      // );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Formgantipassword(
-                           email: emailController.text,    
-                          ),
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Email tidak ditemukan')),
-                      );
-                    }
-                  }
-                },
-                child: const Text('Kirim', style: TextStyle(fontSize: 16, color: Colors.white)),
-              ),
+              // Tampilkan loading atau tombol
+              isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                      ),
+                      onPressed: _handleSendOTP,
+                      child: const Text('Kirim', style: TextStyle(fontSize: 16, color: Colors.white)),
+                    ),
             ],
           ),
         ),
