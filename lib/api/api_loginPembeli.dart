@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart'; // <-- TAMBAHKAN BARIS INI
+import 'package:flutter/material.dart'; 
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -10,10 +10,8 @@ int sessionId = 0;
 Future<Map<String, dynamic>?> profilePembeli = Future.value(null);
 // List<Map<String, dynamic>> getProfilePembeli = await profilePembeli;
 
-// KODE BARU - GUNAKAN INI
 Future<void> fetchLogin(BuildContext context, String email, String password) async {
   try {
-    // Pastikan URL ini benar dan bisa diakses dari perangkat/emulator Anda
     final response = await http.post(
       Uri.parse('https://umkmapi-production.up.railway.app/loginpembeli'),
       headers: <String, String>{

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'homepage.dart'; // Pastikan import halaman tujuan Anda sudah benar
+import 'package:tubes_ppb/api/api_loginPembeli.dart';
 
 class OTPScreen extends StatefulWidget {
   final String email;
@@ -31,7 +32,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:80/api/pembeli/verify-otp'),
+        Uri.parse('https://umkmapi-production.up.railway.app/api/pembeli/verify-otp'),
         headers: {'Content-Type': 'application/json; charset=UTF-8'},
         body: jsonEncode({
           'email': widget.email,
@@ -41,7 +42,7 @@ class _OTPScreenState extends State<OTPScreen> {
       );
 
       if (response.statusCode == 200) {
-        
+        sessionId = widget.userId;
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setInt('sessionId', widget.userId);
         Navigator.of(context).pushAndRemoveUntil(
