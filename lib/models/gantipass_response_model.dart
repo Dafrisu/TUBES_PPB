@@ -1,28 +1,47 @@
+// lib/models/gantipass_response_model.dart
+
 import 'dart:convert';
 
-GantipassResponseModel gantipassResponseModelFromJson(String str) => 
-    GantipassResponseModel.fromJson(json.decode(str));
+GantipassResponseModel gantipassResponseModelFromJson(String str) => GantipassResponseModel.fromJson(json.decode(str));
 
-String gantipassResponseModelToJson(GantipassResponseModel data) => 
-    json.encode(data.toJson());
+String gantipassResponseModelToJson(GantipassResponseModel data) => json.encode(data.toJson());
 
 class GantipassResponseModel {
-  GantipassResponseModel({
-    required this.message,
-    this.data,
-  });
+    String? message;
+    Data? data;
 
-  final String message;
-  final String? data;
+    GantipassResponseModel({
+        this.message,
+        this.data,
+    });
 
-  factory GantipassResponseModel.fromJson(Map<String, dynamic> json) => 
-      GantipassResponseModel(
+    factory GantipassResponseModel.fromJson(Map<String, dynamic> json) => GantipassResponseModel(
         message: json["message"],
-        data: json["data"],
-      );
+        data: json["data"] == null ? null : Data.fromJson(json["data"]),
+    );
 
-  Map<String, dynamic> toJson() => {
+    Map<String, dynamic> toJson() => {
         "message": message,
-        "data": data,
-      };
+        "data": data?.toJson(),
+    };
+}
+
+class Data {
+    String? message;
+    String? hash; // <-- Definisikan 'hash' sebagai String di sini
+
+    Data({
+        this.message,
+        this.hash,
+    });
+
+    factory Data.fromJson(Map<String, dynamic> json) => Data(
+        message: json["message"],
+        hash: json["hash"], // <-- Ambil 'hash' dari JSON
+    );
+
+    Map<String, dynamic> toJson() => {
+        "message": message,
+        "hash": hash,
+    };
 }

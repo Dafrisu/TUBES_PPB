@@ -111,7 +111,10 @@ class _LoginState extends State<login> {
                         fontSize: 16, fontWeight: FontWeight.w700)),
                 TextFormField(
                   controller: emailController,
-                  decoration: InputDecoration(labelText: 'Email', border: OutlineInputBorder(),),
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(),
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Masukkan Email Anda';
@@ -173,7 +176,7 @@ class _LoginState extends State<login> {
                       if (selectedRole == 'pembeli') {
                         try {
                           await fetchLogin(
-                              emailController.text, passwordController.text);
+                             context, emailController.text, passwordController.text);
                           if (sessionId != 0) {
                             Navigator.push(
                               context,
