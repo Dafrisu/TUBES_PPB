@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_ppb/Dafa_register.dart';
-import 'package:tubes_ppb/api/api_loginKurir.dart';
-import 'package:tubes_ppb/login.dart';
-import 'package:tubes_ppb/api/api_registerPembeli.dart';
-import 'package:tubes_ppb/landing.dart';
-import 'api/api_registerKurir.dart';
-
-//packages
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tubes_ppb/Dafa_register.dart';
+import 'package:tubes_ppb/api/api_registerKurir.dart';
+import 'package:tubes_ppb/landing.dart';
+import 'package:tubes_ppb/login.dart';
 
 class RegisterKurir extends StatefulWidget {
   const RegisterKurir({super.key});
@@ -21,7 +17,6 @@ class _RegisterKurirState extends State<RegisterKurir> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final namaController = TextEditingController();
-  // final usernameController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   String? selectedRole = 'kurir';
   String? selectedUMKM;
@@ -41,11 +36,18 @@ class _RegisterKurirState extends State<RegisterKurir> {
   Future<void> loadUMKM() async {
     try {
       final umkmData = await fetchUMKM();
-      setState(() {
-        umkmList = umkmData;
-      });
+      if (mounted) {
+        setState(() {
+          umkmList = umkmData;
+        });
+      }
     } catch (error) {
       print('Failed to load UMKM data: $error');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal memuat data UMKM: $error')),
+        );
+      }
     }
   }
 
@@ -62,7 +64,7 @@ class _RegisterKurirState extends State<RegisterKurir> {
     if (value == null || value.isEmpty) {
       return 'Tolong masukkan password anda';
     } else if (!passwordRegex.hasMatch(value)) {
-      return 'Password harus memiliki minimal 8 karakter, termasuk satu huruf besar, satu huruf kecil, satu angka, dan satu karakter spesial';
+      return 'Password min. 8 karakter, kombinasi huruf besar, kecil, angka, & simbol';
     }
     return null;
   }
@@ -71,7 +73,7 @@ class _RegisterKurirState extends State<RegisterKurir> {
     if (value == null || value.isEmpty) {
       return 'Tolong masukkan konfirmasi password anda';
     } else if (value != passwordController.text) {
-      return 'konfirmasi password anda tidak sama';
+      return 'Konfirmasi password anda tidak sama';
     }
     return null;
   }
@@ -81,7 +83,7 @@ class _RegisterKurirState extends State<RegisterKurir> {
     emailController.dispose();
     passwordController.dispose();
     namaController.dispose();
-    // usernameController.dispose();
+    confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -104,190 +106,190 @@ class _RegisterKurirState extends State<RegisterKurir> {
         ),
         centerTitle: true,
         title: Text(
-          ' ',
+          '',
           style: GoogleFonts.montserrat(
               fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
         ),
       ),
-      body: SingleChildScrollView(
+      body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Form(
             key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Text('Register Kurir',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 32, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 20),
-                  Text('Pilih Role Anda ',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
-                DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                  ),
-                  value: selectedRole,
-                  items: [
-                    DropdownMenuItem(
-                      value: 'pembeli',
-                      child: Text('Pembeli'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'kurir',
-                      child: Text('Kurir'),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      selectedRole = value;
-                    });
-                    if (value == 'pembeli') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Register(),
-                        ),
-                      );
-                    }
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Tolong pilih pendaftaran';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
-                Text('Nama',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
-                TextFormField(
-                  controller: namaController,
-                  decoration:
-                      const InputDecoration(labelText: 'Masukkan Nama Anda', border: OutlineInputBorder(),),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Tolong masukkan nama anda';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
-                Text('Email',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
-                TextFormField(
-                  controller: emailController,
-                  decoration:
-                      const InputDecoration(labelText: 'Masukkan Email Anda', border: OutlineInputBorder(),),
-                  validator: validateEmail,
-                ),
-                const SizedBox(height: 10),
-                // Text('Username',
-                //     style: GoogleFonts.montserrat(
-                //         fontSize: 16, fontWeight: FontWeight.w700)),
-                // TextFormField(
-                //   controller: usernameController,
-                //   decoration: const InputDecoration(
-                //       labelText: 'Masukkan Username Anda'),
-                //   validator: (value) {
-                //     if (value == null || value.isEmpty) {
-                //       return 'Tolong masukkan username anda';
-                //     }
-                //     return null;
-                //   },
-                // ),
-                // const SizedBox(height: 10),
-                Text('Password',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
-                TextFormField(
-                  controller: passwordController,
-                  decoration: const InputDecoration(
-                      labelText: 'Masukkan Password Anda', border: OutlineInputBorder(),),
-                  obscureText: true,
-                  validator: validatePassword,
-                ),
-                const SizedBox(height: 10),
-                Text('Konfirmasi Password',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
-                TextFormField(
-                  controller: confirmPasswordController,
-                  decoration: const InputDecoration(
-                      labelText: 'Masukkan Konfirmasi Password Anda', border: OutlineInputBorder(),),
-                  obscureText: true,
-                  validator: validateConfirmPassword,
-                ),
-                const SizedBox(height: 10),
-                Text('Pilih UMKM',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
-                DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                  ),
-                  value: selectedUMKM,
-                  items: umkmList.map((umkm) {
-                    return DropdownMenuItem<String>(
-                      value: umkm['id_umkm'].toString(),
-                      child: Text(umkm['nama_usaha']),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      selectedUMKM = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Tolong pilih UMKM';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    shape:
-                        RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                  ),
-                  onPressed: () async {
-                    if (formKey.currentState?.validate() == true) {
-                      bool isRegistered = await registerKurir(
-                        emailController.text.trim(),
-                        namaController.text.trim(),
-                        passwordController.text.trim(),
-                        selectedUMKM!,
-                      );
-                      if (!mounted) return;
-
-                      if (isRegistered) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text(
-                                  'Registrasi Berhasil! harap login kembali')),
-                        );
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => login(),
+            child: CustomScrollView(
+              slivers: [
+                SliverPadding(
+                  padding: const EdgeInsets.all(16.0),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        Text('Register Kurir',
+                            style: GoogleFonts.montserrat(
+                                fontSize: 32, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 20),
+                        Text('Pilih Role Anda',
+                            style: GoogleFonts.montserrat(
+                                fontSize: 16, fontWeight: FontWeight.w700)),
+                        DropdownButtonFormField<String>(
+                          isExpanded: true,
+                          icon: const Icon(Icons.arrow_drop_down),
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
                           ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Email sudah digunakan')),
-                        );
-                      }
-                    }
-                  },
-                  child: Text('Register!',
-                      style: GoogleFonts.montserrat(
-                          fontSize: 20, color: Colors.white)),
+                          value: selectedRole,
+                          items: [
+                            DropdownMenuItem(
+                              value: 'pembeli',
+                              child: Text('Pembeli'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'kurir',
+                              child: Text('Kurir'),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            if (value == 'pembeli') {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Register(),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        Text('Nama',
+                            style: GoogleFonts.montserrat(
+                                fontSize: 16, fontWeight: FontWeight.w700)),
+                        TextFormField(
+                          controller: namaController,
+                          decoration: const InputDecoration(
+                              labelText: 'Masukkan Nama Anda',
+                              border: OutlineInputBorder()),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Tolong masukkan nama anda';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        Text('Email',
+                            style: GoogleFonts.montserrat(
+                                fontSize: 16, fontWeight: FontWeight.w700)),
+                        TextFormField(
+                          controller: emailController,
+                          decoration: const InputDecoration(
+                              labelText: 'Masukkan Email Anda',
+                              border: OutlineInputBorder()),
+                          validator: validateEmail,
+                        ),
+                        const SizedBox(height: 10),
+                        Text('Password',
+                            style: GoogleFonts.montserrat(
+                                fontSize: 16, fontWeight: FontWeight.w700)),
+                        TextFormField(
+                          controller: passwordController,
+                          decoration: const InputDecoration(
+                            labelText: 'Masukkan Password Anda',
+                            border: OutlineInputBorder(),
+                            errorMaxLines: 3,
+                          ),
+                          obscureText: true,
+                          validator: validatePassword,
+                        ),
+                        const SizedBox(height: 10),
+                        Text('Konfirmasi Password',
+                            style: GoogleFonts.montserrat(
+                                fontSize: 16, fontWeight: FontWeight.w700)),
+                        TextFormField(
+                          controller: confirmPasswordController,
+                          decoration: const InputDecoration(
+                              labelText: 'Masukkan Konfirmasi Password Anda',
+                              border: OutlineInputBorder()),
+                          obscureText: true,
+                          validator: validateConfirmPassword,
+                        ),
+                        const SizedBox(height: 10),
+                        Text('Pilih UMKM',
+                            style: GoogleFonts.montserrat(
+                                fontSize: 16, fontWeight: FontWeight.w700)),
+                        DropdownButtonFormField<String>(
+                          isExpanded: true,
+                          icon: const Icon(Icons.arrow_drop_down),
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                          ),
+                          value: selectedUMKM,
+                          hint: umkmList.isEmpty
+                              ? Text('Memuat data...')
+                              : null,
+                          items: umkmList.map((umkm) {
+                            return DropdownMenuItem<String>(
+
+                              value: umkm['id_umkm'].toString(),
+                              child: Text(umkm['nama_usaha'] ?? 'Tanpa Nama'),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedUMKM = value;
+                            });
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Tolong pilih UMKM';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                          onPressed: () async {
+                             if (formKey.currentState?.validate() == true) {
+                              bool isRegistered = await registerKurir(
+                                emailController.text.trim(),
+                                namaController.text.trim(),
+                                passwordController.text.trim(),
+                                selectedUMKM!,
+                              );
+                              if (!mounted) return;
+          
+                              if (isRegistered) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Registrasi Berhasil! Silakan login.')),
+                                );
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => login()),
+                                  (Route<dynamic> route) => false,
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Registrasi gagal. Email mungkin sudah digunakan.')),
+                                );
+                              }
+                            }
+                          },
+                          child: Text('Register!',
+                              style: GoogleFonts.montserrat(
+                                  fontSize: 20, color: Colors.white)),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),

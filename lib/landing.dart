@@ -47,120 +47,122 @@ class landingPageState extends State<landingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Particles(
-            awayRadius: 150,
-            particles: createParticles(),
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            onTapAnimation: false,
-            awayAnimationDuration: const Duration(milliseconds: 100),
-            awayAnimationCurve: Curves.linear,
-            enableHover: false,
-            hoverRadius: 90,
-            connectDots: true,
-          ),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'lib/assets_images/Sample 1 copy.png',
-                  width: 200,
-                  height: 200,
-                  fit: BoxFit.cover,
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  'Selamat Datang',
-                  style: GoogleFonts.montserrat(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: const Color.fromARGB(255, 0, 0, 0),
-                  ),
-                ),
-                Text(
-                  'di UMKMku',
-                  style: GoogleFonts.montserrat(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 0, 0, 0),
-                  ),
-                ),
-                const SizedBox(height: 30),
-                FlutterCarousel(
-                  options: FlutterCarouselOptions(
-                    height: 200.0,
-                    showIndicator: true,
-                    initialPage: 0,
-                    autoPlay: true,
-                    autoPlayInterval: const Duration(seconds: 3),
-                    slideIndicator: CircularSlideIndicator(),
-                  ),
-                  items: carouselItems.map((imagePath) {
-                    return Builder(
-                      builder: (BuildContext context) {
-                        return Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: EdgeInsets.symmetric(horizontal: 5.0),
-                          decoration: BoxDecoration(color: Colors.green),
-                          child: Image.asset(
-                            imagePath,
-                            fit: BoxFit.cover,
-                          ),
-                        );
-                      },
-                    );
-                  }).toList(),
-                ),
-                const SizedBox(height: 30),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    minimumSize: const Size(300, 50),
-                    shape:
-                        RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const login(),
-                      ),
-                    );
-                  },
-                  child: Text('Login',
-                      style: GoogleFonts.montserrat(
-                          fontSize: 20, color: Colors.white)),
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                    minimumSize: const Size(300, 50),
-                    shape:
-                        RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Register(),
-                      ),
-                    );
-                  },
-                  child: Text('Registrasi',
-                      style: GoogleFonts.montserrat(
-                        fontSize: 20,
-                        color: Colors.green,
-                      )),
-                ),
-                const SizedBox(height: 20),
-              ],
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            Particles(
+              awayRadius: 150,
+              particles: createParticles(),
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              onTapAnimation: false,
+              awayAnimationDuration: const Duration(milliseconds: 100),
+              awayAnimationCurve: Curves.linear,
+              enableHover: false,
+              hoverRadius: 90,
+              connectDots: true,
             ),
-          ),
-        ],
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'lib/assets_images/Sample 1 copy.png',
+                    width: 200,
+                    height: 200,
+                    fit: BoxFit.cover,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Selamat Datang',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: const Color.fromARGB(255, 0, 0, 0),
+                    ),
+                  ),
+                  Text(
+                    'di UMKMku',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  FlutterCarousel(
+                    options: FlutterCarouselOptions(
+                      height: 200.0,
+                      showIndicator: true,
+                      initialPage: 0,
+                      autoPlay: true,
+                      autoPlayInterval: const Duration(seconds: 3),
+                      slideIndicator: CircularSlideIndicator(),
+                    ),
+                    items: carouselItems.map((imagePath) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: EdgeInsets.symmetric(horizontal: 5.0),
+                            decoration: BoxDecoration(color: Colors.green),
+                            child: Image.asset(
+                              imagePath,
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        },
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 30),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      minimumSize: const Size(300, 50),
+                      shape:
+                          RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const login(),
+                        ),
+                      );
+                    },
+                    child: Text('Login',
+                        style: GoogleFonts.montserrat(
+                            fontSize: 20, color: Colors.white)),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                      minimumSize: const Size(300, 50),
+                      shape:
+                          RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Register(),
+                        ),
+                      );
+                    },
+                    child: Text('Registrasi',
+                        style: GoogleFonts.montserrat(
+                          fontSize: 20,
+                          color: Colors.green,
+                        )),
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
