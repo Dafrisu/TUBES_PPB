@@ -1,9 +1,10 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'berhasil_hapus_akun.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // For clearing local data
 import 'dart:io';
+import 'package:tubes_ppb/login.dart'; // Import your login page
 
 class AccountDeletion extends StatefulWidget {
   final String userId;
@@ -18,37 +19,58 @@ class _AccountDeletionState extends State<AccountDeletion> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController emailController;
   late TextEditingController passwordController;
-  bool isLoading = false;
+
+  bool isLoading = true; // Set to true initially to show loading state for data fetch
   bool isPasswordVisible = false;
 
   late String defaultImg =
-      "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg";
-  String fetchedEmail = '';
-  String fetchedPassword = '';
-  String profileImageUrl = '';
+      "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of_social_media_user_vector.jpg";
+  String profileImageUrl = ''; // To display user's profile image
 
   @override
   void initState() {
     super.initState();
     emailController = TextEditingController();
     passwordController = TextEditingController();
+
+    // Fetch user data (including email and profile image) when the page loads
     fetchUserData(widget.userId);
   }
 
+  // --- Fetch User Data Logic ---
   Future<void> fetchUserData(String userId) async {
-    final response = await http.get(
-      Uri.parse('https://umkmapi-production.up.railway.app/pembeli/$userId'),
-    );
+    try {
+      final response = await http.get(
+        Uri.parse('https://umkmapi-production.up.railway.app/pembeli/$userId'),
+      );
 
-    if (response.statusCode == 200) {
-      final userData = json.decode(response.body);
+      if (response.statusCode == 200) {
+        final userData = json.decode(response.body);
+        setState(() {
+          emailController.text = userData['email'] ?? '';
+          profileImageUrl = userData['profileImg'] ?? '';
+          isLoading = false; // Data loaded, hide loading indicator
+        });
+      } else {
+        // Handle non-200 status codes
+        setState(() {
+          profileImageUrl = ''; // Fallback to default image
+          isLoading = false; // Stop loading
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Gagal memuat data pengguna: ${response.statusCode}')),
+        );
+      }
+    } catch (error) {
+      // Handle network errors or other exceptions
       setState(() {
-        fetchedEmail = userData['email'];
-        fetchedPassword = userData['password'];
-        profileImageUrl = userData['profileImg'] ?? ''; // Handle null case
+        profileImageUrl = ''; // Fallback to default image on network error
+        isLoading = false; // Stop loading even if there's an error
       });
-    } else {
-      throw Exception('Failed to load user data');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error loading user data: $error')),
+      );
     }
   }
 
@@ -59,46 +81,125 @@ class _AccountDeletionState extends State<AccountDeletion> {
     super.dispose();
   }
 
+  // --- Delete Account Logic ---
   Future<void> _deleteAccount(BuildContext context) async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() => isLoading = true);
+    setState(() => isLoading = true); // Show loading indicator for deletion process
 
     try {
-      if (emailController.text != fetchedEmail ||
-          passwordController.text != fetchedPassword) {
-        throw Exception('Invalid credentials');
-      }
-
       final response = await http.delete(
         Uri.parse(
             'https://umkmapi-production.up.railway.app/pembeli/${widget.userId}'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'email': emailController.text,
+          'password': passwordController.text,
+        }),
       );
 
-      if (response.statusCode != 200) {
-        throw Exception('Failed to delete account');
+      // Check mounted state BEFORE any navigation or state updates that rely on the widget being active
+      if (!mounted) return;
+
+      if (response.statusCode == 200) {
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.clear(); // Clear all data, including sessionId
+
+        // Use the same navigation logic as logout:
+        // Pop all routes and push the login page as the new first route.
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+              builder: (context) =>
+                  const login()), // Navigate to your login page
+          (Route<dynamic> route) => false, // Remove all previous routes
+        );
+      } else if (response.statusCode == 401) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Email atau password salah.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } else {
+        throw Exception(
+            'Gagal menghapus akun. Kode status: ${response.statusCode}. Pesan: ${response.body}');
       }
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const DeleteAccount()),
-      );
     } catch (e) {
+      print('Error deleting account: $e');
+      if (!mounted) return; // Re-check mounted state for snackbar
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString() == 'Exception: Invalid credentials'
-              ? 'Email atau password salah'
-              : 'Gagal menghapus akun. Silakan coba lagi.'),
+          content: Text('Gagal menghapus akun. Silakan coba lagi. ($e)'),
           backgroundColor: Colors.red,
         ),
       );
     } finally {
-      setState(() => isLoading = false);
+      if (!mounted) return; // Ensure setState isn't called on a disposed widget
+      setState(() => isLoading = false); // Always hide loading indicator
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Determine the image widget based on profileImageUrl
+    Widget profileImageWidget;
+    if (profileImageUrl.isEmpty) {
+      // If URL is empty, always use the default network image
+      profileImageWidget = Image.network(
+        defaultImg,
+        width: 120,
+        height: 120,
+        fit: BoxFit.cover,
+      );
+    } else if (profileImageUrl.startsWith('/')) {
+      // If it's a local file path
+      final File localFile = File(profileImageUrl);
+      profileImageWidget = FutureBuilder<bool>(
+        future: localFile.exists(), // Check if the file exists
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasError || !snapshot.data!) {
+              // File doesn't exist or there was an error, show default image
+              return Image.network(
+                defaultImg,
+                width: 120,
+                height: 120,
+                fit: BoxFit.cover,
+              );
+            } else {
+              // File exists, show it
+              return Image.file(
+                localFile,
+                width: 120,
+                height: 120,
+                fit: BoxFit.cover,
+              );
+            }
+          }
+          // While checking for file existence, show a placeholder
+          return const CircularProgressIndicator();
+        },
+      );
+    } else {
+      // Otherwise, assume it's a network URL
+      profileImageWidget = CachedNetworkImage(
+        imageUrl: profileImageUrl,
+        width: 120,
+        height: 120,
+        fit: BoxFit.cover,
+        placeholder: (context, url) =>
+            const CircularProgressIndicator(), // Show loading while fetching
+        errorWidget: (context, url, error) => Image.network(
+          defaultImg, // Fallback if network image fails to load
+          width: 120,
+          height: 120,
+          fit: BoxFit.cover,
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFF4C4C4C),
       appBar: AppBar(
@@ -118,55 +219,9 @@ class _AccountDeletionState extends State<AccountDeletion> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 16.0),
+              // --- Profile Image Display ---
               ClipOval(
-                child: (profileImageUrl.isEmpty)
-                    ? Image.network(
-                        defaultImg, // Default image URL
-                        width: 120,
-                        height: 120,
-                        fit: BoxFit.cover,
-                      )
-                    : profileImageUrl.startsWith('/')
-                        ? FutureBuilder<bool>(
-                            future: File(profileImageUrl).exists(),
-                            builder: (context, fileSnapshot) {
-                              if (fileSnapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const CircularProgressIndicator();
-                              } else if (fileSnapshot.hasError ||
-                                  !fileSnapshot.data!) {
-                                // File does not exist, show default image
-                                return Image.network(
-                                  defaultImg, // Default image URL
-                                  width: 120,
-                                  height: 120,
-                                  fit: BoxFit.cover,
-                                );
-                              } else {
-                                // File exists, show the image
-                                return Image.file(
-                                  File(profileImageUrl),
-                                  width: 120,
-                                  height: 120,
-                                  fit: BoxFit.cover,
-                                );
-                              }
-                            },
-                          )
-                        : CachedNetworkImage(
-                            imageUrl: profileImageUrl,
-                            width: 120,
-                            height: 120,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) =>
-                                const CircularProgressIndicator(),
-                            errorWidget: (context, url, error) => Image.network(
-                              defaultImg, // Default image URL
-                              width: 120,
-                              height: 120,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                child: profileImageWidget, // Use the determined image widget
               ),
               const SizedBox(height: 16.0),
               const Text(
@@ -194,6 +249,7 @@ class _AccountDeletionState extends State<AccountDeletion> {
                 ),
               ),
               const SizedBox(height: 24.0),
+              // --- Email Input Field ---
               TextFormField(
                 controller: emailController,
                 style: const TextStyle(color: Colors.white),
@@ -220,6 +276,7 @@ class _AccountDeletionState extends State<AccountDeletion> {
                 },
               ),
               const SizedBox(height: 16.0),
+              // --- Password Input Field ---
               TextFormField(
                 controller: passwordController,
                 obscureText: !isPasswordVisible,
@@ -256,10 +313,12 @@ class _AccountDeletionState extends State<AccountDeletion> {
                 },
               ),
               const SizedBox(height: 24.0),
+              // --- Delete Account Button ---
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: isLoading ? null : () => _deleteAccount(context),
+                  onPressed:
+                      isLoading ? null : () => _deleteAccount(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                     padding: const EdgeInsets.symmetric(vertical: 12),
