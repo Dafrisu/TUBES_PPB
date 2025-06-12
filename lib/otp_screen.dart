@@ -72,7 +72,7 @@ class _OTPScreenState extends State<OTPScreen> {
         backgroundColor: Colors.green,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: formKey,
           child: Column(

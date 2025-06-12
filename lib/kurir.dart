@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubes_ppb/api/api_loginKurir.dart';
 import 'package:tubes_ppb/api/api_loginPembeli.dart';
 import 'package:tubes_ppb/login.dart';
@@ -120,7 +121,15 @@ class _DeliveryPageState extends State<DeliveryPage> {
                       ),
                       TextButton(
                         child: const Text("Ya"),
-                        onPressed: () {
+                        onPressed: () async {
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          await prefs.remove('sessionId'); // Remove session ID
+                          await prefs.remove('kurirSessionId');
+                          // Hapus data kurir dan pembeli
+                          sessionId = 0;
+                          kurirSessionId = 0;
+                          nullifyProfilePembeli();
+                          
                           Navigator.of(context).pop();
                           Navigator.pushReplacement(
                             context,

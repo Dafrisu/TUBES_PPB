@@ -25,8 +25,6 @@ Future<void> fetchLogin(BuildContext context, String email, String password) asy
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      
-      // Logika baru: Navigasi ke halaman OTP, bukan simpan session
       Navigator.push(
         context,
         MaterialPageRoute(

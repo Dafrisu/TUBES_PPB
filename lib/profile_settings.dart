@@ -8,6 +8,9 @@ import 'account_deletion.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 
+import 'package:tubes_ppb/api/api_loginPembeli.dart';
+import 'package:tubes_ppb/api/api_loginKurir.dart';
+
 class ProfileSettings extends StatefulWidget {
   const ProfileSettings({super.key});
 
@@ -60,6 +63,12 @@ class _ProfileSettingsState extends State<ProfileSettings> {
               onPressed: () async {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 await prefs.remove('sessionId'); // Remove session ID
+                await prefs.remove('kurirSessionId');
+
+                sessionId = 0;
+                kurirSessionId = 0;
+                nullifyProfilePembeli();
+
                 Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
                       builder: (context) => const login()), // Navigate to login

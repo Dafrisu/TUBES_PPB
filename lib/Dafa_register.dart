@@ -45,7 +45,7 @@ class _RegisterState extends State<Register> {
     if (value == null || value.isEmpty) {
       return 'Tolong masukkan password anda';
     } else if (!passwordRegex.hasMatch(value)) {
-      return 'Password harus memiliki minimal 8 karakter, termasuk satu huruf besar, satu huruf kecil, satu angka, dan satu karakter spesial';
+      return 'Memiliki minimal 8 karakter, termasuk satu huruf besar, satu huruf kecil, satu angka, dan satu karakter spesial';
     }
     return null;
   }
@@ -103,204 +103,208 @@ class _RegisterState extends State<Register> {
               fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
         ),
       ),
-      body: SingleChildScrollView(
+      body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Text('Register',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 32, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 20),
-                Text('Pilih Role Anda',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
-                DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                  ),
-                  
-                  value: selectedRole,
-                  items: [
-                    DropdownMenuItem(
-                      value: 'pembeli',
-                      child: Text('Pembeli'),
+          child: SingleChildScrollView(
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Text('Register',
+                      style: GoogleFonts.montserrat(
+                          fontSize: 32, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 20),
+                  Text('Pilih Role Anda',
+                      style: GoogleFonts.montserrat(
+                          fontSize: 16, fontWeight: FontWeight.w700)),
+                  DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
                     ),
-                    DropdownMenuItem(
-                      value: 'kurir',
-                      child: Text('Kurir'),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      selectedRole = value;
-                    });
-                    if (value == 'kurir') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RegisterKurir(),
-                        ),
-                      );
-                    }
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Tolong pilih pendaftaran';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
-                Text('Nama',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
-                TextFormField(
-                  controller: namaController,
-                  decoration:
-                      const InputDecoration(labelText: 'Masukkan Nama Anda',
-                      border: OutlineInputBorder(),),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Tolong masukkan nama anda';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
-                Text('Email',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
-                TextFormField(
-                  controller: emailController,
-                  decoration:
-                      const InputDecoration(labelText: 'Masukkan Email Anda',border: OutlineInputBorder(),),
-                  validator: validateEmail,
-                ),
-                const SizedBox(height: 10),
-                Text('Username',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
-                TextFormField(
-                  controller: usernameController,
-                  decoration: const InputDecoration(
-                      labelText: 'Masukkan Username Anda',border: OutlineInputBorder(),),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Tolong masukkan username anda';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
-                Text('Password',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
-                TextFormField(
-                  controller: passwordController,
-                  decoration: const InputDecoration(
-                      labelText: 'Masukkan Password Anda', border: OutlineInputBorder(),),
-                  obscureText: true,
-                  validator: validatePassword,
-                ),
-                const SizedBox(height: 10),
-                Text('Konfirmasi Password',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
-                TextFormField(
-                  controller: confirmPasswordController,
-                  decoration: const InputDecoration(
-                      labelText: 'Masukkan Konfirmasi Password Anda',border: OutlineInputBorder(),),
-                  obscureText: true,
-                  validator: validateConfirmPassword,
-                ),
-                const SizedBox(height: 10),
-                Text('Nomor Telepon',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
-                TextFormField(
-                  controller: telephoneController,
-                  decoration: const InputDecoration(
-                      labelText: 'Masukkan Nomor Telepon Anda', border: OutlineInputBorder(),),
-                  validator: validateTelephone,
-                ),
-                const SizedBox(height: 10),
-                Text('Alamat',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
-                TextFormField(
-                  controller: alamatController,
-                  decoration: const InputDecoration(
-                      labelText: 'Masukkan Alamat Anda', border: OutlineInputBorder(),),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Tolong masukkan alamat anda';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    shape:
-                        RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                  ),
-                  onPressed: () async {
-                    if (formKey.currentState?.validate() == true) {
-                      bool isRegistered = false;
-                      if (selectedRole == 'kurir') {
+                    
+                    value: selectedRole,
+                    items: [
+                      DropdownMenuItem(
+                        value: 'pembeli',
+                        child: Text('Pembeli'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'kurir',
+                        child: Text('Kurir'),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        selectedRole = value;
+                      });
+                      if (value == 'kurir') {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => RegisterKurir(),
                           ),
                         );
-                      } else {
-                        isRegistered = await registerPembeli(
-                          namaController.text.trim(),
-                          telephoneController.text.trim(),
-                          usernameController.text.trim(),
-                          emailController.text.trim(),
-                          passwordController.text.trim(),
-                          alamatController.text.trim(),
-                        );
                       }
-
-                      print('isRegistered: $isRegistered');
-
-                      if (!mounted) return;
-
-                      if (isRegistered) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text(
-                                  'Registrasi Berhasil! harap login kembali')),
-                        );
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => login(),
-                          ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content:
-                                  Text('Email atau Username sudah digunakan')),
-                        );
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Tolong pilih pendaftaran';
                       }
-                    }
-                  },
-                  child: Text('Register!',
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  Text('Nama',
                       style: GoogleFonts.montserrat(
-                          fontSize: 20, color: Colors.white)
-                          .copyWith(fontWeight: FontWeight.w700)),
-                ),
-              ],
+                          fontSize: 16, fontWeight: FontWeight.w700)),
+                  TextFormField(
+                    controller: namaController,
+                    decoration:
+                        const InputDecoration(labelText: 'Masukkan Nama Anda',
+                        border: OutlineInputBorder(),),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Tolong masukkan nama anda';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  Text('Email',
+                      style: GoogleFonts.montserrat(
+                          fontSize: 16, fontWeight: FontWeight.w700)),
+                  TextFormField(
+                    controller: emailController,
+                    decoration:
+                        const InputDecoration(labelText: 'Masukkan Email Anda',border: OutlineInputBorder(),),
+                    validator: validateEmail,
+                  ),
+                  const SizedBox(height: 10),
+                  Text('Username',
+                      style: GoogleFonts.montserrat(
+                          fontSize: 16, fontWeight: FontWeight.w700)),
+                  TextFormField(
+                    controller: usernameController,
+                    decoration: const InputDecoration(
+                        labelText: 'Masukkan Username Anda',border: OutlineInputBorder(),),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Tolong masukkan username anda';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  Text('Password',
+                      style: GoogleFonts.montserrat(
+                          fontSize: 16, fontWeight: FontWeight.w700)),
+                  TextFormField(
+                    controller: passwordController,
+                    decoration: const InputDecoration(
+                        labelText: 'Masukkan Password Anda',
+                        border: OutlineInputBorder(),
+                        errorMaxLines: 3,),
+                    obscureText: true,
+                    validator: validatePassword,
+                  ),
+                  const SizedBox(height: 10),
+                  Text('Konfirmasi Password',
+                      style: GoogleFonts.montserrat(
+                          fontSize: 16, fontWeight: FontWeight.w700)),
+                  TextFormField(
+                    controller: confirmPasswordController,
+                    decoration: const InputDecoration(
+                        labelText: 'Masukkan Konfirmasi Password Anda',border: OutlineInputBorder(),),
+                    obscureText: true,
+                    validator: validateConfirmPassword,
+                  ),
+                  const SizedBox(height: 10),
+                  Text('Nomor Telepon',
+                      style: GoogleFonts.montserrat(
+                          fontSize: 16, fontWeight: FontWeight.w700)),
+                  TextFormField(
+                    controller: telephoneController,
+                    decoration: const InputDecoration(
+                        labelText: 'Masukkan Nomor Telepon Anda', border: OutlineInputBorder(),),
+                    validator: validateTelephone,
+                  ),
+                  const SizedBox(height: 10),
+                  Text('Alamat',
+                      style: GoogleFonts.montserrat(
+                          fontSize: 16, fontWeight: FontWeight.w700)),
+                  TextFormField(
+                    controller: alamatController,
+                    decoration: const InputDecoration(
+                        labelText: 'Masukkan Alamat Anda', border: OutlineInputBorder(),),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Tolong masukkan alamat anda';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape:
+                          RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                    ),
+                    onPressed: () async {
+                      if (formKey.currentState?.validate() == true) {
+                        bool isRegistered = false;
+                        if (selectedRole == 'kurir') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RegisterKurir(),
+                            ),
+                          );
+                        } else {
+                          isRegistered = await registerPembeli(
+                            namaController.text.trim(),
+                            telephoneController.text.trim(),
+                            usernameController.text.trim(),
+                            emailController.text.trim(),
+                            passwordController.text.trim(),
+                            alamatController.text.trim(),
+                          );
+                        }
+        
+                        print('isRegistered: $isRegistered');
+        
+                        if (!mounted) return;
+        
+                        if (isRegistered) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text(
+                                    'Registrasi Berhasil! harap login kembali')),
+                          );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => login(),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content:
+                                    Text('Email atau Username sudah digunakan')),
+                          );
+                        }
+                      }
+                    },
+                    child: Text('Register!',
+                        style: GoogleFonts.montserrat(
+                            fontSize: 20, color: Colors.white)
+                            .copyWith(fontWeight: FontWeight.w700)),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

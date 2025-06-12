@@ -53,191 +53,196 @@ class _LoginState extends State<login> {
               fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
         ),
       ),
-      body: SingleChildScrollView(
+      body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Center(
-                  child: Text('Selamat Datang Kembali',
-                      style: GoogleFonts.montserrat(
-                          fontSize: 24, fontWeight: FontWeight.bold)),
-                ),
-                const SizedBox(height: 20),
-                Text('Pilih Role',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
-                DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                  ),
-                  value: selectedRole,
-                  items: [
-                    DropdownMenuItem(
-                      value: 'pembeli',
-                      child: Text('Pembeli'),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Center(
+                      child: Text('Selamat Datang Kembali',
+                          style: GoogleFonts.montserrat(
+                              fontSize: 24, fontWeight: FontWeight.bold)),
                     ),
-                    DropdownMenuItem(
-                      value: 'kurir',
-                      child: Text('Kurir'),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      selectedRole = value;
-                      if (value == 'kurir') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginKurir(),
-                          ),
-                        );
-                      }
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Tolong pilih role anda';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 10),
-                Text('Email',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
-                TextFormField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Masukkan Email Anda';
-                    }
-                    final regex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-                    if (!regex.hasMatch(value)) {
-                      return 'Email Tidak Valid';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 24),
-                Text('Password',
-                    style: GoogleFonts.montserrat(
-                        fontSize: 16, fontWeight: FontWeight.w700)),
-                TextFormField(
-                  controller: passwordController,
-                  decoration: const InputDecoration(
-                    labelText: 'Masukkan Password',
-                    border: OutlineInputBorder(),
-                  ),
-                  obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Tolong Masukkan Password Anda';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Masukkanemail()),
-                          );
-                        },
-                        child: Text('Lupa Password?',
-                            style: GoogleFonts.montserrat(
-                                fontSize: 16, fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 20),
+                    Text('Pilih Role',
+                        style: GoogleFonts.montserrat(
+                            fontSize: 16, fontWeight: FontWeight.w700)),
+                    DropdownButtonFormField<String>(
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
                       ),
-                    ],
-                  ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    shape:
-                        RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                  ),
-                  onPressed: () async {
-                    if (formKey.currentState?.validate() == true) {
-                      if (selectedRole == 'pembeli') {
-                        try {
-                          await fetchLogin(
-                             context, emailController.text, passwordController.text);
-                          if (sessionId != 0) {
+                      value: selectedRole,
+                      items: [
+                        DropdownMenuItem(
+                          value: 'pembeli',
+                          child: Text('Pembeli'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'kurir',
+                          child: Text('Kurir'),
+                        ),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          selectedRole = value;
+                          if (value == 'kurir') {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => Homepage(),
-                              ),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Email atau Password salah'),
+                                builder: (context) => LoginKurir(),
                               ),
                             );
                           }
-                        } catch (error) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content:
-                                  Text('Terjadi kesalahan, coba lagi nanti'),
-                            ),
-                          );
-                        }
-                      } else if (selectedRole == 'kurir') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginKurir(),
-                          ),
-                        );
-                      }
-                    }
-                  },
-                  child: Text('Masuk',
-                      style: GoogleFonts.montserrat(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700)),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Tidak Memiliki akun?",
-                        style: GoogleFonts.montserrat(
-                            fontSize: 16, fontWeight: FontWeight.w400)),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Register(),
-                          ),
-                        );
+                        });
                       },
-                      child: Text('Register',
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Tolong pilih role anda';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Text('Email',
+                        style: GoogleFonts.montserrat(
+                            fontSize: 16, fontWeight: FontWeight.w700)),
+                    TextFormField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Masukkan Email Anda';
+                        }
+                        final regex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+                        if (!regex.hasMatch(value)) {
+                          return 'Email Tidak Valid';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                    Text('Password',
+                        style: GoogleFonts.montserrat(
+                            fontSize: 16, fontWeight: FontWeight.w700)),
+                    TextFormField(
+                      controller: passwordController,
+                      decoration: const InputDecoration(
+                        labelText: 'Masukkan Password',
+                        border: OutlineInputBorder(),
+                      ),
+                      obscureText: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Tolong Masukkan Password Anda';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Masukkanemail()),
+                              );
+                            },
+                            child: Text('Lupa Password?',
+                                style: GoogleFonts.montserrat(
+                                    fontSize: 16, fontWeight: FontWeight.w700)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        shape:
+                            RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                      ),
+                      onPressed: () async {
+                        if (formKey.currentState?.validate() == true) {
+                          if (selectedRole == 'pembeli') {
+                            try {
+                              await fetchLogin(
+                                 context, emailController.text, passwordController.text);
+                              if (sessionId != 0) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Homepage(),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Email atau Password salah'),
+                                  ),
+                                );
+                              }
+                            } catch (error) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text('Terjadi kesalahan, coba lagi nanti'),
+                                ),
+                              );
+                            }
+                          } else if (selectedRole == 'kurir') {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginKurir(),
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      child: Text('Masuk',
                           style: GoogleFonts.montserrat(
-                              fontSize: 16, fontWeight: FontWeight.w400)),
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700)),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Tidak Memiliki akun?",
+                            style: GoogleFonts.montserrat(
+                                fontSize: 16, fontWeight: FontWeight.w400)),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Register(),
+                              ),
+                            );
+                          },
+                          child: Text('Register',
+                              style: GoogleFonts.montserrat(
+                                  fontSize: 16, fontWeight: FontWeight.w400)),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

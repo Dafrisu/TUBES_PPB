@@ -92,6 +92,7 @@ class _FormgantipasswordState extends State<Formgantipassword> {
                 decoration: const InputDecoration(
                   labelText: 'Password Baru',
                   border: OutlineInputBorder(),
+                  errorMaxLines: 3,
                 ),
                 obscureText: true,
                 validator: (value) {
