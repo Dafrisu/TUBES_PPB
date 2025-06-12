@@ -257,13 +257,7 @@ class _KurirProfilePageState extends State<KurirProfilePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => KurirProfilePage(
-                                  nama: widget.nama,
-                                  noTelp: widget.noTelp,
-                                  namaMitra: widget.namaMitra,
-                                  status: widget.status,
-                                  idKurir: widget.idKurir,
-                                ),
+                                builder: (context) => Kurir(),
                               ),
                             );
                           },
