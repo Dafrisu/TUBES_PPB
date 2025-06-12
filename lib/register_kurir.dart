@@ -18,6 +18,7 @@ class _RegisterKurirState extends State<RegisterKurir> {
   final passwordController = TextEditingController();
   final namaController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final nomorTeleponController = TextEditingController();
   String? selectedRole = 'kurir';
   String? selectedUMKM;
   List<dynamic> umkmList = [];
@@ -175,6 +176,23 @@ class _RegisterKurirState extends State<RegisterKurir> {
                           },
                         ),
                         const SizedBox(height: 10),
+                           Text('Nomor Telepon',
+                            style: GoogleFonts.montserrat(
+                                fontSize: 16, fontWeight: FontWeight.w700)),
+                        TextFormField(
+                          controller: nomorTeleponController,
+                          decoration: const InputDecoration(
+                              labelText: 'Masukkan Nomor Telepon Anda',
+                              border: OutlineInputBorder()),
+                          keyboardType: TextInputType.phone,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Tolong masukkan nomor telepon anda';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 10),
                         Text('Email',
                             style: GoogleFonts.montserrat(
                                 fontSize: 16, fontWeight: FontWeight.w700)),
@@ -259,6 +277,7 @@ class _RegisterKurirState extends State<RegisterKurir> {
                                 namaController.text.trim(),
                                 passwordController.text.trim(),
                                 selectedUMKM!,
+                                nomorTeleponController.text.trim()
                               );
                               if (!mounted) return;
           
