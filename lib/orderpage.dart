@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'oderpage_fingerprintTest.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:tubes_ppb/api/api_loginPembeli.dart';
@@ -84,13 +83,9 @@ class _OrderPageState extends State<OrderPage> {
 
   Future<void> authenticate() async {
     try {
-      bool canCheckBiometrics = FingerprintTestHelper.testMode
-          ? FingerprintTestHelper.mockBiometricAvailable
-          : await auth.canCheckBiometrics;
+      bool canCheckBiometrics = await auth.canCheckBiometrics;
 
-      bool isDeviceSupported = FingerprintTestHelper.testMode
-          ? FingerprintTestHelper.mockBiometricAvailable
-          : await auth.isDeviceSupported();
+      bool isDeviceSupported = await auth.isDeviceSupported();
 
       if (!canCheckBiometrics || !isDeviceSupported) {
         sendallpesanan();
@@ -110,15 +105,13 @@ class _OrderPageState extends State<OrderPage> {
         );
         return;
       } else {
-        bool authenticated = FingerprintTestHelper.testMode
-            ? FingerprintTestHelper.mockAuthenticated
-            : await auth.authenticate(
-                localizedReason: 'Scan Fingerprintmu untuk Pesan ya',
-                options: const AuthenticationOptions(
-                  useErrorDialogs: true,
-                  stickyAuth: false,
-                ),
-              );
+        bool authenticated = await auth.authenticate(
+          localizedReason: 'Scan Fingerprintmu untuk Pesan ya',
+          options: const AuthenticationOptions(
+            useErrorDialogs: true,
+            stickyAuth: false,
+          ),
+        );
 
         if (authenticated) {
           sendallpesanan();
@@ -399,7 +392,6 @@ class _OrderPageState extends State<OrderPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [Text('TOTAL'), Text('Rp. $totalsemuanya')],
                 ),
-                FingerprintTestWidget(),
               ],
             ),
           ),
