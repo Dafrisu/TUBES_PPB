@@ -41,6 +41,7 @@ Future<bool> registerKurir(
         'email': email,
         'password': password,
         'id_umkm': idUmkm,
+        'status': 'Belum Terdaftar',
       }),
     );
 
