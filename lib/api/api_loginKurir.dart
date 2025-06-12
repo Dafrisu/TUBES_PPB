@@ -22,6 +22,8 @@ Future<bool> loginKurir(String email, String password) async {
     kurirSessionId = data['id_kurir'];
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt('kurirSessionId', kurirSessionId);
+    await prefs.setString('userRole', 'kurir');
+    print('Kurir session ID: $kurirSessionId');
     return true;
   } else {
     print('Failed to login: ${response.statusCode}');

@@ -64,6 +64,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 await prefs.remove('sessionId'); // Remove session ID
                 await prefs.remove('kurirSessionId');
+                await prefs.remove('userRole'); // Remove user role
 
                 sessionId = 0;
                 kurirSessionId = 0;

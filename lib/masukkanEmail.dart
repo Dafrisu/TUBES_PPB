@@ -1,10 +1,8 @@
-// lib/masukkanEmail.dart (atau nama file yang sesuai)
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tubes_ppb/api/api_gantiPassword.dart';
 import 'package:tubes_ppb/login.dart';
-import 'package:tubes_ppb/verifikasi_otp_ganti_pass.dart'; // Impor halaman verifikasi baru
+import 'package:tubes_ppb/verifikasi_otp_ganti_pass.dart'; 
 
 class Masukkanemail extends StatefulWidget {
   const Masukkanemail({super.key});
@@ -18,25 +16,15 @@ class _MasukkanemailState extends State<Masukkanemail> {
   final TextEditingController emailController = TextEditingController();
   bool isLoading = false;
 
-  // Fungsi untuk menangani logika saat tombol ditekan
   void _handleSendOTP() async {
-    // Validasi form
     if (formKey.currentState?.validate() != true) return;
-    
-    // Tampilkan loading
     setState(() => isLoading = true);
-    
-    // Cek apakah email terdaftar di database
     bool emailExists = await checkPembeliByEmail(emailController.text);
-    
-    // Pastikan widget masih ada di tree sebelum lanjut
+
     if (mounted && emailExists) {
       try {
-        // Panggil API untuk mengirim OTP
         var response = await sendPasswordResetOTP(emailController.text);
         String otpHash = (response.data?.hash as String?) ?? '';
-
-        // Jika berhasil, navigasi ke halaman verifikasi OTP
         if (mounted) {
           Navigator.push(
             context,
@@ -45,6 +33,13 @@ class _MasukkanemailState extends State<Masukkanemail> {
                 email: emailController.text,
                 otpHash: otpHash,
               ),
+            ),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  "OTP terkirim! Mohon periksa folder spam email Anda."),
+              duration: Duration(seconds: 5), 
             ),
           );
         }
@@ -57,12 +52,12 @@ class _MasukkanemailState extends State<Masukkanemail> {
         }
       }
     } else if (mounted) {
-      // Tampilkan pesan error jika email tidak ditemukan
+      // pesan error jika email tidak ditemukan
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Email tidak ditemukan')),
       );
     }
-    
+
     // Sembunyikan loading setelah selesai
     if (mounted) {
       setState(() => isLoading = false);
@@ -93,49 +88,58 @@ class _MasukkanemailState extends State<Masukkanemail> {
               fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              const Text(
-                'Masukkan Email Anda',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Masukkan email Anda';
-                  }
-                  // Validasi format email sederhana
-                  if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                    return 'Masukkan format email yang valid';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              // Tampilkan loading atau tombol
-              isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                      ),
-                      onPressed: _handleSendOTP,
-                      child: const Text('Kirim', style: TextStyle(fontSize: 16, color: Colors.white)),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    const Text(
+                      'Masukkan Email Anda',
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
-            ],
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: emailController,
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Masukkan email Anda';
+                        }
+                        // Validasi format email sederhana
+                        if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                          return 'Masukkan format email yang valid';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    // Tampilkan loading atau tombol
+                    isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero),
+                            ),
+                            onPressed: _handleSendOTP,
+                            child: const Text('Kirim',
+                                style: TextStyle(fontSize: 16, color: Colors.white)),
+                          ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       ),

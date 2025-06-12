@@ -19,9 +19,12 @@ class _FormgantipasswordState extends State<Formgantipassword> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
   final passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
+
   
   // Tambahkan state untuk loading
   bool isLoading = false;
+  bool _passwordVisible = false;
+  bool _confirmPasswordVisible = false;
 
   // Buat fungsi terpisah untuk menangani logika
   void _handleChangePassword() async {
@@ -75,66 +78,86 @@ class _FormgantipasswordState extends State<Formgantipassword> {
               fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              const Text(
-                'Password Baru',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Password Baru',
-                  border: OutlineInputBorder(),
-                  errorMaxLines: 3,
-                ),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Masukkan Password Baru';
-                  } else if (!passwordRegex.hasMatch(value)) {
-                    return 'Password minimal 8 karakter, harus mengandung huruf besar, kecil, angka, dan simbol';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: confirmPasswordController,
-                decoration: const InputDecoration(
-                  labelText: 'Konfirmasi Password Baru',
-                  border: OutlineInputBorder(),
-                ),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Konfirmasi Password Baru';
-                  } else if (value != passwordController.text) {
-                    return 'Password tidak cocok';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 24),
-              // Tampilkan loading atau tombol
-              isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    const Text(
+                      'Password Baru',
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
-                    onPressed: _handleChangePassword,
-                    child: const Text('Ubah Password',
-                        style: TextStyle(fontSize: 16, color: Colors.white)),
-                  ),
-            ],
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: passwordController,
+                      obscureText: !_passwordVisible,
+                      decoration: InputDecoration(
+                        labelText: 'Password Baru',
+                        border: const OutlineInputBorder(),
+                        errorMaxLines: 3,
+                        suffixIcon: IconButton(
+                              icon: Icon(
+                                _passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _passwordVisible = !_passwordVisible;
+                                });
+                              },
+                            ),
+                      ),
+                      
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Masukkan Password Baru';
+                        } else if (!passwordRegex.hasMatch(value)) {
+                          return 'Password minimal 8 karakter, harus mengandung huruf besar, kecil, angka, dan simbol';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: confirmPasswordController,
+                      decoration: const InputDecoration(
+                        labelText: 'Konfirmasi Password Baru',
+                        border: OutlineInputBorder(),
+                      ),
+                      obscureText: true,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Konfirmasi Password Baru';
+                        } else if (value != passwordController.text) {
+                          return 'Password tidak cocok';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                    // Tampilkan loading atau tombol
+                    isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                          ),
+                          onPressed: _handleChangePassword,
+                          child: const Text('Ubah Password',
+                              style: TextStyle(fontSize: 16, color: Colors.white)),
+                        ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       ),

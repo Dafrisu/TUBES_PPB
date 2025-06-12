@@ -123,8 +123,10 @@ class _DeliveryPageState extends State<DeliveryPage> {
                         child: const Text("Ya"),
                         onPressed: () async {
                           SharedPreferences prefs = await SharedPreferences.getInstance();
-                          await prefs.remove('sessionId'); // Remove session ID
+                          await prefs.remove('sessionId');
                           await prefs.remove('kurirSessionId');
+                          await prefs.remove('userRole');
+
                           // Hapus data kurir dan pembeli
                           sessionId = 0;
                           kurirSessionId = 0;
