@@ -4,7 +4,7 @@ import 'dart:convert';
 Future<bool> registerKurir(
     String email, String nama, String password, String idUmkm, String nomorTelepon) async {
   final checkUrl = 'https://umkmapi-production.up.railway.app/checkkurir';
-  final registerUrl = 'http://10.0.2.2/kurir';
+  final registerUrl = 'https://umkmapi-production.up.railway.app/kurir';
 
   try {
     // Check if Kurir already exists
