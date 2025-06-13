@@ -6,9 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubes_ppb/otp_screen.dart'; 
 
 int sessionId = 0;
-// Future<List<Map<String, dynamic>>> profilePembeli = fetchUserData(sessionId);
 Future<Map<String, dynamic>?> profilePembeli = Future.value(null);
-// List<Map<String, dynamic>> getProfilePembeli = await profilePembeli;
 
 Future<void> fetchLogin(BuildContext context, String email, String password) async {
   try {
@@ -43,7 +41,6 @@ Future<void> fetchLogin(BuildContext context, String email, String password) asy
       );
     }
   } catch (error) {
-    // Menampilkan error jika tidak bisa terhubung ke server
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text('Gagal terhubung ke server.')));
     print(error);

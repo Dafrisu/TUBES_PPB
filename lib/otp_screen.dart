@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'homepage.dart'; // Pastikan import halaman tujuan Anda sudah benar
+import 'homepage.dart'; 
 import 'package:tubes_ppb/api/api_loginPembeli.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 
 class OTPScreen extends StatefulWidget {
   final String email;
@@ -45,6 +47,8 @@ class _OTPScreenState extends State<OTPScreen> {
         sessionId = widget.userId;
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setInt('sessionId', widget.userId);
+        await prefs.setString('userRole', 'pembeli');
+
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => Homepage()),
           (Route<dynamic> route) => false,
@@ -68,59 +72,74 @@ class _OTPScreenState extends State<OTPScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Verifikasi OTP'),
+        title: Text('Verifikasi OTP', style: GoogleFonts.montserrat(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+        ),
         backgroundColor: Colors.green,
+        leading: IconButton(
+        icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+        onPressed: () {
+          Navigator.of(context).pop(); 
+        },
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Masukkan 4 digit kode OTP yang dikirim ke email:\n${widget.email}',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16),
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                controller: otpController,
-                keyboardType: TextInputType.number,
-                maxLength: 4,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 24, letterSpacing: 16),
-                decoration: InputDecoration(
-                  counterText: "", // Menghilangkan counter di bawah
-                  labelText: 'Kode OTP',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'OTP tidak boleh kosong';
-                  }
-                  if (value.length < 4) {
-                    return 'OTP harus 4 digit';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 20),
-              _isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                      ),
-                      onPressed: _verifyOTP,
-                      child: Text(
-                        'Verifikasi',
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'Masukkan 4 digit kode OTP yang dikirim ke Spam Email:\n${widget.email}',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.montserrat(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 16),
                     ),
-            ],
+                    SizedBox(height: 20),
+                    TextFormField(
+                      controller: otpController,
+                      keyboardType: TextInputType.number,
+                      maxLength: 4,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 24, letterSpacing: 16),
+                      decoration: InputDecoration(
+                        hintText: 'O T P',
+                        counterText: "", 
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'OTP tidak boleh kosong';
+                        }
+                        if (value.length < 4) {
+                          return 'OTP harus 4 digit';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    _isLoading
+                        ? Center(child: CircularProgressIndicator())
+                        : ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder()
+                            ),
+                            onPressed: _verifyOTP,
+                            child: Text(
+                              'Verifikasi',
+                              style: GoogleFonts.montserrat(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                          ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       ),

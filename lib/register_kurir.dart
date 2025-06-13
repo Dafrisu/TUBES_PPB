@@ -28,6 +28,9 @@ class _RegisterKurirState extends State<RegisterKurir> {
   final passwordRegex = RegExp(
       r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
 
+  bool _passwordVisible = false;
+  bool _confirmPasswordVisible = false;
+
   @override
   void initState() {
     super.initState();
@@ -54,7 +57,7 @@ class _RegisterKurirState extends State<RegisterKurir> {
 
   String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Tolong masukkan email anda';
+      return 'Tolong masukkan email ';
     } else if (!emailRegex.hasMatch(value)) {
       return 'Email tidak valid';
     }
@@ -63,7 +66,7 @@ class _RegisterKurirState extends State<RegisterKurir> {
 
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Tolong masukkan password anda';
+      return 'Tolong masukkan password ';
     } else if (!passwordRegex.hasMatch(value)) {
       return 'Password min. 8 karakter, kombinasi huruf besar, kecil, angka, & simbol';
     }
@@ -72,9 +75,9 @@ class _RegisterKurirState extends State<RegisterKurir> {
 
   String? validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Tolong masukkan konfirmasi password anda';
+      return 'Tolong masukkan konfirmasi password ';
     } else if (value != passwordController.text) {
-      return 'Konfirmasi password anda tidak sama';
+      return 'Konfirmasi password  tidak sama';
     }
     return null;
   }
@@ -166,28 +169,28 @@ class _RegisterKurirState extends State<RegisterKurir> {
                         TextFormField(
                           controller: namaController,
                           decoration: const InputDecoration(
-                              labelText: 'Masukkan Nama Anda',
+                              hintText: 'Masukkan Nama ',
                               border: OutlineInputBorder()),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Tolong masukkan nama anda';
+                              return 'Tolong masukkan nama ';
                             }
                             return null;
                           },
                         ),
                         const SizedBox(height: 10),
-                           Text('Nomor Telepon',
+                        Text('Nomor Telepon',
                             style: GoogleFonts.montserrat(
                                 fontSize: 16, fontWeight: FontWeight.w700)),
                         TextFormField(
                           controller: nomorTeleponController,
                           decoration: const InputDecoration(
-                              labelText: 'Masukkan Nomor Telepon Anda',
+                              hintText: 'Masukkan Nomor Telepon ',
                               border: OutlineInputBorder()),
                           keyboardType: TextInputType.phone,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Tolong masukkan nomor telepon anda';
+                              return 'Tolong masukkan nomor telepon ';
                             }
                             return null;
                           },
@@ -199,7 +202,7 @@ class _RegisterKurirState extends State<RegisterKurir> {
                         TextFormField(
                           controller: emailController,
                           decoration: const InputDecoration(
-                              labelText: 'Masukkan Email Anda',
+                              hintText: 'Masukkan Email ',
                               border: OutlineInputBorder()),
                           validator: validateEmail,
                         ),
@@ -209,12 +212,25 @@ class _RegisterKurirState extends State<RegisterKurir> {
                                 fontSize: 16, fontWeight: FontWeight.w700)),
                         TextFormField(
                           controller: passwordController,
-                          decoration: const InputDecoration(
-                            labelText: 'Masukkan Password Anda',
-                            border: OutlineInputBorder(),
+                          obscureText: !_passwordVisible,
+                          decoration: InputDecoration(
+                            hintText: 'Masukkan Password ',
+                            border: const OutlineInputBorder(),
                             errorMaxLines: 3,
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _passwordVisible =
+                                      !_passwordVisible;
+                                });
+                              },
+                            ),
                           ),
-                          obscureText: true,
                           validator: validatePassword,
                         ),
                         const SizedBox(height: 10),
@@ -223,10 +239,24 @@ class _RegisterKurirState extends State<RegisterKurir> {
                                 fontSize: 16, fontWeight: FontWeight.w700)),
                         TextFormField(
                           controller: confirmPasswordController,
-                          decoration: const InputDecoration(
-                              labelText: 'Masukkan Konfirmasi Password Anda',
-                              border: OutlineInputBorder()),
-                          obscureText: true,
+                          obscureText: _confirmPasswordVisible,
+                          decoration: InputDecoration(
+                              hintText: 'Masukkan Konfirmasi Password ',
+                              border: OutlineInputBorder(),
+                              suffixIcon: IconButton(
+                        icon: Icon(
+                          _confirmPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _confirmPasswordVisible = !_confirmPasswordVisible;
+                          });
+                        },
+                      ),
+                              ),
+                          
                           validator: validateConfirmPassword,
                         ),
                         const SizedBox(height: 10),
@@ -240,12 +270,10 @@ class _RegisterKurirState extends State<RegisterKurir> {
                             border: OutlineInputBorder(),
                           ),
                           value: selectedUMKM,
-                          hint: umkmList.isEmpty
-                              ? Text('Memuat data...')
-                              : null,
+                          hint:
+                              umkmList.isEmpty ? Text('Memuat data...') : null,
                           items: umkmList.map((umkm) {
                             return DropdownMenuItem<String>(
-
                               value: umkm['id_umkm'].toString(),
                               child: Text(umkm['nama_usaha'] ?? 'Tanpa Nama'),
                             );
@@ -268,19 +296,18 @@ class _RegisterKurirState extends State<RegisterKurir> {
                             backgroundColor: Colors.green,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.zero),
-                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            padding: const EdgeInsets.symmetric(vertical: 8),
                           ),
                           onPressed: () async {
-                             if (formKey.currentState?.validate() == true) {
+                            if (formKey.currentState?.validate() == true) {
                               bool isRegistered = await registerKurir(
-                                emailController.text.trim(),
-                                namaController.text.trim(),
-                                passwordController.text.trim(),
-                                selectedUMKM!,
-                                nomorTeleponController.text.trim()
-                              );
+                                  emailController.text.trim(),
+                                  namaController.text.trim(),
+                                  passwordController.text.trim(),
+                                  selectedUMKM!,
+                                  nomorTeleponController.text.trim());
                               if (!mounted) return;
-          
+
                               if (isRegistered) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(

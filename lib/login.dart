@@ -1,20 +1,13 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:tubes_ppb/notif.dart';
 import 'masukkanEmail.dart';
-import 'homepage.dart';
-import 'package:tubes_ppb/kurir.dart';
 import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/Dafa_register.dart';
 import 'api/api_loginPembeli.dart';
-import 'api/api_loginKurir.dart';
+
 import 'package:tubes_ppb/login_kurir.dart';
 
 //packages
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class login extends StatefulWidget {
   const login({super.key});
@@ -28,6 +21,8 @@ class _LoginState extends State<login> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   String? selectedRole = 'pembeli';
+
+  bool _loginPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +43,7 @@ class _LoginState extends State<login> {
         ),
         centerTitle: true,
         title: Text(
-          'Login!',
+          'Login',
           style: GoogleFonts.montserrat(
               fontSize: 20, fontWeight: FontWeight.w500, color: Colors.white),
         ),
@@ -115,7 +110,7 @@ class _LoginState extends State<login> {
                     TextFormField(
                       controller: emailController,
                       decoration: InputDecoration(
-                        labelText: 'Email',
+                        hintText: 'Masukkan Email',
                         border: OutlineInputBorder(),
                       ),
                       validator: (value) {
@@ -135,11 +130,25 @@ class _LoginState extends State<login> {
                             fontSize: 16, fontWeight: FontWeight.w700)),
                     TextFormField(
                       controller: passwordController,
-                      decoration: const InputDecoration(
-                        labelText: 'Masukkan Password',
+                      obscureText: _loginPasswordVisible,
+                      decoration: InputDecoration(
+                        hintText: 'Masukkan Password',
                         border: OutlineInputBorder(),
+                        errorMaxLines: 3,
+                        suffixIcon: IconButton(
+                        icon: Icon(
+                          _loginPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _loginPasswordVisible = !_loginPasswordVisible;
+                          });
+                        },
                       ),
-                      obscureText: true,
+                      ),
+                      
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Tolong Masukkan Password Anda';
@@ -158,7 +167,8 @@ class _LoginState extends State<login> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const Masukkanemail()),
+                                    builder: (context) =>
+                                        const Masukkanemail()),
                               );
                             },
                             child: Text('Lupa Password?',
@@ -171,37 +181,14 @@ class _LoginState extends State<login> {
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
-                        shape:
-                            RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero),
                       ),
                       onPressed: () async {
                         if (formKey.currentState?.validate() == true) {
                           if (selectedRole == 'pembeli') {
-                            try {
-                              await fetchLogin(
-                                 context, emailController.text, passwordController.text);
-                              if (sessionId != 0) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Homepage(),
-                                  ),
-                                );
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('Email atau Password salah'),
-                                  ),
-                                );
-                              }
-                            } catch (error) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content:
-                                      Text('Terjadi kesalahan, coba lagi nanti'),
-                                ),
-                              );
-                            }
+                            await fetchLogin(context, emailController.text,
+                                passwordController.text);
                           } else if (selectedRole == 'kurir') {
                             Navigator.push(
                               context,
@@ -224,7 +211,7 @@ class _LoginState extends State<login> {
                       children: [
                         Text("Tidak Memiliki akun?",
                             style: GoogleFonts.montserrat(
-                                fontSize: 16, fontWeight: FontWeight.w400)),
+                                fontSize: 16, fontWeight: FontWeight.w600)),
                         TextButton(
                           onPressed: () {
                             Navigator.push(
