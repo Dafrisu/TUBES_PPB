@@ -28,7 +28,7 @@ class _LoginKurirState extends State<LoginKurir> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
+        backgroundColor: Color.fromARGB(255, 101, 136, 100),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () {
@@ -158,7 +158,7 @@ class _LoginKurirState extends State<LoginKurir> {
                     const SizedBox(height: 20),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
+                        backgroundColor: Color.fromARGB(255, 101, 136, 100),
                         shape:
                             RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                       ),
@@ -197,8 +197,9 @@ class _LoginKurirState extends State<LoginKurir> {
                               fontWeight: FontWeight.w700)),
                     ),
                     const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      Wrap(
+                      alignment: WrapAlignment.center,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         Text("Tidak Memiliki akun?",
                             style: GoogleFonts.montserrat(
@@ -214,7 +215,8 @@ class _LoginKurirState extends State<LoginKurir> {
                           },
                           child: Text('Register',
                               style: GoogleFonts.montserrat(
-                                  fontSize: 16, fontWeight: FontWeight.w400)),
+                                  fontSize: 16, fontWeight: FontWeight.w400),
+                                  overflow: TextOverflow.clip),
                         ),
                       ],
                     ),

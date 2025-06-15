@@ -86,7 +86,7 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
+        backgroundColor:  Color.fromARGB(255, 101, 136, 100),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () {
@@ -289,7 +289,7 @@ class _RegisterState extends State<Register> {
                       const SizedBox(height: 20),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
+                          backgroundColor: Color.fromARGB(255, 101, 136, 100),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.zero),
                         ),

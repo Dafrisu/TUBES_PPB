@@ -67,9 +67,7 @@ class _FormgantipasswordState extends State<Formgantipassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
-        // Tombol kembali tidak lagi diperlukan jika navigasi dari halaman sebelumnya sudah benar
-        // Namun, bisa dipertahankan jika diperlukan
+        backgroundColor:  const Color.fromARGB(255, 101, 136, 100),
         automaticallyImplyLeading: false, 
         centerTitle: true,
         title: Text(
@@ -147,7 +145,7 @@ class _FormgantipasswordState extends State<Formgantipassword> {
                       ? const Center(child: CircularProgressIndicator())
                       : ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
+                            backgroundColor:Color.fromARGB(255, 101, 136, 100),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
                           ),
                           onPressed: _handleChangePassword,
