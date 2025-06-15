@@ -74,7 +74,7 @@ class _OTPScreenState extends State<OTPScreen> {
       appBar: AppBar(
         title: Text('Verifikasi OTP', style: GoogleFonts.montserrat(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
         ),
-        backgroundColor: Colors.green,
+        backgroundColor:  const Color.fromARGB(255, 101, 136, 100),
         leading: IconButton(
         icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
         onPressed: () {
@@ -102,7 +102,7 @@ class _OTPScreenState extends State<OTPScreen> {
                     SizedBox(height: 20),
                     TextFormField(
                       controller: otpController,
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.text,
                       maxLength: 4,
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 24, letterSpacing: 16),
@@ -126,9 +126,10 @@ class _OTPScreenState extends State<OTPScreen> {
                         ? Center(child: CircularProgressIndicator())
                         : ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
+                              backgroundColor:  Color.fromARGB(255, 101, 136, 100),
                               padding: EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder()
+                               shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero),
                             ),
                             onPressed: _verifyOTP,
                             child: Text(

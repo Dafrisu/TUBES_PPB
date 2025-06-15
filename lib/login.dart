@@ -28,7 +28,7 @@ class _LoginState extends State<login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
+        backgroundColor: const Color.fromARGB(255, 101, 136, 100),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () {
@@ -130,7 +130,7 @@ class _LoginState extends State<login> {
                             fontSize: 16, fontWeight: FontWeight.w700)),
                     TextFormField(
                       controller: passwordController,
-                      obscureText: _loginPasswordVisible,
+                      obscureText: !_loginPasswordVisible,
                       decoration: InputDecoration(
                         hintText: 'Masukkan Password',
                         border: OutlineInputBorder(),
@@ -180,7 +180,7 @@ class _LoginState extends State<login> {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
+                        backgroundColor:  const Color.fromARGB(255, 101, 136, 100),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.zero),
                       ),
@@ -206,8 +206,9 @@ class _LoginState extends State<login> {
                               fontWeight: FontWeight.w700)),
                     ),
                     const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         Text("Tidak Memiliki akun?",
                             style: GoogleFonts.montserrat(
@@ -223,7 +224,10 @@ class _LoginState extends State<login> {
                           },
                           child: Text('Register',
                               style: GoogleFonts.montserrat(
-                                  fontSize: 16, fontWeight: FontWeight.w400)),
+                                  fontSize: 16, fontWeight: FontWeight.w400,),
+                                  maxLines: 1,
+                                  softWrap: false,
+                                  overflow: TextOverflow.clip,),
                         ),
                       ],
                     ),

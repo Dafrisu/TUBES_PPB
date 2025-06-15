@@ -42,7 +42,7 @@ Future<void> fetchLogin(BuildContext context, String email, String password) asy
     }
   } catch (error) {
     ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('Gagal terhubung ke server.')));
+        .showSnackBar(SnackBar(content: Text('Email/Password Salah Atau Gagal terhubung ke server.')));
     print(error);
   }
 }
