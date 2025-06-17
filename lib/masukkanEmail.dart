@@ -21,44 +21,42 @@ class _MasukkanemailState extends State<Masukkanemail> {
     setState(() => isLoading = true);
     bool emailExists = await checkPembeliByEmail(emailController.text);
 
-    if (mounted && emailExists) {
-      try {
-        var response = await sendPasswordResetOTP(emailController.text);
-        String otpHash = (response.data?.hash as String?) ?? '';
-        if (mounted) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => VerifikasiOtpGantiPass(
-                email: emailController.text,
-                otpHash: otpHash,
-              ),
-            ),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                  "OTP terkirim! Mohon periksa folder spam email Anda."),
-              duration: Duration(seconds: 5), 
-            ),
-          );
-        }
-      } catch (e) {
-        // Tampilkan pesan error jika gagal mengirim OTP
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Gagal mengirim OTP.')),
-          );
-        }
-      }
-    } else if (mounted) {
-      // pesan error jika email tidak ditemukan
+    if (!mounted) return; // Pastikan widget masih ada sebelum melanjutkan
+
+     if (emailExists) {
+    try {
+      var response = await sendPasswordResetOTP(emailController.text);
+      if (!mounted) return;
+
+      String otpHash = (response.data?.hash as String?) ?? '';
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VerifikasiOtpGantiPass(
+            email: emailController.text,
+            otpHash: otpHash,
+          ),
+        ),
+      );
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Email tidak ditemukan')),
+        const SnackBar(
+          content: Text("OTP terkirim! Mohon periksa folder spam email Anda."),
+          duration: Duration(seconds: 5),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Gagal mengirim OTP.')),
       );
     }
+  } else {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Email tidak ditemukan')),
+    );
+  }
 
-    // Sembunyikan loading setelah selesai
     if (mounted) {
       setState(() => isLoading = false);
     }
@@ -68,7 +66,7 @@ class _MasukkanemailState extends State<Masukkanemail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(76, 175, 80, 1),
+        backgroundColor:  Color.fromARGB(255, 101, 136, 100),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () {
@@ -107,7 +105,7 @@ class _MasukkanemailState extends State<Masukkanemail> {
                     TextFormField(
                       controller: emailController,
                       decoration: const InputDecoration(
-                        labelText: 'Email',
+                        hintText: 'Email',
                         border: OutlineInputBorder(),
                       ),
                       keyboardType: TextInputType.emailAddress,
@@ -123,12 +121,11 @@ class _MasukkanemailState extends State<Masukkanemail> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    // Tampilkan loading atau tombol
                     isLoading
                         ? const Center(child: CircularProgressIndicator())
                         : ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
+                              backgroundColor:  Color.fromARGB(255, 101, 136, 100),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.zero),
                             ),

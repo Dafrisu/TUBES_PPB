@@ -22,7 +22,7 @@ List<Particle> createParticles() {
   List<Particle> particles = [];
   for (int i = 0; i < 100; i++) {
     particles.add(Particle(
-      color: Colors.green.withOpacity(0.6),
+      color:  Color.fromARGB(255, 101, 136, 100).withOpacity(0.6),
       size: rng.nextDouble() * 10,
       velocity: Offset(rng.nextDouble() * 50 * randomSign(),
           rng.nextDouble() * 200 * randomSign()),
@@ -105,7 +105,7 @@ class landingPageState extends State<landingPage> {
                           return Container(
                             width: MediaQuery.of(context).size.width,
                             margin: EdgeInsets.symmetric(horizontal: 5.0),
-                            decoration: BoxDecoration(color: Colors.green),
+                            decoration: BoxDecoration(color: Color.fromARGB(255, 101, 136, 100)),
                             child: Image.asset(
                               imagePath,
                               fit: BoxFit.cover,
@@ -118,7 +118,7 @@ class landingPageState extends State<landingPage> {
                   const SizedBox(height: 30),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor:  Color.fromARGB(255, 101, 136, 100),
                       minimumSize: const Size(300, 50),
                       shape:
                           RoundedRectangleBorder(borderRadius: BorderRadius.zero),
@@ -154,7 +154,7 @@ class landingPageState extends State<landingPage> {
                     child: Text('Registrasi',
                         style: GoogleFonts.montserrat(
                           fontSize: 20,
-                          color: Colors.green,
+                          color:  Color.fromARGB(255, 101, 136, 100),
                         )),
                   ),
                   const SizedBox(height: 20),

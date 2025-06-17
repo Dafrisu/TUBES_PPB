@@ -56,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.green,
+        backgroundColor:Color.fromARGB(255, 101, 136, 100),
         body: Stack(
           children: [
             ClipPath(
