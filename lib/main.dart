@@ -9,9 +9,11 @@ import 'package:tubes_ppb/landing.dart';
 import 'package:tubes_ppb/notif.dart';
 import 'userdata/user_provider.dart';
 import 'animation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
   runApp(
     ChangeNotifierProvider(
       create: (context) => UserProvider(),

@@ -1,10 +1,13 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+final String baseUrl = dotenv.env['BASE_URL'] ?? '';
 
 Future<bool> registerPembeli(String nama, String nomorTelepon, String username,
     String email, String password, String alamat) async {
-  final checkUserUrl = 'https://umkmapi-production.up.railway.app/checkPembeli';
-  final registerUrl = 'https://umkmapi-production.up.railway.app/pembeli';
+  final checkUserUrl = '$baseUrl/checkPembeli';
+  final registerUrl = '$baseUrl/pembeli';
 
   try {
     // Check if Pembeli already exists

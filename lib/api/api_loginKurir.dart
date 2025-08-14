@@ -1,12 +1,15 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+final String baseUrl = dotenv.env['BASE_URL'] ?? '';
 
 int kurirSessionId = 0;
 
 Future<bool> loginKurir(String email, String password) async {
   final response = await http.post(
-    Uri.parse('https://umkmapi-production.up.railway.app/loginKurir'),
+    Uri.parse('$baseUrl/loginKurir'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },

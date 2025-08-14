@@ -5,6 +5,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // For clearing local data
 import 'dart:io';
 import 'package:tubes_ppb/login.dart'; // Import your login page
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+final String baseUrl = dotenv.env['BASE_URL'] ?? '';
 
 class AccountDeletion extends StatefulWidget {
   final String userId;
@@ -41,7 +44,7 @@ class _AccountDeletionState extends State<AccountDeletion> {
   Future<void> fetchUserData(String userId) async {
     try {
       final response = await http.get(
-        Uri.parse('https://umkmapi-production.up.railway.app/pembeli/$userId'),
+        Uri.parse('$baseUrl/pembeli/$userId'),
       );
 
       if (response.statusCode == 200) {
@@ -90,7 +93,7 @@ class _AccountDeletionState extends State<AccountDeletion> {
     try {
       final response = await http.delete(
         Uri.parse(
-            'https://umkmapi-production.up.railway.app/pembeli/${widget.userId}'),
+            '$baseUrl/pembeli/${widget.userId}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

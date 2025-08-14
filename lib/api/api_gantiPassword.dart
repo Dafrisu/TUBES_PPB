@@ -3,9 +3,10 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:tubes_ppb/models/gantipass_response_model.dart'; // Pastikan model ini ada
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 var client = http.Client();
-const String baseUrl = "https://umkmapi-production.up.railway.app"; // Definisikan base URL
+final String baseUrl = dotenv.env['BASE_URL'] ?? '';
 
 // Fungsi untuk mengecek email
 Future<bool> checkPembeliByEmail(String email) async {

@@ -1,9 +1,12 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+final String baseUrl = dotenv.env['BASE_URL'] ?? '';
 
 Future<List<Map<String, dynamic>>> fetchData() async {
   final response = await http
-      .get(Uri.parse('https://umkmapi-production.up.railway.app/produk'));
+      .get(Uri.parse('$baseUrl/produk'));
 
   if (response.statusCode == 200) {
     // Decode the response body as a List
@@ -23,7 +26,7 @@ Future<List<Map<String, dynamic>>> fetchDataByType(String tipeBarang) async {
   // Construct the URL with the query parameter
   final response = await http.get(
     Uri.parse(
-        'https://umkmapi-production.up.railway.app/produkbytipe/tipe?tipe_barang=$tipeBarang'),
+        '$baseUrl/produkbytipe/tipe?tipe_barang=$tipeBarang'),
   );
 
   if (response.statusCode == 200) {
@@ -43,7 +46,7 @@ Future<List<Map<String, dynamic>>> fetchDataByType(String tipeBarang) async {
 Future<List<Map<String, dynamic>>> fetchDataUMKM() async {
   // Construct the URL with the query parameter
   final response = await http.get(
-    Uri.parse('https://umkmapi-production.up.railway.app/umkm'),
+    Uri.parse('$baseUrl/umkm'),
   );
 
   if (response.statusCode == 200) {

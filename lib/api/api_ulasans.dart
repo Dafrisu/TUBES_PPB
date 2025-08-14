@@ -1,10 +1,13 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+final String baseUrl = dotenv.env['BASE_URL'] ?? '';
 
 Future<List<Map<String, dynamic>>> fetchAllUlasans() async {
   // Construct the URL with the query parameter
   final response = await http.get(
-    Uri.parse('https://umkmapi-production.up.railway.app/ulasans'),
+    Uri.parse('$baseUrl/ulasans'),
   );
 
   if (response.statusCode == 200) {
@@ -27,7 +30,7 @@ Future<List<Map<String, dynamic>>> fetchAllUlasans() async {
 Future<List<Map<String, dynamic>>> fetchUlasansUMKM(int id) async {
   // Construct the URL with the query parameter
   final response = await http.get(
-    Uri.parse('https://umkmapi-production.up.railway.app/ulasans/umkm/$id'),
+    Uri.parse('$baseUrl/ulasans/umkm/$id'),
   );
   print(response.body);
 
@@ -68,7 +71,7 @@ Future<Map<String, dynamic>> postUlasan({
       return {'message': 'Rating must be between 0 and 5'};
     }
 
-    final url = Uri.parse('https://umkmapi-production.up.railway.app/ulasans');
+    final url = Uri.parse('$baseUrl/ulasans');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -97,7 +100,7 @@ Future<Map<String, dynamic>> postUlasan({
 Future<List<Map<String, dynamic>>> fetchUlasansByProdukId(int id) async {
   // Construct the URL with the query parameter
   final response = await http.get(
-    Uri.parse('https://umkmapi-production.up.railway.app/ulasans/produk/$id'),
+    Uri.parse('$baseUrl/ulasans/produk/$id'),
   );
   print(response.body);
 

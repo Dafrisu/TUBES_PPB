@@ -34,7 +34,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse('https://umkmapi-production.up.railway.app/api/pembeli/verify-otp'),
+        Uri.parse('$baseUrl/api/pembeli/verify-otp'),
         headers: {'Content-Type': 'application/json; charset=UTF-8'},
         body: jsonEncode({
           'email': widget.email,

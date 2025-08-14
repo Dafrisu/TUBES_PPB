@@ -1,10 +1,13 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+final String baseUrl = dotenv.env['BASE_URL'] ?? '';
 
 Future<bool> registerKurir(
     String email, String nama, String password, String idUmkm, String nomorTelepon) async {
-  final checkUrl = 'https://umkmapi-production.up.railway.app/checkkurir';
-  final registerUrl = 'https://umkmapi-production.up.railway.app/kurir';
+  final checkUrl = '$baseUrl/checkkurir';
+  final registerUrl = '$baseUrl/kurir';
 
   try {
     // Check if Kurir already exists
@@ -62,7 +65,7 @@ Future<bool> registerKurir(
 
 Future<List<dynamic>> fetchUMKM() async {
   final response = await http
-      .get(Uri.parse('https://umkmapi-production.up.railway.app/umkm'));
+      .get(Uri.parse('$baseUrl/umkm'));
   if (response.statusCode == 200) {
     return jsonDecode(response.body);
   } else {

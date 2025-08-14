@@ -1,10 +1,12 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+final String baseUrl = dotenv.env['BASE_URL'] ?? '';
 
 Future<List<Map<String, dynamic>>> getbookmark(int id_pembeli) async {
   try {
-    final response = await http.get(Uri.parse(
-        'https://umkmapi-production.up.railway.app/bookmark/$id_pembeli'));
+    final response = await http.get(Uri.parse('$baseUrl/bookmark/$id_pembeli'));
 
     if (response.statusCode == 200) {
       final dynamic decodedData = jsonDecode(response.body);
@@ -34,7 +36,7 @@ Future<Map<String, dynamic>> checkbookmark(
     int id_produk, int id_pembeli) async {
   try {
     final response = await http.get(Uri.parse(
-        'https://umkmapi-production.up.railway.app/bookmark/check/$id_produk/$id_pembeli'));
+        '$baseUrl/bookmark/check/$id_produk/$id_pembeli'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
@@ -52,7 +54,7 @@ Future<Map<String, dynamic>> checkbookmark(
 Future<void> addtobookmark(int id_pembeli, int id_produk) async {
   try {
     final response = await http.post(Uri.parse(
-        "https://umkmapi-production.up.railway.app/bookmark/$id_pembeli/$id_produk"));
+        "$baseUrl/bookmark/$id_pembeli/$id_produk"));
     if (response.statusCode == 200) {
       print(response.body);
     } else {
@@ -66,7 +68,7 @@ Future<void> addtobookmark(int id_pembeli, int id_produk) async {
 Future<void> deletebookmark(int id_pembeli, int id_produk) async {
   try {
     final response = await http.delete(Uri.parse(
-        "https://umkmapi-production.up.railway.app/bookmark/$id_pembeli/$id_produk"));
+        "$baseUrl/bookmark/$id_pembeli/$id_produk"));
     if (response.statusCode == 200) {
       print(response.body);
     } else {

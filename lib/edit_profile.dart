@@ -5,6 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+final String baseUrl = dotenv.env['BASE_URL'] ?? '';
 
 class EditProfile extends StatefulWidget {
   final String userId;
@@ -94,7 +97,7 @@ class _EditProfileState extends State<EditProfile> {
   Future<void> fetchUserData(String id) async {
     try {
       final response = await http.get(
-        Uri.parse('https://umkmapi-production.up.railway.app/pembeli/$id'),
+        Uri.parse('$baseUrl/pembeli/$id'),
       );
 
       if (response.statusCode == 200) {
@@ -133,7 +136,7 @@ class _EditProfileState extends State<EditProfile> {
       String email, String username) async {
     try {
       final response = await http.post(
-        Uri.parse('https://umkmapi-production.up.railway.app/checkPembeli'), // Your backend endpoint
+        Uri.parse('$baseUrl/checkPembeli'), // Your backend endpoint
         headers: {
           'Content-Type': 'application/json',
         },
@@ -165,7 +168,7 @@ class _EditProfileState extends State<EditProfile> {
     // Note: The example backend URL 'http://10.0.2.2/pembeli/$id' suggests a local development server.
     // Ensure this matches your actual backend's accessible URL.
     final response = await http.put(
-      Uri.parse('https://umkmapi-production.up.railway.app/pembeli/$id'),
+      Uri.parse('$baseUrl/pembeli/$id'),
       headers: {
         'Content-Type': 'application/json',
       },

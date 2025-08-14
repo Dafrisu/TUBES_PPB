@@ -146,7 +146,7 @@ class _OrderPageState extends State<OrderPage> {
 
   Future<Map<String, dynamic>> fetchUserData() async {
     final response = await http.get(
-      Uri.parse('https://umkmapi-production.up.railway.app/pembeli/$sessionId'),
+      Uri.parse('$baseUrl/pembeli/$sessionId'),
     );
 
     if (response.statusCode == 200) {

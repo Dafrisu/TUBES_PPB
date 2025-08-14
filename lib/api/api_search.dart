@@ -1,12 +1,15 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+final String baseUrl = dotenv.env['BASE_URL'] ?? '';
 
 Future<List<Map<String, dynamic>>> searchbar(String query) async {
   try {
     String encodedQuery = Uri.encodeComponent(query);
     print(encodedQuery);
     final response = await http.get(Uri.parse(
-        'https://umkmapi-production.up.railway.app/search?search=$encodedQuery'));
+        '$baseUrl/search?search=$encodedQuery'));
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
 

@@ -35,7 +35,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     userId = (prefs.getInt('sessionId') ?? 0).toString();
 
     final response = await http.get(
-      Uri.parse('https://umkmapi-production.up.railway.app/pembeli/$userId'),
+      Uri.parse('$baseUrl/pembeli/$userId'),
     );
 
     if (response.statusCode == 200) {
