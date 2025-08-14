@@ -10,6 +10,9 @@ import 'api/Dafa_api_getriwayaPembelian.dart';
 import 'api/api_keranjang.dart';
 import 'dashboard/dashboard.dart'; // import dashboard page darryl
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+final String baseUrl = dotenv.env['BASE_URL'] ?? '';
 
 class OrderPage extends StatefulWidget {
   final Future<List<Map<String, dynamic>>> isikeranjang;

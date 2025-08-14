@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:timelines/timelines.dart';
+import 'package:timelines_plus/timelines_plus.dart';
 import 'component/appbar.dart';
 import 'api/Dafa_api_getriwayaPembelian.dart';
 

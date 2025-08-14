@@ -10,6 +10,9 @@ import 'dart:io';
 
 import 'package:tubes_ppb/api/api_loginPembeli.dart';
 import 'package:tubes_ppb/api/api_loginKurir.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+final String baseUrl = dotenv.env['BASE_URL'] ?? '';
 
 class ProfileSettings extends StatefulWidget {
   const ProfileSettings({super.key});

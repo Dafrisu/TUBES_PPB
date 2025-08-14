@@ -47,6 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 2), () {
+      if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const landingPage()),
       );
@@ -56,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor:Color.fromARGB(255, 101, 136, 100),
+        backgroundColor: Color.fromARGB(255, 101, 136, 100),
         body: Stack(
           children: [
             ClipPath(
